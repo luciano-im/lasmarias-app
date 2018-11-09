@@ -12,12 +12,6 @@ import BigButton from '../components/BigButton';
 import { theme } from '../helpers/styles';
 
 export default class HomeScreen extends React.Component {
-  state = {
-    query: '',
-  };
-
-  // padding: 10
-
   render() {
     return (
       <View style={styles.container}>
@@ -73,13 +67,6 @@ export default class HomeScreen extends React.Component {
     );
   }
 }
-
-// <Searchbar
-//   theme={{roundness: 2}}
-//   placeholder='Buscar Clientes'
-//   onChangeText={query => { this.setState({ query: query }); }}
-//   value={this.state.query}
-// />
 
 const styles = StyleSheet.create({
   container: {

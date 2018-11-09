@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
-import { Appbar } from 'react-native-paper';
 
+import Header from '../components/Header';
 import HomeScreen from './HomeScreen';
 
 const HomeStack = createStackNavigator({
@@ -9,10 +9,7 @@ const HomeStack = createStackNavigator({
     screen: HomeScreen,
     navigationOptions: ({navigation}) => ({
       header: (
-        <Appbar.Header>
-          <Appbar.Action icon='menu' onPress={() => navigation.navigate('DrawerOpen')} />
-          <Appbar.Content title='LAS MARIAS' />
-        </Appbar.Header>
+        <Header leftAction='drawer' />
       ),
     }),
   },
