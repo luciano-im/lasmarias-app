@@ -16,7 +16,7 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{backgroundColor: theme.PRIMARY_COLOR, padding: 10, marginTop: 10}}>
+        <View style={{backgroundColor: theme.PRIMARY_COLOR, padding: 10, marginTop: 10, marginBottom: 30}}>
           <Searchbar
             theme={{roundness: 2}}
             placeholder='Buscar Clientes'
@@ -26,10 +26,12 @@ export default class HomeScreen extends React.Component {
         </View>
         <View>
           <View style={styles.row}>
-            <BigButton label='OK' elevation={3} radius={3} icon='refresh' iconSize={32} iconColor={theme.PRIMARY_COLOR} />
-            <BigButton label='OK' elevation={3} radius={3} icon='refresh' iconSize={32} iconColor='green' />
+            <BigButton label='Nuevo Pedido' backgroundColor={theme.PRIMARY_COLOR} textColor='white' elevation={3} radius={3} icon='cart' iconSize={38} />
+            <BigButton label='Pedidos Pendientes' backgroundColor={theme.PRIMARY_COLOR} textColor='white' elevation={3} radius={3} icon='cogs' iconSize={38} />
           </View>
           <View style={styles.row}>
+            <BigButton label='Historial de Pedidos' backgroundColor={theme.PRIMARY_COLOR} textColor='white' elevation={3} radius={3} icon='clipboard-text-outline' iconSize={38} />
+            <BigButton label='Estado de Cuenta' backgroundColor={theme.PRIMARY_COLOR} textColor='white' elevation={3} radius={3} icon='currency-usd' iconSize={38} />
           </View>
         </View>
       </View>
@@ -43,6 +45,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    marginVertical: 20
   }
 });
