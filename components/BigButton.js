@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Platform,
   StyleSheet,
   View
 } from 'react-native';
@@ -10,7 +11,7 @@ import {
   Surface,
   withTheme
 } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default class BigButton extends React.Component {
   render() {
@@ -22,15 +23,18 @@ export default class BigButton extends React.Component {
     const icon = this.props.icon;
     const iconSize = this.props.iconSize;
 
+    const isIOS = Platform.OS === 'ios';
+    const fontFamily = isIOS ? 'HelveticaNeue-Medium' : 'sans-serif-medium';
+
     return (
       <Surface style={[styles.button, {elevation: elevation, borderRadius: radius, backgroundColor: backgroundColor, color: textColor}]}>
         <TouchableRipple borderless onPress={() => console.log('Pressed')}>
            <View style={styles.content}>
               <View>
-                <MaterialCommunityIcons name={icon} size={iconSize} color={textColor} />
+                <MaterialIcons name={icon} size={iconSize} color={textColor} />
               </View>
               <Text
-                style={[styles.label, {color: textColor}]}
+                style={[styles.label, {color: textColor, fontFamily: fontFamily}]}
                 numberOfLines={2}>
                 {label}
               </Text>
