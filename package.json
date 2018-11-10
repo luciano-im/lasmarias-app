@@ -17,6 +17,7 @@
     "react-navigation": "^2.18.2"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-preset-expo": "^5.0.0",
+    "reactotron-react-native": "^2.1.0"
   }
 }

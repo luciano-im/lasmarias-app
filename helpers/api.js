@@ -1,17 +1,19 @@
 import { SQLite } from 'expo';
 import axios from 'axios';
+import Reactotron from 'reactotron-react-native';
 
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
 const api = 'https://las-marias.localtunnel.me/';
 
-fetchCustomers = () => {
+
+export let fetchCustomers = () => {
 
   //Create database table if not exists
   db.transaction(tx => {
     tx.executeSql(
-      'create table if not exists customer (id integer primary key not null, address text, city text);'
+      'CREATE TABLE IF NOT EXISTS customer (id integer PRIMARY KEY NOT NULL, name text, address text, city text);'
     );
   });
 
@@ -21,11 +23,31 @@ fetchCustomers = () => {
 
   axios.get(api+'api/customer/', config)
   .then(response => {
-    console.log(response.data);
+    const data = response.data;
+    data.forEach(customer => {
+      db.transaction(tx => {
+        tx.executeSql(
+          'REPLACE INTO customer (id, name, address, city) VALUES (?, ?, ?, ?);',
+          [customer.customer_id, customer.name, customer.address, customer.city]
+        );
+      });
+    });
   })
   .catch(error => {
     console.log(error);
   });
 }
 
-export default fetchCustomers;
+
+export let getCustomers = () => {
+  db.transaction(tx => {
+    tx.executeSql(
+      'SELECT customer_id, name FROM customer;',
+      [],
+      (tx, results) => { Reactotron.log(results) }
+    );
+  });
+}
+//
+// export default fetchCustomers;
+// export default getCustomers;

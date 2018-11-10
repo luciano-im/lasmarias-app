@@ -1,13 +1,9 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View
 } from 'react-native';
-import {
-  List,
-  Searchbar
-} from 'react-native-paper';
+import { List } from 'react-native-paper';
 import BigButton from '../components/BigButton';
 import { theme } from '../helpers/styles';
 
@@ -22,7 +18,7 @@ export default class HomeScreen extends React.Component {
             right={props => <List.Icon {...props} icon='chevron-right' color={theme.ACCENT_COLOR} />}
             theme={{colors: {text: '#FFFFFF'}}}
             style={{padding: 0}}
-            onPress={() => console.log('Pressed')}
+            onPress={() => this.props.navigation.navigate('SearchCustomer')}
           />
         </View>
         <View>

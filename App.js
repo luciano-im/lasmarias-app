@@ -6,6 +6,7 @@ import {
 } from 'react-native-paper';
 import { Navigation } from './navigation/Navigation';
 import { theme } from './helpers/styles';
+import './ReactotronConfig';
 
 const customTheme = {
   ...DefaultTheme,
