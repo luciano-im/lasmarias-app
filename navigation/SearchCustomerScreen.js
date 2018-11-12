@@ -7,11 +7,13 @@ import {
 import {
   Divider,
   List,
-  Searchbar,
-  Text,
-  TouchableRipple
+  Searchbar
 } from 'react-native-paper';
-import { getCustomers } from '../helpers/api';
+import SelectCity from '../components/SelectCity';
+import {
+  getCustomers,
+  getCities
+} from '../helpers/api';
 import { theme } from '../helpers/styles';
 import Reactotron from 'reactotron-react-native';
 
@@ -21,18 +23,35 @@ export default class SearchCustomerScreen extends React.Component {
     this.state = {
       searchQuery: '',
       customers: [],
+      filteredCustomers: [],
+      cities: [],
+      selectedCity: '',
+      showCitiesModal: false,
+      address: ''
     }
   }
 
   async componentDidMount() {
     // Get customers asynchronously to prevent get "undefined"
-    const data = await getCustomers();
+    const customers = await getCustomers();
+    const cities = await getCities();
     this.setState({
-      'customers': data
+      'customers': customers,
+      'cities': cities
     });
   }
 
-  _handlePress = (item) => {
+  _handleShowSelectCity = (visible) => {
+    this.setState({
+      showCitiesModal: visible
+    });
+  }
+
+  _handleSelectCity = (item) => {
+    console.log(item);
+  }
+
+  _handleSelectCustomer = (item) => {
     Reactotron.log(item);
     const { navigation } = this.props;
     navigation.goBack();
@@ -45,7 +64,7 @@ export default class SearchCustomerScreen extends React.Component {
   _renderItem = ({item}) => (
     <List.Item
       title={item.name}
-      onPress= {() => this._handlePress(item)} />
+      onPress= {() => this._handleSelectCustomer(item)} />
   );
 
   render() {
@@ -62,13 +81,14 @@ export default class SearchCustomerScreen extends React.Component {
             theme={{colors: {primary: '#FFFFFF', text: '#FFFFFF'}}}
             style={{padding: 0}}>
               <List.Item
-                title='Dirección'
-                left={props => <List.Icon {...props} style={{padding: 0}} icon='location-on' />}
-                right={props => <List.Icon {...props} icon='chevron-right' />}
-                style={{padding: 0}} />
-              <List.Item
                 title='Localidad'
                 left={props => <List.Icon {...props} style={{padding: 0}} icon='location-city' />}
+                right={props => <List.Icon {...props} icon='chevron-right' />}
+                style={{padding: 0}}
+                onPress={() => this._handleShowSelectCity(true)}  />
+              <List.Item
+                title='Dirección'
+                left={props => <List.Icon {...props} style={{padding: 0}} icon='location-on' />}
                 right={props => <List.Icon {...props} icon='chevron-right' />}
                 style={{padding: 0}} />
           </List.Accordion>
@@ -81,6 +101,11 @@ export default class SearchCustomerScreen extends React.Component {
           extraData={this.state}
           renderItem={this._renderItem}
           keyExtractor={(item, index) => item.id.toString()} />
+        <SelectCity
+          cities={this.state.cities}
+          visible={this.state.showCitiesModal}
+          onDismiss={this._handleShowSelectCity}
+          onSelect={this._handleSelectCity} />
       </View>
     );
   }

@@ -69,3 +69,16 @@ export let getCustomers = async () => {
     );
   }));
 }
+
+export let getCities = async () => {
+  return new Promise((resolve, reject) => db.transaction(tx => {
+    tx.executeSql(
+      'SELECT DISTINCT city FROM customer;',
+      [],
+      (tx, { rows }) => {
+        resolve(rows._array);
+      },
+      reject
+    );
+  }));
+}
