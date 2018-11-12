@@ -9,13 +9,28 @@ const api = 'https://las-marias.localtunnel.me/';
 
 
 export let fetchCustomers = () => {
+  // Delete table customer
+  // db.transaction(tx => {
+  //   tx.executeSql(
+  //     'DROP TABLE customer;',
+  //     [],
+  //     (tx, results) => {
+  //       Reactotron.log(results);
+  //     },
+  //     (tx, error) => {
+  //       Reactotron.log(error) ;
+  //     }
+  //   );
+  // });
 
   //Create database table if not exists
-  db.transaction(tx => {
-    tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS customer (id integer PRIMARY KEY NOT NULL, name text, address text, city text);'
-    );
-  });
+  db.transaction(
+    tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS customer (id integer PRIMARY KEY NOT NULL, name text, address text, city text)'
+      );
+    }
+  );
 
   const config = {
     responseType: 'json'
@@ -25,12 +40,14 @@ export let fetchCustomers = () => {
   .then(response => {
     const data = response.data;
     data.forEach(customer => {
-      db.transaction(tx => {
-        tx.executeSql(
-          'REPLACE INTO customer (id, name, address, city) VALUES (?, ?, ?, ?);',
-          [customer.customer_id, customer.name, customer.address, customer.city]
-        );
-      });
+      db.transaction(
+        tx => {
+          tx.executeSql(
+            'REPLACE INTO customer (id, name, address, city) VALUES (?, ?, ?, ?);',
+            [customer.customer_id, customer.name, customer.address, customer.city],
+          );
+        }
+      );
     });
   })
   .catch(error => {
@@ -39,15 +56,16 @@ export let fetchCustomers = () => {
 }
 
 
-export let getCustomers = () => {
-  db.transaction(tx => {
+// Use a Promise to assign result asynchronously
+export let getCustomers = async () => {
+  return new Promise((resolve, reject) => db.transaction(tx => {
     tx.executeSql(
-      'SELECT customer_id, name FROM customer;',
+      'SELECT id, name FROM customer;',
       [],
-      (tx, results) => { Reactotron.log(results) }
+      (tx, { rows }) => {
+        resolve(rows._array);
+      },
+      reject
     );
-  });
+  }));
 }
-//
-// export default fetchCustomers;
-// export default getCustomers;
