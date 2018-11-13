@@ -57,10 +57,12 @@ export let fetchCustomers = () => {
 
 
 // Use a Promise to assign result asynchronously
-export let getCustomers = async () => {
+export let getCustomers = async (city) => {
+  const where = (city) ? `WHERE city="${city}"`: '';
+  const sql = `SELECT id, name FROM customer ${where} ORDER BY name ASC;`;
   return new Promise((resolve, reject) => db.transaction(tx => {
     tx.executeSql(
-      'SELECT id, name FROM customer;',
+      sql,
       [],
       (tx, { rows }) => {
         resolve(rows._array);
@@ -71,9 +73,10 @@ export let getCustomers = async () => {
 }
 
 export let getCities = async () => {
+  const sql = 'SELECT DISTINCT city FROM customer ORDER BY city ASC;';
   return new Promise((resolve, reject) => db.transaction(tx => {
     tx.executeSql(
-      'SELECT DISTINCT city FROM customer;',
+      sql,
       [],
       (tx, { rows }) => {
         resolve(rows._array);
