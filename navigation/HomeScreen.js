@@ -73,7 +73,7 @@ export default class HomeScreen extends React.Component {
             <IconButton
               {...props}
               icon='close'
-              color='#FF3333'
+              color={theme.RED_COLOR}
               onPress={() => this._onRemoveCustomer()} />
           )
         }

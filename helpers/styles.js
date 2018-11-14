@@ -1,6 +1,7 @@
 export const theme = {
   PRIMARY_COLOR: '#006DA8',
-  ACCENT_COLOR: '#2AB8D1'
+  ACCENT_COLOR: '#2AB8D1',
+  RED_COLOR: '#FF3333'
 };
 
 // FONT_SIZE_SMALL: 12,
