@@ -7,7 +7,7 @@ export default class Header extends React.Component {
   render() {
     let leftAction;
     if(this.props.leftAction === 'drawer') {
-      leftAction = <Appbar.Action icon='menu' onPress={() => this.props.navigation.navigate('DrawerOpen')} />;
+      leftAction = <Appbar.Action icon='menu' onPress={() => this.props.navigation.toggleDrawer()} />;
     } else if (this.props.leftAction === 'back') {
       leftAction = <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />;
     }

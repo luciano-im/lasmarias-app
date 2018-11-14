@@ -1,9 +1,13 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
-
+import {
+  createDrawerNavigator,
+  createStackNavigator
+} from 'react-navigation';
+import { List } from 'react-native-paper';
 import Header from '../components/Header';
 import HomeScreen from './HomeScreen';
 import SearchCustomerScreen from './SearchCustomerScreen';
+import AccountBalanceScreen from './AccountBalanceScreen';
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -16,7 +20,7 @@ const HomeStack = createStackNavigator({
   },
   SearchCustomer: {
     screen: SearchCustomerScreen,
-    navigationOptions: ({ navigation }) => ({
+    navigationOptions: ({navigation}) => ({
       header: (
         <Header leftAction='back' navigation={navigation} />
       ),
@@ -26,5 +30,36 @@ const HomeStack = createStackNavigator({
   initialRouteName: 'Home',
 });
 
+const AccountBalanceStack = createStackNavigator({
+  AccountBalance: {
+    screen: AccountBalanceScreen,
+    navigationOptions: ({navigation}) => ({
+      header: (
+        <Header leftAction='back' navigation={navigation} />
+      ),
+    }),
+  }
+});
 
-export const Navigation = HomeStack;
+
+const AppNavigation = createDrawerNavigator({
+  Home: {
+    screen: HomeStack,
+    navigationOptions: {
+      drawerLabel: 'Home',
+      drawerIcon: ({tintColor}) => (<List.Icon color={tintColor} icon='home' />),
+    }
+  },
+  AccountBalance: {
+    screen: AccountBalanceStack,
+    navigationOptions: {
+      drawerLabel: 'Saldo de Cuenta',
+      drawerIcon: ({tintColor}) => (<List.Icon color={tintColor} icon='attach-money' />),
+    }
+  }
+},{
+  initialRouteName: 'Home'
+});
+
+
+export const Navigation = AppNavigation;

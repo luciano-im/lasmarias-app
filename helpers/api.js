@@ -8,7 +8,7 @@ const db = SQLite.openDatabase('lasmarias.db');
 const api = 'https://las-marias.localtunnel.me/';
 
 
-export let fetchCustomers = () => {
+export let fetchCustomers = async () => {
   // Delete table customer
   // db.transaction(tx => {
   //   tx.executeSql(
@@ -56,9 +56,27 @@ export let fetchCustomers = () => {
 }
 
 
+export let fetchAccountBalance = async (user) => {
+
+  const config = {
+    responseType: 'json'
+  };
+
+  axios.get(api+`api/balance/${user}/`, config)
+  .then(response => {
+    const data = response.data;
+    console.log(data);
+    return data;
+  })
+  .catch(error => {
+    console.log(error);
+  });
+}
+
+
 // Use a Promise to assign result asynchronously
 export let getCustomers = async (city, address) => {
-  let where;
+  let where = '';
   if(city && address) {
     where = `WHERE city="${city}" AND UPPER(address) LIKE '%${address.toUpperCase()}%'`;
   } else if (city) {

@@ -6,7 +6,8 @@ import {
 } from 'react-native';
 import {
   IconButton,
-  List
+  List,
+  Snackbar
 } from 'react-native-paper';
 import BigButton from '../components/BigButton';
 import { theme } from '../helpers/styles';
@@ -17,7 +18,8 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       customerId: null,
-      customerName: null
+      customerName: null,
+      showError: false
     };
   }
 
@@ -54,29 +56,24 @@ export default class HomeScreen extends React.Component {
     this._emptySelectedCustomer();
   }
 
+  _navigateAccountBalance = () => {
+    if(this.state.customerId) {
+      console.log(this.state.customerId, this.state.customerName);
+      this.props.navigation.navigate('AccountBalance');
+    } else {
+      this.setState({
+        showError: true
+      })
+    }
+  }
+
   render() {
     let customer;
     if(this.state.customerName) {
       customer = <List.Item
         title={this.state.customerName}
-        left={
-          (props) => (
-            <List.Icon
-              {...props}
-              icon='person'
-              color='white'
-              style={{margin:4}} />
-          )
-        }
-        right={
-          (props) => (
-            <IconButton
-              {...props}
-              icon='close'
-              color={theme.RED_COLOR}
-              onPress={() => this._onRemoveCustomer()} />
-          )
-        }
+        left={(props) => (<List.Icon {...props} icon='person' color='white' style={{margin:4}} />)}
+        right={(props) => (<IconButton {...props} icon='close' color={theme.RED_COLOR} onPress={() => this._onRemoveCustomer()} />)}
         theme={{colors: {text: '#FFFFFF'}}}
         style={{padding: 0, backgroundColor: theme.ACCENT_COLOR}} />;
     }
@@ -130,9 +127,20 @@ export default class HomeScreen extends React.Component {
               elevation={3}
               radius={3}
               icon='attach-money'
-              iconSize={38} />
+              iconSize={38}
+              onPress={this._navigateAccountBalance} />
           </View>
         </View>
+        <Snackbar
+          visible={this.state.showError}
+          onDismiss={() => this.setState({ showError: false })}
+          theme={{colors: {accent: theme.RED_COLOR}}}
+          action={{
+            label: 'Ok',
+            onPress: () => {() => this.setState({ showError: false })},
+          }}>
+          Debe seleccionar un Cliente
+        </Snackbar>
       </View>
     );
   }

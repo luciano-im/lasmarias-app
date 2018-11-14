@@ -28,7 +28,7 @@ export default class BigButton extends React.Component {
 
     return (
       <Surface style={[styles.button, {elevation: elevation, borderRadius: radius, backgroundColor: backgroundColor, color: textColor}]}>
-        <TouchableRipple borderless onPress={() => console.log('Pressed')}>
+        <TouchableRipple borderless onPress={() => this.props.onPress()}>
            <View style={styles.content}>
               <View>
                 <MaterialIcons name={icon} size={iconSize} color={textColor} />
