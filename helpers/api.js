@@ -61,12 +61,10 @@ export let fetchAccountBalance = async user => {
     responseType: 'json'
   };
 
-  axios
+  return await axios
     .get(api + `api/balance/${user}/`, config)
     .then(response => {
-      const data = response.data;
-      console.log(data);
-      return data;
+      return response.data[0];
     })
     .catch(error => {
       console.log(error);
