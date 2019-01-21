@@ -1,34 +1,24 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Button, Text, TextInput } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
+import InputPassword from '../../components/InputPassword';
 
-// TODO: creat the login screen
+// TODO: add login logic
 export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userText: '',
-      passText: '',
-      passwordHide: true,
-      passwordIcon: 'visibility-off'
+      passText: ''
     };
   }
 
-  _changePwdType = () => {
-    if (this.state.passwordIcon === 'visibility-off') {
-      this.setState({
-        passwordIcon: 'visibility',
-        passwordHide: false
-      });
-    } else {
-      this.setState({
-        passwordIcon: 'visibility-off',
-        passwordHide: true
-      });
-    }
+  _onChangePassword = text => {
+    this.setState({
+      passText: text
+    });
   };
 
   render() {
@@ -48,57 +38,44 @@ export default class LoginScreen extends React.Component {
           <TextInput
             label="Usuario"
             placeholder="Correo"
-            style={[styles.input, { marginBottom: 20 }]}
+            style={styles.input}
             value={this.state.userText}
             onChangeText={text => this.setState({ userText: text })}
           />
-          <View>
-            <TextInput
-              style={styles.input}
-              autoCapitalize={'none'}
-              label="Contraseña"
-              placeholder="Contraseña"
-              secureTextEntry={this.state.passwordHide}
-              value={this.state.passText}
-              onChangeText={text => this.setState({ passText: text })}
-            />
-            <MaterialIcons
-              style={styles.password}
-              name={this.state.passwordIcon}
-              size={22}
-              onPress={() => this._changePwdType()}
-            />
-          </View>
+          <InputPassword
+            label="Contraseña"
+            value={this.state.passText}
+            onChangeText={this._onChangePassword}
+            styles={styles.input}
+          />
         </View>
-        <View>
-          <Button
-            mode="text"
-            compact={true}
-            color="red"
-            style={styles.button}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={{ marginBottom: 8 }}
             onPress={() => {
               this.props.navigation.navigate('ForgetPassword');
             }}
           >
-            <Text uppercase={false}>Olvidé mi Contraseña</Text>
-          </Button>
-          <Button
-            mode="text"
-            compact={true}
-            color="red"
-            style={styles.button}
+            <Text uppercase={false} style={styles.button}>
+              Olvidé mi Contraseña
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => {
               this.props.navigation.navigate('SignUp');
             }}
           >
-            <Text uppercase={false}>Registrarse</Text>
-          </Button>
+            <Text uppercase={false} style={styles.button}>
+              Registrarse
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.loginButtonContainer}>
           <Button
             mode="contained"
             style={styles.loginButton}
             color={theme.ACCENT_COLOR}
+            theme={{ roundness: 0 }}
           >
             <Text
               theme={{
@@ -122,25 +99,27 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   inputContainer: {
-    alignItems: 'center'
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   },
   input: {
     backgroundColor: 'transparent',
-    width: 250
+    width: 260
   },
-  password: {
-    position: 'absolute',
-    right: 0,
-    top: 30
+  buttonContainer: {
+    alignItems: 'center',
+    paddingTop: 10
   },
   button: {
-    marginVertical: 0
+    color: 'red'
   },
   loginButtonContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: 20,
+    marginTop: 30
   },
   loginButton: {
-    width: 200,
-    margin: 20
+    width: 280
   }
 });

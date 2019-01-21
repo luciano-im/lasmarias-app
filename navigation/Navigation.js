@@ -23,11 +23,17 @@ const AuthStack = createStackNavigator(
       })
     },
     SignUp: {
-      screen: SignUpScreen
+      screen: SignUpScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <EmptyHeader />
+      })
     }
   },
   {
-    initialRouteName: 'Login'
+    initialRouteName: 'Login',
+    cardStyle: {
+      backgroundColor: 'white'
+    }
   }
 );
 
@@ -47,7 +53,10 @@ const HomeStack = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Home',
+    cardStyle: {
+      backgroundColor: 'white'
+    }
   }
 );
 

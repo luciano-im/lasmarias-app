@@ -17,7 +17,7 @@ export default class Logo extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 20
