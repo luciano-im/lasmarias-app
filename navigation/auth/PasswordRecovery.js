@@ -1,17 +1,15 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
-import InputPassword from '../../components/InputPassword';
 
-// TODO: add login logic
-export default class LoginScreen extends React.Component {
+// TODO: add password recovery logic
+export default class PasswordRecoveryScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userText: '',
-      passText: ''
+      userText: ''
     };
   }
 
@@ -30,59 +28,34 @@ export default class LoginScreen extends React.Component {
             style={{ width: 80, height: 80 }}
             source={require('../../assets/user-128.png')}
           />
-          <Text style={styles.title}>INGRESÁ</Text>
+          <Text style={styles.title}>RECUPERAR CONTRASEÑA</Text>
         </View>
         <View style={styles.inputContainer}>
           <TextInput
-            label="Usuario"
+            label="Ingresá el correo registrado:"
             placeholder="Correo"
             style={styles.input}
             value={this.state.userText}
             onChangeText={text => this.setState({ userText: text })}
           />
-          <InputPassword
-            label="Contraseña"
-            value={this.state.passText}
-            onChangeText={this._onChangePassword}
-            styles={styles.input}
-          />
         </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.buttonFirst}
-            onPress={() => {
-              this.props.navigation.navigate('PasswordRecovery');
-            }}
-          >
-            <Text uppercase={false} style={styles.button}>
-              Olvidé mi Contraseña
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate('SignUp');
-            }}
-          >
-            <Text uppercase={false} style={styles.button}>
-              Registrarse
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.loginButtonContainer}>
+        <View style={styles.dataButtonContainer}>
           <Button
             mode="contained"
-            style={styles.loginButton}
+            style={styles.dataButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
+            onPress={() => this.props.navigation.navigate('PasswordRecoveryOk')}
           >
             <Text
+              style={styles.dataButtonText}
               theme={{
                 colors: {
                   text: '#FFFFFF'
                 }
               }}
             >
-              INGRESAR
+              SOLICITAR DATOS
             </Text>
           </Button>
         </View>
@@ -108,33 +81,26 @@ const styles = StyleSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   inputContainer: {
-    flex: 3,
+    flex: 5,
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'center'
   },
   input: {
     backgroundColor: 'transparent',
     width: 260
   },
-  buttonContainer: {
+  dataButtonContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 10
-  },
-  button: {
-    color: 'red'
-  },
-  buttonFirst: {
-    marginBottom: 8
-  },
-  loginButtonContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20,
+    justifyContent: 'flex-end',
     marginTop: 30
   },
-  loginButton: {
-    width: 280
+  dataButton: {
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    height: 50
+  },
+  dataButtonText: {
+    fontSize: 16
   }
 });
