@@ -51,7 +51,6 @@ export default class InputPassword extends React.Component {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    flex: 1,
     alignItems: 'center'
   },
   password: {

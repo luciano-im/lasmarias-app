@@ -5,7 +5,7 @@ import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import InputPassword from '../../components/InputPassword';
 
-// TODO: Create the sign up screen
+// TODO: add sign up logic
 export default class SignUpScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -23,16 +23,14 @@ export default class SignUpScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={styles.container}>
         <Logo />
-        <View style={{ flexDirection: 'column' }}>
+        <View style={styles.titleContainer}>
           <Image
             style={{ width: 40, height: 40 }}
             source={require('../../assets/user-128.png')}
           />
-          <Text style={[styles.title, { color: theme.PRIMARY_COLOR }]}>
-            REGISTRATE
-          </Text>
+          <Text style={styles.title}>REGISTRATE</Text>
         </View>
         <View style={styles.inputContainer}>
           <TextInput
@@ -59,8 +57,10 @@ export default class SignUpScreen extends React.Component {
             style={styles.nextButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
+            onPress={() => this.props.navigation.navigate('SignUp2')}
           >
             <Text
+              style={styles.nextButtonText}
               theme={{
                 colors: {
                   text: '#FFFFFF'
@@ -77,29 +77,47 @@ export default class SignUpScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  titleContainer: {
+    flex: 2.5,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
   title: {
     fontSize: 22,
-    marginTop: 10
+    marginTop: 10,
+    color: theme.PRIMARY_COLOR,
+    fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   inputContainer: {
-    //flex: 1
+    flex: 5,
+    alignItems: 'center'
   },
   input: {
     backgroundColor: 'transparent',
     width: 260
   },
-  nextButtonContainer: {
-    alignItems: 'center',
-    //margin: 20,
-    //marginTop: 30,
-    flex: 1
-  },
-  nextButton: {
-    //width: 280
-  },
   helpText: {
     color: 'grey',
     width: 260,
-    fontSize: 12
+    fontSize: 12,
+    marginTop: 8
+  },
+  nextButtonContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: 30
+  },
+  nextButton: {
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    height: 50
+  },
+  nextButtonText: {
+    fontSize: 16
   }
 });

@@ -23,16 +23,14 @@ export default class LoginScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+      <View style={styles.container}>
         <Logo />
-        <View style={{ alignItems: 'center' }}>
+        <View style={styles.titleContainer}>
           <Image
             style={{ width: 80, height: 80 }}
             source={require('../../assets/user-128.png')}
           />
-          <Text style={[styles.title, { color: theme.PRIMARY_COLOR }]}>
-            INGRESÁ
-          </Text>
+          <Text style={styles.title}>INGRESÁ</Text>
         </View>
         <View style={styles.inputContainer}>
           <TextInput
@@ -51,7 +49,7 @@ export default class LoginScreen extends React.Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={{ marginBottom: 8 }}
+            style={styles.buttonFirst}
             onPress={() => {
               this.props.navigation.navigate('ForgetPassword');
             }}
@@ -94,12 +92,23 @@ export default class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  titleContainer: {
+    flex: 3.5,
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
   title: {
     fontSize: 22,
-    marginTop: 10
+    marginTop: 10,
+    color: theme.PRIMARY_COLOR,
+    fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   inputContainer: {
-    flex: 1,
+    flex: 3,
     alignItems: 'center',
     justifyContent: 'flex-start'
   },
@@ -108,14 +117,20 @@ const styles = StyleSheet.create({
     width: 260
   },
   buttonContainer: {
+    flex: 1,
     alignItems: 'center',
     paddingTop: 10
   },
   button: {
     color: 'red'
   },
+  buttonFirst: {
+    marginBottom: 8
+  },
   loginButtonContainer: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     margin: 20,
     marginTop: 30
   },

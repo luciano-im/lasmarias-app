@@ -10,6 +10,7 @@ import EmptyHeader from './auth/components/EmptyHeader';
 import AuthLoadingScreen from './AuthLoading';
 import LoginScreen from './auth/Login';
 import SignUpScreen from './auth/SignUp';
+import SignUpScreen2 from './auth/SignUp-2';
 import HomeScreen from './app/Home';
 import SearchCustomerScreen from './app/SearchCustomer';
 // import AccountBalanceScreen from './app/AccountBalance';
@@ -24,6 +25,12 @@ const AuthStack = createStackNavigator(
     },
     SignUp: {
       screen: SignUpScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <EmptyHeader />
+      })
+    },
+    SignUp2: {
+      screen: SignUpScreen2,
       navigationOptions: ({ navigation }) => ({
         header: <EmptyHeader />
       })
