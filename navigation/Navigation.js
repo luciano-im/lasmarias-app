@@ -88,37 +88,28 @@ const HomeStack = createStackNavigator(
   }
 );
 
-// const AppNavigation = createDrawerNavigator(
-//   {
-//     Home: {
-//       screen: HomeStack,
-//       navigationOptions: {
-//         drawerLabel: 'Home',
-//         drawerIcon: ({ tintColor }) => (
-//           <List.Icon color={tintColor} icon="home" />
-//         )
-//       }
-//     },
-//     AccountBalance: {
-//       screen: AccountBalanceStack,
-//       navigationOptions: {
-//         drawerLabel: 'Saldo de Cuenta',
-//         drawerIcon: ({ tintColor }) => (
-//           <List.Icon color={tintColor} icon="attach-money" />
-//         )
-//       }
-//     }
-//   },
-//   {
-//     initialRouteName: 'Home'
-//   }
-// );
+const AppDrawer = createDrawerNavigator(
+  {
+    Home: {
+      screen: HomeStack,
+      navigationOptions: {
+        drawerLabel: 'Home',
+        drawerIcon: ({ tintColor }) => (
+          <List.Icon color={tintColor} icon="home" />
+        )
+      }
+    }
+  },
+  {
+    initialRouteName: 'Home'
+  }
+);
 
 const AppNavigation = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     Auth: AuthStack,
-    App: HomeStack
+    App: AppDrawer
   },
   {
     initialRouteName: 'AuthLoading'

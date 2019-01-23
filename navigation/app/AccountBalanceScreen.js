@@ -1,15 +1,6 @@
 import React from 'react';
-import {
-  AsyncStorage,
-  StyleSheet,
-  View
-} from 'react-native';
-import {
-  Divider,
-  IconButton,
-  List,
-  Text
-} from 'react-native-paper';
+import { AsyncStorage, StyleSheet, View } from 'react-native';
+import { Divider, IconButton, List, Text } from 'react-native-paper';
 import { fetchAccountBalance } from '../helpers/api';
 import { theme } from '../helpers/styles';
 
@@ -24,7 +15,7 @@ export default class AccountBalanceScreen extends React.Component {
   }
 
   // AsyncStorage functions
-  _getCustomer = async (user) => {
+  _getCustomer = async user => {
     try {
       const customer = await AsyncStorage.getItem('@Customer');
       if (customer !== null) {
@@ -34,10 +25,8 @@ export default class AccountBalanceScreen extends React.Component {
     } catch (error) {
       console.log('Error retrieving data: ' + error);
     }
-  }
+  };
   //////////
-
-
 
   async componentDidMount() {
     // Get customers from AsyncStorage
@@ -53,26 +42,46 @@ export default class AccountBalanceScreen extends React.Component {
   render() {
     const balance = this.state.balance;
     let balanceText;
-    if(balance < 0) {
-      balanceText = <Text>Saldo Deudor:</Text>
+    if (balance < 0) {
+      balanceText = <Text>Saldo Deudor:</Text>;
     } else if (balance > 0) {
-      balanceText = <Text>Saldo Acreedor:</Text>
+      balanceText = <Text>Saldo Acreedor:</Text>;
     } else {
-      balanceText = <Text>Saldo:</Text>
+      balanceText = <Text>Saldo:</Text>;
     }
 
     return (
       <View style={styles.container}>
         <List.Item
           title={this.state.customerName}
-          left={(props) => (<List.Icon {...props} icon='person' color='white' style={{margin:4}} />)}
-          right={(props) => (<List.Icon {...props} icon='attach-money' color='white' style={{margin:4}} />)}
-          theme={{colors: {text: '#FFFFFF'}}}
-          style={[styles.customer, {backgroundColor: theme.ACCENT_COLOR}]} />
-        <View style={[styles.titleContainer, {backgroundColor: theme.PRIMARY_COLOR}]}>
-          <Text
-            theme={{colors: {text: '#FFFFFF'}}}
-            style={styles.title}>ESTADO DE CUENTA</Text>
+          left={props => (
+            <List.Icon
+              {...props}
+              icon="person"
+              color="white"
+              style={{ margin: 4 }}
+            />
+          )}
+          right={props => (
+            <List.Icon
+              {...props}
+              icon="attach-money"
+              color="white"
+              style={{ margin: 4 }}
+            />
+          )}
+          theme={{ colors: { text: '#FFFFFF' } }}
+          style={[styles.customer, { backgroundColor: theme.ACCENT_COLOR }]}
+        />
+        <View
+          style={[
+            styles.titleContainer,
+            { backgroundColor: theme.PRIMARY_COLOR }
+          ]}
+        >
+          <Text theme={{ colors: { text: '#FFFFFF' } }} style={styles.title}>
+            ESTADO DE CUENTA
+          </Text>
         </View>
         <View style={styles.balance}>
           {balanceText}
@@ -86,7 +95,7 @@ export default class AccountBalanceScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   customer: {
     padding: 0,

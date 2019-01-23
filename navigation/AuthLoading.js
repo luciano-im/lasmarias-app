@@ -9,7 +9,7 @@ export default class AuthLoadingScreen extends React.Component {
 
   // TODO: develop a real check function
   _checkLogin = () => {
-    const logged = false;
+    const logged = true;
 
     this.props.navigation.navigate(logged ? 'App' : 'Auth');
   };
