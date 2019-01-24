@@ -1,9 +1,8 @@
 import React from 'react';
 import { AsyncStorage, StyleSheet, View } from 'react-native';
-import { IconButton, List } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
-import BigButton from '../../components/BigButton';
 import SelectCustomer from '../../components/SelectCustomer';
+import CategoryFilter from './components/CategoryFilter';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -40,6 +39,7 @@ export default class HomeScreen extends React.Component {
           navigation={this.props.navigation}
           screenProps={this.props.screenProps}
         />
+        <CategoryFilter />
       </View>
     );
   }
