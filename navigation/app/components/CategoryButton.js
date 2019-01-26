@@ -11,12 +11,13 @@ export default class CategoryButton extends React.Component {
     const image = this.props.image;
     const category = this.props.category;
     const label = this.props.label;
+    const imageSize = size - (size * 40) / 100;
 
     // const isIOS = Platform.OS === 'ios';
     // const fontFamily = isIOS ? 'HelveticaNeue-Medium' : 'sans-serif-medium';
 
     return (
-      <View style={{ width: size + 20 }}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
         <Surface
           style={[
             styles.button,
@@ -32,17 +33,19 @@ export default class CategoryButton extends React.Component {
           <TouchableRipple
             borderless
             onPress={() => this.props.onPress(category)}
-            style={{
-              borderWidth: 1,
-              borderColor: borderColor,
-              width: size,
-              height: size,
-              borderRadius: size
-            }}
+            style={[
+              styles.touchable,
+              {
+                borderColor: borderColor,
+                width: size,
+                height: size,
+                borderRadius: size
+              }
+            ]}
           >
-            <View style={styles.content}>
+            <View>
               <Image
-                //style={{ width: 80, height: 80 }}
+                style={{ width: imageSize, height: imageSize }}
                 source={image}
               />
             </View>
@@ -60,15 +63,16 @@ const styles = StyleSheet.create({
   button: {
     borderStyle: 'solid'
   },
-  content: {
-    flexDirection: 'column',
+  touchable: {
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'center',
+    borderWidth: 1
   },
   label: {
     textAlign: 'center',
     marginTop: 9,
-    marginHorizontal: 16,
+    marginHorizontal: 4,
     fontSize: 14
   }
 });
