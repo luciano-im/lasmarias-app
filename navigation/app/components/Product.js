@@ -1,6 +1,7 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Divider, Text } from 'react-native-paper';
+import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
 
 //TODO: Receive data and make to work "detail" link
@@ -20,10 +21,9 @@ export default class Product extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>HOLA</Text>
-        <view style={styles.imageContainer}>
-          <Image style={styles.image} source={image} />
-        </view>
+        <View style={styles.imageContainer}>
+          <Image style={styles.image} source={image} resizeMode="contain" />
+        </View>
         <View style={styles.dataContainer}>
           <View style={styles.nameContainer}>
             <Text style={styles.name}>
@@ -34,11 +34,26 @@ export default class Product extends React.Component {
           </View>
           <View style={styles.priceContainer}>
             <View style={styles.priceDetail}>
-              <Button style={styles.button}>Ver detalle</Button>
+              <TouchableOpacity
+                onPress={() => console.log('click')}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Ver detalle</Text>
+              </TouchableOpacity>
               <Text style={styles.price}>${price}</Text>
             </View>
             <View style={styles.addProductContainer}>
-              <Button style={styles.addButton}>Carrito</Button>
+              <TouchableOpacity
+                onPress={() => console.log('click')}
+                style={styles.addButton}
+              >
+                <MaterialIcons
+                  name="shopping-cart"
+                  size={32}
+                  color={theme.PRIMARY_COLOR}
+                />
+                <Text style={styles.addButtonText}>AGREGAR</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -49,19 +64,62 @@ export default class Product extends React.Component {
 
 styles = StyleSheet.create({
   container: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  imageContainer: {
     flex: 1
   },
-  imageContainer: {},
-  image: {},
-  dataContainer: {},
+  image: {
+    flex: 1,
+    width: undefined,
+    height: undefined
+  },
+  dataContainer: {
+    flex: 2,
+    flexDirection: 'column',
+    padding: 10
+  },
   nameContainer: {},
-  name: {},
-  category: {},
-  unit: {},
-  priceContainer: {},
+  name: {
+    fontSize: 16
+  },
+  category: {
+    color: '#CCC'
+  },
+  unit: {
+    color: '#CCC'
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginTop: 20
+  },
   priceDetail: {},
-  button: {},
-  price: {},
+  button: {
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    backgroundColor: theme.PRIMARY_COLOR,
+    alignItems: 'center',
+    width: 100
+  },
+  buttonText: {
+    color: '#FFF'
+  },
+  price: {
+    fontSize: 28,
+    fontWeight: theme.FONT_WEIGHT_BOLD
+  },
   addProductContainer: {},
-  addButton: {}
+  addButton: {
+    alignItems: 'center',
+    marginRight: 5,
+    marginBottom: 5
+  },
+  addButtonText: {
+    color: theme.PRIMARY_COLOR,
+    fontSize: 12,
+    fontWeight: theme.FONT_WEIGHT_MEDIUM
+  }
 });

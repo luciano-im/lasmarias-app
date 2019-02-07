@@ -1,6 +1,6 @@
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { Divider, Text } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
 import SelectCustomer from '../../components/SelectCustomer';
 import CategoryFilter from './components/CategoryFilter';
@@ -68,7 +68,7 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showError: false
+      //showError: false
     };
   }
 
@@ -76,8 +76,8 @@ export default class HomeScreen extends React.Component {
 
   _renderItem = ({ item }) => (
     <Product
-      name={item.name}
-      brand={item.name}
+      name={item.name.toUpperCase()}
+      brand={item.brand.toUpperCase()}
       category={item.category}
       price={item.price}
       unit={item.unit}
@@ -87,7 +87,7 @@ export default class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <SelectCustomer
           navigation={this.props.navigation}
           screenProps={this.props.screenProps}
@@ -98,12 +98,15 @@ export default class HomeScreen extends React.Component {
         </View>
         <View style={styles.listContainer}>
           <FlatList
-            data={this.productData}
+            ItemSeparatorComponent={() => (
+              <View style={{ height: 6, backgroundColor: '#EEE' }} />
+            )}
+            data={productData}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
           />
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
