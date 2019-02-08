@@ -35,7 +35,7 @@ export default class Product extends React.Component {
           <View style={styles.priceContainer}>
             <View style={styles.priceDetail}>
               <TouchableOpacity
-                onPress={() => console.log('click')}
+                onPress={() => this.props.onPress(this.props.item)}
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>Ver detalle</Text>

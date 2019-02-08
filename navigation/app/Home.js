@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
+import { Modal, Portal, Text } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
 import SelectCustomer from '../../components/SelectCustomer';
 import CategoryFilter from './components/CategoryFilter';
@@ -68,9 +68,22 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //showError: false
+      isModalVisible: false,
+      selectedItem: null
     };
   }
+
+  _onPressItem = item => {
+    this._showModal(item);
+  };
+
+  _showModal = selectedItem => {
+    this.setState({ isModalVisible: true, selectedItem });
+  };
+
+  _hideModal = () => {
+    this.setState({ isModalVisible: false });
+  };
 
   _keyExtractor = (item, index) => item.id;
 
@@ -82,6 +95,8 @@ export default class HomeScreen extends React.Component {
       price={item.price}
       unit={item.unit}
       image={item.image}
+      item={item}
+      onPress={this._onPressItem}
     />
   );
 
@@ -106,6 +121,14 @@ export default class HomeScreen extends React.Component {
             renderItem={this._renderItem}
           />
         </View>
+        <Portal>
+          <Modal
+            visible={this.state.isModalVisible}
+            onDismiss={this._hideModal}
+          >
+            <Text>Example Modal</Text>
+          </Modal>
+        </Portal>
       </ScrollView>
     );
   }
