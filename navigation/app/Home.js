@@ -5,6 +5,7 @@ import { theme } from '../../helpers/styles';
 import SelectCustomer from '../../components/SelectCustomer';
 import CategoryFilter from './components/CategoryFilter';
 import Product from './components/Product';
+import ProductDetailModal from './components/ProductDetailModal';
 
 const productData = [
   {
@@ -14,7 +15,13 @@ const productData = [
     category: 'Frescos y Congelados',
     price: 55.0,
     unit: '2,5 Kg',
-    image: require('../../assets/products/mortadela-225.jpg')
+    image: require('../../assets/products/mortadela-225.jpg'),
+    gallery: [
+      require('../../assets/products/mortadela-225.jpg'),
+      require('../../assets/products/yerba-225.jpg'),
+      require('../../assets/products/jugo-225.jpg'),
+      require('../../assets/products/galletitas-225.jpg')
+    ]
   },
   {
     id: 2,
@@ -85,7 +92,7 @@ export default class HomeScreen extends React.Component {
     this.setState({ isModalVisible: false });
   };
 
-  _keyExtractor = (item, index) => item.id;
+  _keyExtractor = (item, index) => item.id.toString();
 
   _renderItem = ({ item }) => (
     <Product
@@ -121,12 +128,16 @@ export default class HomeScreen extends React.Component {
             renderItem={this._renderItem}
           />
         </View>
-        <Portal>
+        <Portal style={styles.modal}>
           <Modal
             visible={this.state.isModalVisible}
             onDismiss={this._hideModal}
+            style={styles.modal}
           >
-            <Text>Example Modal</Text>
+            <ProductDetailModal
+              data={this.state.selectedItem}
+              onDismiss={this._hideModal}
+            />
           </Modal>
         </Portal>
       </ScrollView>
@@ -148,6 +159,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   listContainer: {
+    flex: 1
+  },
+  modal: {
     flex: 1
   }
 });

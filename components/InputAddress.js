@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   Button,
   Divider,
@@ -23,39 +20,46 @@ export default class InputAddress extends React.Component {
 
   _hideModal = () => {
     this.props.onDismiss(false);
-  }
+  };
 
   _handleInputAddress = () => {
     this.props.onSelect(this.state.queryString);
     this.props.onDismiss(false);
-  }
+  };
 
   render() {
-    const {visible} = this.props;
+    const { visible } = this.props;
 
     return (
       <Portal>
-        <Modal visible={visible} onDismiss={this._hideModal} style={styles.container}>
+        <Modal
+          visible={visible}
+          onDismiss={this._hideModal}
+          style={styles.container}
+        >
           <View style={styles.modalContainer}>
             <View style={styles.modalInner}>
               <Text style={styles.title}>{this.props.title.toUpperCase()}</Text>
               <Divider />
               <TextInput
                 style={styles.input}
-                mode='flat'
+                mode="flat"
                 label={this.props.title}
                 value={this.state.queryString}
-                onChangeText={text => this.setState({
-                  queryString: text
-                })} />
+                onChangeText={text =>
+                  this.setState({
+                    queryString: text
+                  })
+                }
+              />
               <View style={styles.buttonContainer}>
                 <Button
                   style={styles.button}
-                  icon='check'
-                  mode='contained'
+                  icon="check"
+                  mode="contained"
                   compact={true}
-                  onPress={() => this._handleInputAddress()}>
-                </Button>
+                  onPress={() => this._handleInputAddress()}
+                />
               </View>
             </View>
           </View>
@@ -67,7 +71,7 @@ export default class InputAddress extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   modalContainer: {
     flex: 1,
