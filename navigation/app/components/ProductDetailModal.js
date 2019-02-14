@@ -3,7 +3,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
-import ImageSlider from '../../../components/ImageSlider';
+import Slider from '../../../components/Slider2';
 
 // //TODO: Receive data and make to work "detail" link
 export default class ProductDetailModal extends React.Component {
@@ -30,7 +30,7 @@ export default class ProductDetailModal extends React.Component {
               source={data.image}
               resizeMode="contain"
             /> */}
-            <ImageSlider images={data.gallery} />
+            <Slider images={data.gallery} />
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.name}>

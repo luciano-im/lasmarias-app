@@ -5,12 +5,13 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  ScrollView
+  ScrollView,
+  Text
 } from 'react-native';
 
-const deviceWidth = Dimensions.get('window').width;
-const FIXED_BAR_WIDTH = 280;
-const BAR_SPACE = 10;
+// const deviceWidth = Dimensions.get('window').width;
+// const FIXED_BAR_WIDTH = 280;
+// const BAR_SPACE = 10;
 
 // const images = [
 //   'https://s-media-cache-ak0.pinimg.com/originals/ee/51/39/ee5139157407967591081ee04723259a.png',
@@ -21,74 +22,96 @@ const BAR_SPACE = 10;
 export default class ImageSlider extends Component {
   constructor(props) {
     super(props);
-    //this.state = {};
-    const { images } = this.props;
-    console.log(images);
   }
 
-  numItems = images.length;
-  itemWidth = FIXED_BAR_WIDTH / this.numItems - (this.numItems - 1) * BAR_SPACE;
-  animVal = new Animated.Value(0);
+  // numItems = images.length;
+  // itemWidth = FIXED_BAR_WIDTH / this.numItems - (this.numItems - 1) * BAR_SPACE;
+  // animVal = new Animated.Value(0);
+
+  // render() {
+  //   let imageArray = [];
+  //   let barArray = [];
+  //   this.images.forEach((image, i) => {
+  //     console.log(image, i);
+  //     const thisImage = (
+  //       <Image
+  //         key={`image${i}`}
+  //         source={{ uri: image }}
+  //         style={{ width: deviceWidth }}
+  //       />
+  //     );
+  //     imageArray.push(thisImage);
+
+  //     const scrollBarVal = this.animVal.interpolate({
+  //       inputRange: [deviceWidth * (i - 1), deviceWidth * (i + 1)],
+  //       outputRange: [-this.itemWidth, this.itemWidth],
+  //       extrapolate: 'clamp'
+  //     });
+
+  //     const thisBar = (
+  //       <View
+  //         key={`bar${i}`}
+  //         style={[
+  //           styles.track,
+  //           {
+  //             width: this.itemWidth,
+  //             marginLeft: i === 0 ? 0 : BAR_SPACE
+  //           }
+  //         ]}
+  //       >
+  //         <Animated.View
+  //           style={[
+  //             styles.bar,
+  //             {
+  //               width: this.itemWidth,
+  //               transform: [{ translateX: scrollBarVal }]
+  //             }
+  //           ]}
+  //         />
+  //       </View>
+  //     );
+  //     barArray.push(thisBar);
+  //   });
+
+  //   return (
+  //     <View style={styles.container}>
+  //       <ScrollView
+  //         horizontal
+  //         showsHorizontalScrollIndicator={false}
+  //         scrollEventThrottle={10}
+  //         pagingEnabled
+  //         onScroll={Animated.event([
+  //           { nativeEvent: { contentOffset: { x: this.animVal } } }
+  //         ])}
+  //       >
+  //         {imageArray}
+  //       </ScrollView>
+  //       <View style={styles.barContainer}>{barArray}</View>
+  //     </View>
+  //   );
+  // }
 
   render() {
+    const { images } = this.props;
     let imageArray = [];
-    let barArray = [];
-    images.forEach((image, i) => {
-      console.log(image, i);
+
+    images.map((item, index) => {
       const thisImage = (
+        // <Text>{item}</Text>
         <Image
-          key={`image${i}`}
-          source={{ uri: image }}
-          style={{ width: deviceWidth }}
+          key={`image${index}`}
+          source={item}
+          style={{ width: undefined }}
         />
       );
       imageArray.push(thisImage);
-
-      const scrollBarVal = this.animVal.interpolate({
-        inputRange: [deviceWidth * (i - 1), deviceWidth * (i + 1)],
-        outputRange: [-this.itemWidth, this.itemWidth],
-        extrapolate: 'clamp'
-      });
-
-      const thisBar = (
-        <View
-          key={`bar${i}`}
-          style={[
-            styles.track,
-            {
-              width: this.itemWidth,
-              marginLeft: i === 0 ? 0 : BAR_SPACE
-            }
-          ]}
-        >
-          <Animated.View
-            style={[
-              styles.bar,
-              {
-                width: this.itemWidth,
-                transform: [{ translateX: scrollBarVal }]
-              }
-            ]}
-          />
-        </View>
-      );
-      barArray.push(thisBar);
     });
 
     return (
       <View style={styles.container}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={10}
-          pagingEnabled
-          onScroll={Animated.event([
-            { nativeEvent: { contentOffset: { x: this.animVal } } }
-          ])}
-        >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {imageArray}
         </ScrollView>
-        <View style={styles.barContainer}>{barArray}</View>
       </View>
     );
   }
@@ -99,23 +122,23 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  barContainer: {
-    position: 'absolute',
-    zIndex: 2,
-    top: 40,
-    flexDirection: 'row'
-  },
-  track: {
-    backgroundColor: '#ccc',
-    overflow: 'hidden',
-    height: 2
-  },
-  bar: {
-    backgroundColor: '#5294d6',
-    height: 2,
-    position: 'absolute',
-    left: 0,
-    top: 0
   }
+  // barContainer: {
+  //   position: 'absolute',
+  //   zIndex: 2,
+  //   top: 40,
+  //   flexDirection: 'row'
+  // },
+  // track: {
+  //   backgroundColor: '#ccc',
+  //   overflow: 'hidden',
+  //   height: 2
+  // },
+  // bar: {
+  //   backgroundColor: '#5294d6',
+  //   height: 2,
+  //   position: 'absolute',
+  //   left: 0,
+  //   top: 0
+  // }
 });
