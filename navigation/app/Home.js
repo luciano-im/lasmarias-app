@@ -30,7 +30,13 @@ const productData = [
     category: 'Almacen',
     price: 89.6,
     unit: '1 Kg',
-    image: require('../../assets/products/yerba-225.jpg')
+    image: require('../../assets/products/yerba-225.jpg'),
+    gallery: [
+      require('../../assets/products/yerba-225.jpg'),
+      require('../../assets/products/jugo-225.jpg'),
+      require('../../assets/products/galletitas-225.jpg'),
+      require('../../assets/products/queso-225.jpg')
+    ]
   },
   {
     id: 3,
@@ -39,7 +45,12 @@ const productData = [
     category: 'Bebidas',
     price: 38.99,
     unit: 'Caja',
-    image: require('../../assets/products/jugo-225.jpg')
+    image: require('../../assets/products/jugo-225.jpg'),
+    gallery: [
+      require('../../assets/products/jugo-225.jpg'),
+      require('../../assets/products/mortadela-225.jpg'),
+      require('../../assets/products/cerveza-225.jpg')
+    ]
   },
   {
     id: 4,
@@ -48,7 +59,11 @@ const productData = [
     category: 'Almacen',
     price: 238.25,
     unit: 'Pack',
-    image: require('../../assets/products/galletitas-225.jpg')
+    image: require('../../assets/products/galletitas-225.jpg'),
+    gallery: [
+      require('../../assets/products/galletitas-225.jpg'),
+      require('../../assets/products/yerba-225.jpg')
+    ]
   },
   {
     id: 5,
@@ -57,7 +72,8 @@ const productData = [
     category: 'Frescos y Congelados',
     price: 181.75,
     unit: '1 Kg',
-    image: require('../../assets/products/queso-225.jpg')
+    image: require('../../assets/products/queso-225.jpg'),
+    gallery: [require('../../assets/products/queso-225.jpg')]
   },
   {
     id: 6,
@@ -66,7 +82,14 @@ const productData = [
     category: 'Bebidas',
     price: 305.0,
     unit: 'Pack x 6 unidades',
-    image: require('../../assets/products/cerveza-225.jpg')
+    image: require('../../assets/products/cerveza-225.jpg'),
+    gallery: [
+      require('../../assets/products/cerveza-225.jpg'),
+      require('../../assets/products/queso-225.jpg'),
+      require('../../assets/products/galletitas-225.jpg'),
+      require('../../assets/products/yerba-225.jpg'),
+      require('../../assets/products/mortadela-225.jpg')
+    ]
   }
 ];
 

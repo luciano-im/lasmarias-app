@@ -3,15 +3,10 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
-import Slider from '../../../components/Slider2';
+import Slider from '../../../components/ImageSlider';
 
 // //TODO: Receive data and make to work "detail" link
 export default class ProductDetailModal extends React.Component {
-  constructor(props) {
-    super(props);
-    //this.state = {};
-  }
-
   render() {
     const { data } = this.props;
     return (
@@ -25,11 +20,6 @@ export default class ProductDetailModal extends React.Component {
             style={styles.close}
           />
           <View style={styles.imageContainer}>
-            {/* <Image
-              style={styles.image}
-              source={data.image}
-              resizeMode="contain"
-            /> */}
             <Slider images={data.gallery} />
           </View>
           <View style={styles.infoContainer}>
@@ -65,7 +55,8 @@ export default class ProductDetailModal extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    overflow: 'hidden'
   },
   modalInner: {
     backgroundColor: 'white',
@@ -79,11 +70,11 @@ const styles = StyleSheet.create({
     height: 25,
     position: 'absolute',
     right: 10,
-    top: 10
+    top: 10,
+    zIndex: 2
   },
   imageContainer: {
-    alignItems: 'center',
-    marginBottom: 30
+    alignItems: 'center'
   },
   image: {
     width: 150,
