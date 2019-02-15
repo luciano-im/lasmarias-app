@@ -103,6 +103,10 @@ export default class HomeScreen extends React.Component {
     };
   }
 
+  _navigateCheckout = () => {
+    this.props.navigation.navigate('Checkout');
+  };
+
   _onPressItem = item => {
     this._showModal(item);
   };
@@ -127,6 +131,7 @@ export default class HomeScreen extends React.Component {
       image={item.image}
       item={item}
       onPress={this._onPressItem}
+      navigateCheckout={this._navigateCheckout}
     />
   );
 
@@ -160,6 +165,7 @@ export default class HomeScreen extends React.Component {
             <ProductDetailModal
               data={this.state.selectedItem}
               onDismiss={this._hideModal}
+              navigateCheckout={this._navigateCheckout}
             />
           </Modal>
         </Portal>

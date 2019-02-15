@@ -16,6 +16,7 @@ import PasswordRecoveryScreen from './auth/PasswordRecovery';
 import PasswordRecoveryOkScreen from './auth/PasswordRecoveryOk';
 import HomeScreen from './app/Home';
 import SearchCustomerScreen from './app/SearchCustomer';
+import CheckoutScreen from './app/Checkout';
 // import AccountBalanceScreen from './app/AccountBalance';
 
 const AuthStack = createStackNavigator(
@@ -75,6 +76,12 @@ const HomeStack = createStackNavigator(
     },
     SearchCustomer: {
       screen: SearchCustomerScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="back" navigation={navigation} />
+      })
+    },
+    Checkout: {
+      screen: CheckoutScreen,
       navigationOptions: ({ navigation }) => ({
         header: <Header leftAction="back" navigation={navigation} />
       })

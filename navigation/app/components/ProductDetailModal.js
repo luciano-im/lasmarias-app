@@ -1,11 +1,11 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
 import Slider from '../../../components/ImageSlider';
 
-// //TODO: Receive data and make to work "detail" link
+// //TODO: Receive data and make to work "add" link
 export default class ProductDetailModal extends React.Component {
   render() {
     const { data } = this.props;
@@ -34,7 +34,7 @@ export default class ProductDetailModal extends React.Component {
               </View>
               <View style={styles.addProductContainer}>
                 <TouchableOpacity
-                  onPress={() => console.log('click')}
+                  onPress={() => this.props.navigateCheckout}
                   style={styles.addButton}
                 >
                   <MaterialIcons

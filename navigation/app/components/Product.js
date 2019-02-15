@@ -1,16 +1,11 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Divider, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
 
-//TODO: Receive data and make to work "detail" link
+//TODO: Receive data and make to work "add" link
 export default class Product extends React.Component {
-  constructor(props) {
-    super(props);
-    //this.state = {};
-  }
-
   render() {
     const name = this.props.name;
     const brand = this.props.brand;
@@ -44,7 +39,7 @@ export default class Product extends React.Component {
             </View>
             <View style={styles.addProductContainer}>
               <TouchableOpacity
-                onPress={() => console.log('click')}
+                onPress={() => this.props.navigateCheckout}
                 style={styles.addButton}
               >
                 <MaterialIcons
