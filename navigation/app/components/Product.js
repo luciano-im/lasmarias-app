@@ -39,7 +39,7 @@ export default class Product extends React.Component {
             </View>
             <View style={styles.addProductContainer}>
               <TouchableOpacity
-                onPress={() => this.props.navigateCheckout}
+                onPress={() => this.props.navigateCheckout()}
                 style={styles.addButton}
               >
                 <MaterialIcons
