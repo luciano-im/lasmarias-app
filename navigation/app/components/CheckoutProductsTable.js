@@ -35,20 +35,12 @@ export default class CheckoutProductsTable extends React.Component {
           <DataTable.Row>
             <DataTable.Cell>Hola</DataTable.Cell>
             <DataTable.Cell>
-              <View>
-                <IconButton
-                  icon="add-circle-outline"
-                  color={theme.PRIMARY_COLOR}
-                  size={20}
-                  onPress={() => console.log('Pressed')}
-                />
-                <IconButton
-                  icon="remove-circle-outline"
-                  color={theme.PRIMARY_COLOR}
-                  size={20}
-                  onPress={() => console.log('Pressed')}
-                />
-              </View>
+              <IconButton
+                icon="add-circle-outline"
+                color={theme.PRIMARY_COLOR}
+                size={20}
+                onPress={() => console.log('Pressed')}
+              />
             </DataTable.Cell>
             <DataTable.Cell numeric>6.0</DataTable.Cell>
           </DataTable.Row>
