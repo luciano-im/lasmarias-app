@@ -6,6 +6,7 @@ import { theme } from '../../helpers/styles';
 import SelectCustomer from '../../components/SelectCustomer';
 import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
+import DeliveryMethod from './components/DeliveryMethod';
 
 export default class CheckoutScreen extends React.Component {
   render() {
@@ -23,7 +24,9 @@ export default class CheckoutScreen extends React.Component {
             <Text style={styles.headerText}>Pedido Nº: 000128</Text>
             <Text style={styles.headerText}>Fecha: 17/10/18</Text>
           </View>
-          <View>{/* <CheckoutProductsTable /> */}</View>
+          <View>
+            <CheckoutProductsTable />
+          </View>
           <View style={styles.addProductsButtonContainer}>
             <TouchableRipple
               borderless
@@ -78,8 +81,57 @@ export default class CheckoutScreen extends React.Component {
                 el <Text style={{ color: '#555' }}>Estado de Cuenta</Text>
               </Text>
             </View>
-            <View>
+            <View style={styles.payMethod}>
               <PayMethod />
+            </View>
+            <View style={styles.deliveryMethod}>
+              <DeliveryMethod />
+            </View>
+            <View style={styles.addProductsButtonContainer}>
+              <TouchableRipple
+                borderless
+                onPress={() => console.log('Click')}
+                style={styles.addProductsButton}
+              >
+                <View style={{ flexDirection: 'row' }}>
+                  <Text
+                    theme={{
+                      colors: {
+                        text: '#FFFFFF'
+                      }
+                    }}
+                    style={styles.addProductsButtonText}
+                  >
+                    CONFIRMAR PEDIDO
+                  </Text>
+                </View>
+              </TouchableRipple>
+            </View>
+            <View style={styles.addProductsButtonContainer}>
+              <TouchableRipple
+                borderless
+                onPress={() => console.log('Click')}
+                style={styles.addProductsButton}
+              >
+                <View style={{ flexDirection: 'row' }}>
+                  <MaterialIcons
+                    name="add-circle"
+                    size={25}
+                    color="white"
+                    style={styles.addProductsButtonIcon}
+                  />
+                  <Text
+                    theme={{
+                      colors: {
+                        text: '#FFFFFF'
+                      }
+                    }}
+                    style={styles.addProductsButtonText}
+                  >
+                    AGREGAR PRODUCTOS
+                  </Text>
+                </View>
+              </TouchableRipple>
             </View>
           </View>
         </View>
@@ -103,14 +155,16 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   dataContainer: {
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    paddingBottom: 20
   },
   header: {
     flexDirection: 'row',
     marginTop: 10,
     justifyContent: 'space-between',
     borderBottomColor: '#CCC',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    marginBottom: 20
   },
   headerText: {
     fontSize: 16,
@@ -119,9 +173,8 @@ const styles = StyleSheet.create({
   addProductsButtonContainer: {
     flex: 1,
     backgroundColor: theme.ACCENT_COLOR,
-    margin: 20,
-    marginTop: 30
-    //width: 280
+    marginHorizontal: 20,
+    marginVertical: 5
   },
   addProductsButton: {
     justifyContent: 'center',
@@ -134,7 +187,9 @@ const styles = StyleSheet.create({
   addProductsButtonText: {
     fontSize: 18
   },
-  totalsContainer: {},
+  totalsContainer: {
+    marginTop: 20
+  },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -152,5 +207,12 @@ const styles = StyleSheet.create({
   },
   legend: {
     marginTop: 20
+  },
+  payMethod: {
+    marginTop: 20
+  },
+  deliveryMethod: {
+    marginTop: 5,
+    marginBottom: 20
   }
 });

@@ -2,22 +2,18 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { List, RadioButton } from 'react-native-paper';
 
-const payMethods = [
+const deliveryMethods = [
   {
     id: 1,
-    name: 'Efectivo'
+    name: 'Envío a Domicilio'
   },
   {
     id: 2,
-    name: 'Cuenta Corriente'
-  },
-  {
-    id: 3,
-    name: 'Transferencia Bancaria'
+    name: 'Retiro en el Local'
   }
 ];
 
-export default class PayMethod extends React.Component {
+export default class DeliveryMethod extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,11 +28,11 @@ export default class PayMethod extends React.Component {
       <View style={styles.container}>
         <List.Accordion
           style={styles.accordion}
-          title="Forma de Pago"
+          title="Forma de Entrega / Retiro"
           description={this.state.checked}
-          left={props => <List.Icon {...props} icon="credit-card" />}
+          left={props => <List.Icon {...props} icon="local-shipping" />}
         >
-          {payMethods.map((pay, index) => (
+          {deliveryMethods.map((pay, index) => (
             <List.Item
               key={index}
               style={styles.accordionItem}

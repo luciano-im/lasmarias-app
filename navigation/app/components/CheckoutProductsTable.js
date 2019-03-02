@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { DataTable, IconButton } from 'react-native-paper';
+import { DataTable, IconButton, Text } from 'react-native-paper';
 import { theme } from '../../../helpers/styles';
 
 const productData = [
@@ -26,29 +26,22 @@ export default class CheckoutProductsTable extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <DataTable>
+        <View style={styles.header}>
+          <Text style={styles.col1}>Producto</Text>
+          <Text style={[styles.col2, styles.centerAlign]}>Cantidad</Text>
+          <Text style={[styles.col3, styles.centerAlign]}>Importe</Text>
+        </View>
+        {/* <DataTable>
           <DataTable.Header>
             <DataTable.Title>Producto</DataTable.Title>
             <DataTable.Title numeric>Cantidad</DataTable.Title>
             <DataTable.Title numeric>Importe</DataTable.Title>
           </DataTable.Header>
-          <DataTable.Row>
-            <DataTable.Cell>Hola</DataTable.Cell>
-            <DataTable.Cell>
-              <IconButton
-                icon="add-circle-outline"
-                color={theme.PRIMARY_COLOR}
-                size={20}
-                onPress={() => console.log('Pressed')}
-              />
-            </DataTable.Cell>
-            <DataTable.Cell numeric>6.0</DataTable.Cell>
-          </DataTable.Row>
           {productData.map(product => {
             <DataTable.Row>
               <DataTable.Cell>{product.name}</DataTable.Cell>
               <DataTable.Cell>
-                {/* <IconButton
+                <IconButton
                   icon="add-circle-outline"
                   color={theme.PRIMARY_COLOR}
                   size={20}
@@ -59,13 +52,12 @@ export default class CheckoutProductsTable extends React.Component {
                   color={theme.PRIMARY_COLOR}
                   size={20}
                   onPress={() => console.log('Pressed')}
-                /> */}
-                5.0
+                />
               </DataTable.Cell>
               <DataTable.Cell numeric>6.0</DataTable.Cell>
             </DataTable.Row>;
           })}
-        </DataTable>
+        </DataTable> */}
       </View>
     );
   }
@@ -74,5 +66,26 @@ export default class CheckoutProductsTable extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  header: {
+    flexDirection: 'row',
+    borderBottomColor: '#CCC',
+    borderBottomWidth: 1
+  },
+  centerAlign: {
+    textAlign: 'center'
+  },
+  rightAlign: {
+    textAlign: 'right'
+  },
+  col1: {
+    flex: 0.5
+  },
+  col2: {
+    flex: 0.3
+  },
+  col3: {
+    flex: 0.2,
+    textAlign: 'right'
   }
 });
