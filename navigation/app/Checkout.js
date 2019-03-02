@@ -8,6 +8,7 @@ import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
 import DeliveryMethod from './components/DeliveryMethod';
 
+//TODO: Add checkout logic
 export default class CheckoutScreen extends React.Component {
   render() {
     return (
@@ -30,7 +31,7 @@ export default class CheckoutScreen extends React.Component {
           <View style={styles.addProductsButtonContainer}>
             <TouchableRipple
               borderless
-              onPress={() => console.log('Click')}
+              onPress={() => this.props.navigation.navigate('Home')}
               style={styles.addProductsButton}
             >
               <View style={{ flexDirection: 'row' }}>
@@ -90,7 +91,7 @@ export default class CheckoutScreen extends React.Component {
             <View style={styles.addProductsButtonContainer}>
               <TouchableRipple
                 borderless
-                onPress={() => console.log('Click')}
+                onPress={() => this.props.navigation.navigate('CheckoutOk')}
                 style={styles.addProductsButton}
               >
                 <View style={{ flexDirection: 'row' }}>
@@ -110,7 +111,7 @@ export default class CheckoutScreen extends React.Component {
             <View style={styles.addProductsButtonContainer}>
               <TouchableRipple
                 borderless
-                onPress={() => console.log('Click')}
+                onPress={() => this.props.navigation.navigate('Home')}
                 style={styles.addProductsButton}
               >
                 <View style={{ flexDirection: 'row' }}>

@@ -11,12 +11,13 @@ import AuthLoadingScreen from './AuthLoading';
 import LoginScreen from './auth/Login';
 import SignUpScreen from './auth/SignUp';
 import SignUp2Screen from './auth/SignUp2';
-import SignUpResultScreen from './auth/SignUpResult';
+import SignUpResultScreen from './auth/SignUpOk';
 import PasswordRecoveryScreen from './auth/PasswordRecovery';
 import PasswordRecoveryOkScreen from './auth/PasswordRecoveryOk';
 import HomeScreen from './app/Home';
 import SearchCustomerScreen from './app/SearchCustomer';
 import CheckoutScreen from './app/Checkout';
+import CheckoutOkScreen from './app/CheckoutOk';
 // import AccountBalanceScreen from './app/AccountBalance';
 
 const AuthStack = createStackNavigator(
@@ -84,6 +85,12 @@ const HomeStack = createStackNavigator(
       screen: CheckoutScreen,
       navigationOptions: ({ navigation }) => ({
         header: <Header leftAction="back" navigation={navigation} />
+      })
+    },
+    CheckoutOk: {
+      screen: CheckoutOkScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="drawer" navigation={navigation} />
       })
     }
   },

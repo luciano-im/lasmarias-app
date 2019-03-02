@@ -22,6 +22,7 @@ const productData = [
   }
 ];
 
+//TODO: Add checkout logic
 export default class CheckoutProductsTable extends React.Component {
   constructor(props) {
     super(props);
