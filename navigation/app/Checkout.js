@@ -24,7 +24,7 @@ export default class CheckoutScreen extends React.Component {
             <Text style={styles.headerText}>Pedido Nº: 000128</Text>
             <Text style={styles.headerText}>Fecha: 17/10/18</Text>
           </View>
-          <View>
+          <View style={styles.productList}>
             <CheckoutProductsTable />
           </View>
           <View style={styles.addProductsButtonContainer}>
@@ -169,6 +169,9 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 16,
     fontWeight: 'bold'
+  },
+  productList: {
+    marginBottom: 25
   },
   addProductsButtonContainer: {
     flex: 1,
