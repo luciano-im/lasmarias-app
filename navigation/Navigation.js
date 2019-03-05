@@ -18,6 +18,7 @@ import HomeScreen from './app/Home';
 import SearchCustomerScreen from './app/SearchCustomer';
 import CheckoutScreen from './app/Checkout';
 import CheckoutOkScreen from './app/CheckoutOk';
+import OrdersScreen from './app/Orders';
 // import AccountBalanceScreen from './app/AccountBalance';
 
 const AuthStack = createStackNavigator(
@@ -102,6 +103,29 @@ const HomeStack = createStackNavigator(
   }
 );
 
+const OrdersStack = createStackNavigator(
+  {
+    Orders: {
+      screen: OrdersScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="drawer" navigation={navigation} />
+      })
+    },
+    SearchCustomer: {
+      screen: SearchCustomerScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="back" navigation={navigation} />
+      })
+    }
+  },
+  {
+    initialRouteName: 'Orders',
+    cardStyle: {
+      backgroundColor: 'white'
+    }
+  }
+);
+
 const AppDrawer = createDrawerNavigator(
   {
     Home: {
@@ -110,6 +134,15 @@ const AppDrawer = createDrawerNavigator(
         drawerLabel: 'Home',
         drawerIcon: ({ tintColor }) => (
           <List.Icon color={tintColor} icon="home" />
+        )
+      }
+    },
+    Orders: {
+      screen: OrdersStack,
+      navigationOptions: {
+        drawerLabel: 'Mis Pedidos',
+        drawerIcon: ({ tintColor }) => (
+          <List.Icon color={tintColor} icon="shopping-cart" />
         )
       }
     }

@@ -51,9 +51,13 @@ export default class CheckoutProductsTable extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.row}>
-          <Text style={styles.col1}>Producto</Text>
-          <Text style={[styles.col2, styles.centerAlign]}>Cantidad</Text>
-          <Text style={[styles.col3, styles.centerAlign]}>Importe</Text>
+          <Text style={[styles.col1, styles.title]}>Producto</Text>
+          <Text style={[styles.col2, styles.centerAlign, styles.title]}>
+            Cantidad
+          </Text>
+          <Text style={[styles.col3, styles.centerAlign, styles.title]}>
+            Importe
+          </Text>
         </View>
         {productData.map((item, index) => (
           <View style={styles.row}>
@@ -103,6 +107,9 @@ const styles = StyleSheet.create({
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
     paddingVertical: 5
+  },
+  title: {
+    fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   centerAlign: {
     textAlign: 'center'
