@@ -11,7 +11,7 @@ import AuthLoadingScreen from './AuthLoading';
 import LoginScreen from './auth/Login';
 import SignUpScreen from './auth/SignUp';
 import SignUp2Screen from './auth/SignUp2';
-import SignUpResultScreen from './auth/SignUpOk';
+import SignUpOkScreen from './auth/SignUpOk';
 import PasswordRecoveryScreen from './auth/PasswordRecovery';
 import PasswordRecoveryOkScreen from './auth/PasswordRecoveryOk';
 import HomeScreen from './app/Home';
@@ -20,7 +20,11 @@ import CheckoutScreen from './app/Checkout';
 import CheckoutOkScreen from './app/CheckoutOk';
 import OrdersScreen from './app/Orders';
 import OrderDetailScreen from './app/OrderDetail';
-// import AccountBalanceScreen from './app/AccountBalance';
+import AccountBalanceScreen from './app/AccountBalance';
+import ModifyDataScreen from './app/ModifyData';
+import ModifyDataValidationScreen from './app/ModifyDataValidation';
+import ModifyDataOkScreen from './app/ModifyDataOk';
+import ModifyPasswordScreen from './app/ModifyPassword';
 
 const AuthStack = createStackNavigator(
   {
@@ -42,8 +46,8 @@ const AuthStack = createStackNavigator(
         header: <EmptyHeader />
       })
     },
-    SignUpResult: {
-      screen: SignUpResultScreen,
+    SignUpOk: {
+      screen: SignUpOkScreen,
       navigationOptions: ({ navigation }) => ({
         header: <EmptyHeader />
       })
@@ -133,12 +137,73 @@ const OrdersStack = createStackNavigator(
   }
 );
 
+const AccountStack = createStackNavigator(
+  {
+    AccountBalance: {
+      screen: AccountBalanceScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="drawer" navigation={navigation} />
+      })
+    },
+    SearchCustomer: {
+      screen: SearchCustomerScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="back" navigation={navigation} />
+      })
+    }
+  },
+  {
+    initialRouteName: 'AccountBalance',
+    cardStyle: {
+      backgroundColor: 'white'
+    }
+  }
+);
+
+const ModifyDataStack = createStackNavigator(
+  {
+    ModifyData: {
+      screen: ModifyDataScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="drawer" navigation={navigation} />
+      })
+    },
+    ModifyDataValidation: {
+      screen: ModifyDataValidationScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="back" navigation={navigation} />
+      })
+    },
+    ModifyDataOk: {
+      screen: ModifyDataOkScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <EmptyHeader />
+      })
+    }
+  },
+  {
+    initialRouteName: 'ModifyData',
+    cardStyle: {
+      backgroundColor: 'white'
+    }
+  }
+);
+
+const ModifyPasswordStack = createStackNavigator({
+  ModifyPassword: {
+    screen: ModifyPasswordScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header leftAction="drawer" navigation={navigation} />
+    })
+  }
+});
+
 const AppDrawer = createDrawerNavigator(
   {
     Home: {
       screen: HomeStack,
       navigationOptions: {
-        drawerLabel: 'Home',
+        drawerLabel: 'Inicio',
         drawerIcon: ({ tintColor }) => (
           <List.Icon color={tintColor} icon="home" />
         )
@@ -150,6 +215,33 @@ const AppDrawer = createDrawerNavigator(
         drawerLabel: 'Mis Pedidos',
         drawerIcon: ({ tintColor }) => (
           <List.Icon color={tintColor} icon="shopping-cart" />
+        )
+      }
+    },
+    Account: {
+      screen: AccountStack,
+      navigationOptions: {
+        drawerLabel: 'Estado de Cuenta',
+        drawerIcon: ({ tintColor }) => (
+          <List.Icon color={tintColor} icon="monetization-on" />
+        )
+      }
+    },
+    ModifyData: {
+      screen: ModifyDataStack,
+      navigationOptions: {
+        drawerLabel: 'Modificar mis Datos',
+        drawerIcon: ({ tintColor }) => (
+          <List.Icon color={tintColor} icon="account-box" />
+        )
+      }
+    },
+    ModifyPassword: {
+      screen: ModifyPasswordStack,
+      navigationOptions: {
+        drawerLabel: 'Cambiar Contraseña',
+        drawerIcon: ({ tintColor }) => (
+          <List.Icon color={tintColor} icon="lock" />
         )
       }
     }
