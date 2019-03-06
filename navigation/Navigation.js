@@ -19,6 +19,7 @@ import SearchCustomerScreen from './app/SearchCustomer';
 import CheckoutScreen from './app/Checkout';
 import CheckoutOkScreen from './app/CheckoutOk';
 import OrdersScreen from './app/Orders';
+import OrderDetailScreen from './app/OrderDetail';
 // import AccountBalanceScreen from './app/AccountBalance';
 
 const AuthStack = createStackNavigator(
@@ -109,6 +110,12 @@ const OrdersStack = createStackNavigator(
       screen: OrdersScreen,
       navigationOptions: ({ navigation }) => ({
         header: <Header leftAction="drawer" navigation={navigation} />
+      })
+    },
+    OrderDetail: {
+      screen: OrderDetailScreen,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header leftAction="back" navigation={navigation} />
       })
     },
     SearchCustomer: {

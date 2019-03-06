@@ -167,23 +167,13 @@ export default class OrdersScreen extends React.Component {
       <ScrollView style={styles.container}>
         <View style={styles.seller}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialIcons
-              name="person"
-              size={25}
-              color="white"
-              style={styles.addProductsButtonIcon}
-            />
+            <MaterialIcons name="person" size={25} color="white" />
             <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
               Vendedor 01
             </Text>
           </View>
           <View>
-            <MaterialIcons
-              name="assignment"
-              size={25}
-              color="white"
-              style={styles.addProductsButtonIcon}
-            />
+            <MaterialIcons name="assignment" size={25} color="white" />
           </View>
         </View>
         <View style={styles.title}>
@@ -212,7 +202,7 @@ export default class OrdersScreen extends React.Component {
         </View>
         <View style={styles.dataContainer}>
           <View style={styles.productList}>
-            <OrdersTable />
+            <OrdersTable navigation={this.props.navigation} />
           </View>
         </View>
         <DateTimePicker

@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
+import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import { theme } from '../../../helpers/styles';
 import { format, parse } from 'date-fns';
 
@@ -53,7 +53,16 @@ export default class OrdersTable extends React.Component {
             <Text style={[styles.col1, styles.centerAlign]}>
               {format(parse(item.date), 'DD/MM/YY')}
             </Text>
-            <Text style={[styles.col2, styles.centerAlign]}>{item.id}</Text>
+            <TouchableOpacity
+              style={styles.col2}
+              onPress={() => this.props.navigation.navigate('OrderDetail')}
+            >
+              <Text
+                style={[styles.centerAlign, { color: theme.PRIMARY_COLOR }]}
+              >
+                {item.id}
+              </Text>
+            </TouchableOpacity>
             <Text style={styles.col3}>{item.customer}</Text>
             <Text style={[styles.col4, styles.rightAlign]}>{item.seller}</Text>
           </View>
