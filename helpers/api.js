@@ -1,11 +1,79 @@
+import { AsyncStorage } from 'react-native';
 import { SQLite } from 'expo';
 import axios from 'axios';
+import qs from 'qs';
 import Reactotron from 'reactotron-react-native';
 
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
 const api = 'https://las-marias.localtunnel.me/';
+
+/////////
+
+_saveToken = async token => {
+  try {
+    await AsyncStorage.setItem('token', token);
+  } catch (error) {
+    Reactotron.error('Error saving Token');
+  }
+};
+
+export let _getToken = async () => {
+  try {
+    return await AsyncStorage.getItem('token');
+  } catch {
+    Reactotron.error('Error retrieving Token');
+  }
+};
+
+export let _removeToken = async () => {
+  try {
+    await AsyncStorage.removeItem('token');
+  } catch {
+    Reactotron.error('Error deleting Token');
+  }
+};
+
+/////////
+
+export let login = async (email, password) => {
+  const config = {
+    timeout: 5000,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  };
+
+  const data = {
+    email: email,
+    password: password
+  };
+
+  return await axios
+    .post(api + 'rest-auth/login/', qs.stringify(data), config)
+    .then(response => {
+      // Reactotron.log(response);
+      if (response.status === 200) {
+        this._saveToken(response.data.key);
+        return { error: false };
+      }
+    })
+    .catch(error => {
+      // Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo iniciar sesión con los datos ingresados',
+          data: error
+        };
+      }
+    });
+};
 
 export let fetchCustomers = async () => {
   // Delete table customer

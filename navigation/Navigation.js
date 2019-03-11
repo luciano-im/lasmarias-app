@@ -1,10 +1,13 @@
 import React from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import {
   createDrawerNavigator,
   createStackNavigator,
   createSwitchNavigator
 } from 'react-navigation';
+import { DrawerItems } from 'react-navigation';
 import { List } from 'react-native-paper';
+import { _removeToken } from '../helpers/api';
 import Header from '../components/Header';
 import EmptyHeader from './auth/components/EmptyHeader';
 import AuthLoadingScreen from './AuthLoading';
@@ -26,6 +29,7 @@ import ModifyDataValidationScreen from './app/ModifyDataValidation';
 import ModifyDataOkScreen from './app/ModifyDataOk';
 import ModifyPasswordScreen from './app/ModifyPassword';
 
+// TODO: Styles for drawer menu
 const AuthStack = createStackNavigator(
   {
     Login: {
@@ -247,7 +251,32 @@ const AppDrawer = createDrawerNavigator(
     }
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Home',
+    contentComponent: props => (
+      <View style={{ flex: 1 }}>
+        <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
+          <DrawerItems {...props} />
+          <View style={{ height: 172 }}>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                height: 172,
+                alignItems: 'center'
+              }}
+              onPress={async () => {
+                await _removeToken();
+                props.navigation.navigate('Auth');
+              }}
+            >
+              <List.Icon style={{ opacity: 0.62 }} icon="exit-to-app" />
+              <Text style={{ margin: 16, fontWeight: 'bold' }}>
+                Cerrar Sesión
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </View>
+    )
   }
 );
 

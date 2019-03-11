@@ -1,18 +1,13 @@
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { _getToken } from '../helpers/api';
 
+// TODO: Style ActivityIndicator and create splash screen
 export default class AuthLoadingScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this._checkLogin();
+  async componentDidMount() {
+    const token = await _getToken();
+    this.props.navigation.navigate(token !== null ? 'App' : 'Auth');
   }
-
-  // TODO: develop a real check function
-  _checkLogin = () => {
-    const logged = true;
-
-    this.props.navigation.navigate(logged ? 'App' : 'Auth');
-  };
 
   render() {
     return (
