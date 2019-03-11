@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+﻿import { AsyncStorage } from 'react-native';
 import { SQLite } from 'expo';
 import axios from 'axios';
 import qs from 'qs';
@@ -13,7 +13,7 @@ const api = 'https://las-marias.localtunnel.me/';
 
 _saveToken = async token => {
   try {
-    await AsyncStorage.setItem('token', token);
+    await AsyncStorage.setItem('Token', token);
   } catch (error) {
     Reactotron.error('Error saving Token');
   }
@@ -21,7 +21,7 @@ _saveToken = async token => {
 
 export let _getToken = async () => {
   try {
-    return await AsyncStorage.getItem('token');
+    return await AsyncStorage.getItem('Token');
   } catch {
     Reactotron.error('Error retrieving Token');
   }
@@ -29,7 +29,7 @@ export let _getToken = async () => {
 
 export let _removeToken = async () => {
   try {
-    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('Token');
   } catch {
     Reactotron.error('Error deleting Token');
   }
@@ -69,6 +69,41 @@ export let login = async (email, password) => {
         return {
           error: true,
           msg: 'No se pudo iniciar sesión con los datos ingresados',
+          data: error
+        };
+      }
+    });
+};
+
+export let logout = async () => {
+  const token = await this._getToken();
+
+  const config = {
+    timeout: 5000,
+    headers: { Authorization: 'Token ' + token }
+  };
+
+  return await axios
+    .post(api + 'rest-auth/login/', {}, config)
+    .then(response => {
+      // Reactotron.log(response);
+      if (response.status === 200) {
+        this._removeToken();
+        return { error: false };
+      }
+    })
+    .catch(error => {
+      // Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'Error al cerrar sesión',
           data: error
         };
       }

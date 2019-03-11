@@ -1,5 +1,11 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Image,
+  StyleSheet,
+  View,
+  ScrollView
+} from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
@@ -11,7 +17,8 @@ export default class SignUpScreen extends React.Component {
     super(props);
     this.state = {
       userText: '',
-      passText: ''
+      passText: '',
+      errorText: null
     };
   }
 
@@ -21,43 +28,71 @@ export default class SignUpScreen extends React.Component {
     });
   };
 
+  _navigateSignUp2 = () => {
+    if (this.state.userText === '' || this.state.passText === '') {
+      this.setState({
+        errorText: 'Debe completar Correo y Contraseña'
+      });
+    } else {
+      this.setState({
+        errorText: null
+      });
+      this.props.navigation.navigate('SignUp2', {
+        email: this.state.userText,
+        password: this.state.passText
+      });
+    }
+  };
+
   render() {
     return (
-      <View style={styles.container}>
-        <Logo />
-        <View style={styles.titleContainer}>
-          <Image
-            style={{ width: 40, height: 40 }}
-            source={require('../../assets/user-128.png')}
-          />
-          <Text style={styles.title}>REGISTRATE</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            label="Ingresá tu Correo:"
-            placeholder="Correo"
-            style={styles.input}
-            value={this.state.userText}
-            onChangeText={text => this.setState({ userText: text })}
-          />
-          <InputPassword
-            label="Ingresá tu Contraseña:"
-            value={this.state.passText}
-            onChangeText={this._onChangePassword}
-            styles={styles.input}
-          />
-          <Text style={styles.helpText}>
-            (Usa 8 o más caracteres con una combinacion de letras, números y
-            simbolos).
-          </Text>
-        </View>
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidContainer}
+        behavior="padding"
+        keyboardVerticalOffset={100}
+      >
+        <ScrollView style={styles.container}>
+          <Logo />
+          <View style={styles.titleContainer}>
+            <Image
+              style={{ width: 40, height: 40 }}
+              source={require('../../assets/user-128.png')}
+            />
+            <Text style={styles.title}>REGISTRATE</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              label="Ingresá tu Correo:"
+              placeholder="Correo"
+              autoCapitalize={'none'}
+              autoComplete="email"
+              keyboardType="email-address"
+              style={styles.input}
+              value={this.state.userText}
+              onChangeText={text => this.setState({ userText: text })}
+            />
+            <InputPassword
+              label="Ingresá tu Contraseña:"
+              value={this.state.passText}
+              onChangeText={this._onChangePassword}
+              styles={styles.input}
+            />
+            {this.state.errorText ? (
+              <Text style={styles.error}>{this.state.errorText}</Text>
+            ) : null}
+            <Text style={styles.helpText}>
+              (Usa 8 o más caracteres con una combinacion de letras, números y
+              simbolos).
+            </Text>
+          </View>
+        </ScrollView>
         <View style={styles.nextButtonContainer}>
           <Button
             mode="contained"
             style={styles.nextButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this.props.navigation.navigate('SignUp2')}
+            onPress={() => this._navigateSignUp2()}
           >
             <Text
               style={styles.nextButtonText}
@@ -71,18 +106,21 @@ export default class SignUpScreen extends React.Component {
             </Text>
           </Button>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoidContainer: {
+    flex: 1
+  },
   container: {
-    flex: 1,
-    justifyContent: 'center'
+    flex: 1
+    // justifyContent: 'center'
   },
   titleContainer: {
-    flex: 2.5,
+    flex: 3.5,
     flexDirection: 'row',
     justifyContent: 'center'
   },
@@ -93,24 +131,35 @@ const styles = StyleSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   inputContainer: {
-    flex: 5,
-    alignItems: 'center'
+    flex: 3,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 30
   },
   input: {
     backgroundColor: 'transparent',
     width: 260
   },
+  error: {
+    color: 'red',
+    marginVertical: 10,
+    textAlign: 'center',
+    width: 250
+  },
   helpText: {
     color: 'grey',
     width: 260,
-    fontSize: 12,
-    marginTop: 8
+    fontSize: 13,
+    marginTop: 10
   },
   nextButtonContainer: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginTop: 30
+    justifyContent: 'center',
+    marginTop: 30,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%'
   },
   nextButton: {
     alignSelf: 'stretch',

@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  AsyncStorage,
+  BackHandler,
   Image,
   KeyboardAvoidingView,
   ScrollView,
@@ -9,6 +11,7 @@ import {
 import { Button, Text, TextInput } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
+import Reactotron from 'reactotron-react-native';
 
 // TODO: add sign up logic
 export default class SignUp2Screen extends React.Component {
@@ -24,6 +27,50 @@ export default class SignUp2Screen extends React.Component {
       cityText: '',
       zipText: ''
     };
+  }
+
+  _saveData = async () => {
+    try {
+      await AsyncStorage.setItem('SignUpData', JSON.stringify(this.state));
+    } catch (error) {
+      Reactotron.error('Error saving data');
+    }
+    this.props.navigation.goBack();
+  };
+
+  _getData = async () => {
+    try {
+      return await AsyncStorage.getItem('SignUpData');
+    } catch (error) {
+      Reactotron.error('Error retrieving data');
+    }
+  };
+
+  _removeData = async () => {
+    try {
+      await AsyncStorage.removeItem('SignUpData');
+    } catch (error) {
+      Reactotron.error('Error deleting data');
+    }
+  };
+
+  _signUp = () => {
+    this._removeData();
+    this.props.navigation.navigate('SignUpResult');
+  };
+
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this._saveData);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this._saveData);
+  }
+
+  async componentDidMount() {
+    const data = await this._getData();
+    await this._removeData();
+    this.setState(JSON.parse(data));
   }
 
   render() {
@@ -68,6 +115,8 @@ export default class SignUp2Screen extends React.Component {
             <TextInput
               label="Teléfono"
               placeholder="Teléfono"
+              autoComplete="tel"
+              keyboardType="number-pad"
               style={styles.input}
               value={this.state.telText}
               onChangeText={text => this.setState({ telText: text })}
@@ -75,6 +124,8 @@ export default class SignUp2Screen extends React.Component {
             <TextInput
               label="Celular"
               placeholder="Celular"
+              autoComplete="tel"
+              keyboardType="number-pad"
               style={styles.input}
               value={this.state.celText}
               onChangeText={text => this.setState({ celText: text })}
@@ -82,6 +133,7 @@ export default class SignUp2Screen extends React.Component {
             <TextInput
               label="Dirección del Comercio"
               placeholder="Dirección del Comercio"
+              autoComplete="street-address"
               style={styles.input}
               value={this.state.addressText}
               onChangeText={text => this.setState({ addressText: text })}
@@ -96,6 +148,7 @@ export default class SignUp2Screen extends React.Component {
             <TextInput
               label="Código Postal"
               placeholder="Código Postal"
+              autoComplete="postal-code"
               style={styles.input}
               value={this.state.zipText}
               onChangeText={text => this.setState({ zipText: text })}
@@ -107,7 +160,7 @@ export default class SignUp2Screen extends React.Component {
               style={styles.nextButton}
               color={theme.ACCENT_COLOR}
               theme={{ roundness: 0 }}
-              onPress={() => this.props.navigation.navigate('SignUpResult')}
+              onPress={() => this._signUp()}
             >
               <Text
                 style={styles.nextButtonText}

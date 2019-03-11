@@ -7,7 +7,7 @@ import {
 } from 'react-navigation';
 import { DrawerItems } from 'react-navigation';
 import { List } from 'react-native-paper';
-import { _removeToken } from '../helpers/api';
+import { logout } from '../helpers/api';
 import Header from '../components/Header';
 import EmptyHeader from './auth/components/EmptyHeader';
 import AuthLoadingScreen from './AuthLoading';
@@ -264,8 +264,11 @@ const AppDrawer = createDrawerNavigator(
                 alignItems: 'center'
               }}
               onPress={async () => {
-                await _removeToken();
-                props.navigation.navigate('Auth');
+                await logout().then(response => {
+                  if (response.error === false) {
+                    props.navigation.navigate('Auth');
+                  }
+                });
               }}
             >
               <List.Icon style={{ opacity: 0.62 }} icon="exit-to-app" />
