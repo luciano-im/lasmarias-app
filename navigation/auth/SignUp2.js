@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
+import { signUp, saveUserProfile } from '../../helpers/api';
 import Logo from '../../components/Logo';
 import Reactotron from 'reactotron-react-native';
 
@@ -25,7 +26,8 @@ export default class SignUp2Screen extends React.Component {
       celText: '',
       addressText: '',
       cityText: '',
-      zipText: ''
+      zipText: '',
+      errorText: null
     };
   }
 
@@ -54,9 +56,26 @@ export default class SignUp2Screen extends React.Component {
     }
   };
 
-  _signUp = () => {
+  _signUp = async () => {
+    const email = await this.props.navigation.getParam('email');
+    const password = await this.props.navigation.getParam('password');
+    const password2 = await this.props.navigation.getParam('password2');
+
     this._removeData();
-    this.props.navigation.navigate('SignUpResult');
+
+    await signUp(email, password, password2).then(response => {
+      Reactotron.log(response);
+      if (response.error === false) {
+        await saveUserProfile(email, this.state).then(response => {
+          Reactotron.log(response);
+        });
+        // this.props.navigation.navigate('SignUpResult');
+      } else {
+        this.setState({
+          errorText: response.msg
+        });
+      }
+    });
   };
 
   componentWillMount() {
@@ -153,6 +172,9 @@ export default class SignUp2Screen extends React.Component {
               value={this.state.zipText}
               onChangeText={text => this.setState({ zipText: text })}
             />
+            {this.state.errorText ? (
+              <Text style={styles.error}>{this.state.errorText}</Text>
+            ) : null}
           </View>
           <View style={styles.nextButtonContainer}>
             <Button
@@ -213,6 +235,12 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: 'transparent',
     width: 260
+  },
+  error: {
+    color: 'red',
+    marginVertical: 10,
+    textAlign: 'center',
+    width: 250
   },
   nextButtonContainer: {
     // flex: 1,

@@ -18,6 +18,7 @@ export default class SignUpScreen extends React.Component {
     this.state = {
       userText: '',
       passText: '',
+      passText2: '',
       errorText: null
     };
   }
@@ -28,19 +29,36 @@ export default class SignUpScreen extends React.Component {
     });
   };
 
+  _onChangePassword2 = text => {
+    this.setState({
+      passText2: text
+    });
+  };
+
   _navigateSignUp2 = () => {
-    if (this.state.userText === '' || this.state.passText === '') {
+    if (
+      this.state.userText === '' ||
+      this.state.passText === '' ||
+      this.state.passText2 === ''
+    ) {
       this.setState({
         errorText: 'Debe completar Correo y Contraseña'
       });
     } else {
-      this.setState({
-        errorText: null
-      });
-      this.props.navigation.navigate('SignUp2', {
-        email: this.state.userText,
-        password: this.state.passText
-      });
+      if (this.state.passText !== this.state.passText2) {
+        this.setState({
+          errorText: 'Las contraseñas no coinciden'
+        });
+      } else {
+        this.setState({
+          errorText: null
+        });
+        this.props.navigation.navigate('SignUp2', {
+          email: this.state.userText,
+          password: this.state.passText,
+          password2: this.state.passText2
+        });
+      }
     }
   };
 
@@ -75,6 +93,12 @@ export default class SignUpScreen extends React.Component {
               label="Ingresá tu Contraseña:"
               value={this.state.passText}
               onChangeText={this._onChangePassword}
+              styles={styles.input}
+            />
+            <InputPassword
+              label="Repetir Contraseña:"
+              value={this.state.passText2}
+              onChangeText={this._onChangePassword2}
               styles={styles.input}
             />
             {this.state.errorText ? (

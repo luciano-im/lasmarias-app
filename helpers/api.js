@@ -76,7 +76,7 @@ export let login = async (email, password) => {
 };
 
 export let logout = async () => {
-  const token = await this._getToken();
+  const token = await _getToken();
 
   const config = {
     timeout: 5000,
@@ -84,11 +84,11 @@ export let logout = async () => {
   };
 
   return await axios
-    .post(api + 'rest-auth/login/', {}, config)
-    .then(response => {
+    .post(api + 'rest-auth/logout/', {}, config)
+    .then(async response => {
       // Reactotron.log(response);
       if (response.status === 200) {
-        this._removeToken();
+        await _removeToken();
         return { error: false };
       }
     })
@@ -104,6 +104,88 @@ export let logout = async () => {
         return {
           error: true,
           msg: 'Error al cerrar sesión',
+          data: error
+        };
+      }
+    });
+};
+
+export let signUp = async (email, password, password2) => {
+  const config = {
+    timeout: 5000,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  };
+
+  const data = {
+    email: email,
+    password1: password,
+    password2: password2
+  };
+
+  return await axios
+    .post(api + 'rest-auth/registration/', qs.stringify(data), config)
+    .then(response => {
+      // Reactotron.log(response);
+      if (response.status === 201) {
+        return { error: false };
+      }
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo registrar el usuario',
+          data: error
+        };
+      }
+    });
+};
+
+export let saveUserProfile = async (email, userData) => {
+  const config = {
+    timeout: 5000,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  };
+
+  const data = {
+    email: email,
+    related_name: userData.nameText,
+    related_last_name: userData.lastNameText,
+    related_customer_name: userData.businessText,
+    related_customer_address: userData.addressText,
+    related_telephone: userData.telText,
+    related_cel_phone: userData.celText,
+    related_city: userData.cityText,
+    related_zip_code: userData.zipText
+  };
+
+  return await axios
+    .post(api + 'api/user/related-info/', qs.stringify(data), config)
+    .then(response => {
+      Reactotron.log(response);
+      // if (response.status === 200) {
+      //   return { error: false };
+      // }
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo registrar los datos del usuario',
           data: error
         };
       }
