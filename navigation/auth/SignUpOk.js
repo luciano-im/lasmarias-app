@@ -6,7 +6,7 @@ import Logo from '../../components/Logo';
 
 // TODO: add sign up logic
 // TODO: add sign up error
-export default class SignUpResultScreen extends React.Component {
+export default class SignUpOkScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,6 +22,8 @@ export default class SignUpResultScreen extends React.Component {
   };
 
   render() {
+    const name = this.props.navigation.getParam('name').toUpperCase();
+
     return (
       <View style={styles.container}>
         <Logo />
@@ -31,7 +33,7 @@ export default class SignUpResultScreen extends React.Component {
             source={require('../../assets/check-64.png')}
           />
           <Text style={styles.title}>¡GRACIAS POR REGISTRARTE!</Text>
-          <Text style={styles.name}>ALBERTO</Text>
+          <Text style={styles.name}>{name}</Text>
         </View>
         <View style={styles.stepsContainer}>
           <Text style={styles.steps}>
@@ -54,7 +56,7 @@ export default class SignUpResultScreen extends React.Component {
             style={styles.closeButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => console.log('cerrar')}
+            onPress={() => this.props.navigation.navigate('Login')}
           >
             <Text
               style={styles.closeButtonText}

@@ -57,25 +57,50 @@ export default class SignUp2Screen extends React.Component {
   };
 
   _signUp = async () => {
-    const email = await this.props.navigation.getParam('email');
-    const password = await this.props.navigation.getParam('password');
-    const password2 = await this.props.navigation.getParam('password2');
+    const email = this.props.navigation.getParam('email');
+    const password = this.props.navigation.getParam('password');
+    const password2 = this.props.navigation.getParam('password2');
 
     this._removeData();
 
-    await signUp(email, password, password2).then(response => {
-      Reactotron.log(response);
-      if (response.error === false) {
-        await saveUserProfile(email, this.state).then(response => {
+    let isSignUpOk = false;
+    let isSaveProfileOk = false;
+
+    isSignUpOk = await signUp(email, password, password2)
+      .then(response => {
+        Reactotron.log(response);
+        if (response.error === false) {
+          return true;
+        } else {
+          this.setState({
+            errorText: response.msg
+          });
+          return false;
+        }
+      })
+      .catch(error => {
+        Reactotron.error(error);
+        return false;
+      });
+
+    if (isSignUpOk) {
+      isSaveProfileOk = await saveUserProfile(email, this.state)
+        .then(response => {
           Reactotron.log(response);
+          return true;
+        })
+        .catch(error => {
+          Reactotron.error(error);
+          return false;
         });
-        // this.props.navigation.navigate('SignUpResult');
-      } else {
-        this.setState({
-          errorText: response.msg
-        });
-      }
-    });
+    }
+
+    if (isSaveProfileOk) {
+      Reactotron.log('A Navegar');
+      this.props.navigation.navigate('SignUpOk', {
+        name: this.state.nameText
+      });
+    }
   };
 
   componentWillMount() {

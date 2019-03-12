@@ -7,7 +7,8 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-const api = 'https://las-marias.localtunnel.me/';
+// const api = 'https://las-marias.localtunnel.me/';
+const api = 'https://e5ce9d88.ngrok.io/';
 
 /////////
 
@@ -167,12 +168,16 @@ export let saveUserProfile = async (email, userData) => {
   };
 
   return await axios
-    .post(api + 'api/user/related-info/', qs.stringify(data), config)
+    .post(
+      api + 'api/registration/user-related-info/',
+      qs.stringify(data),
+      config
+    )
     .then(response => {
       Reactotron.log(response);
-      // if (response.status === 200) {
-      //   return { error: false };
-      // }
+      if (response.status === 200) {
+        return { error: false };
+      }
     })
     .catch(error => {
       Reactotron.error(error);
