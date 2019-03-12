@@ -38,7 +38,7 @@ export default class SignUpOkScreen extends React.Component {
         <View style={styles.stepsContainer}>
           <Text style={styles.steps}>
             Enviaremos un e-mail de verificación a la dirección de correo que
-            registrarse.
+            registraste.
           </Text>
           <Text style={styles.steps}>Para continuar:</Text>
           <Text style={styles.steps}>1. Cerrá la App.</Text>

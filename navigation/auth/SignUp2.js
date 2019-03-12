@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   AsyncStorage,
   BackHandler,
   Image,
@@ -14,7 +15,7 @@ import { signUp, saveUserProfile } from '../../helpers/api';
 import Logo from '../../components/Logo';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: add sign up logic
+// TODO: unify sign up in a single request
 export default class SignUp2Screen extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +28,8 @@ export default class SignUp2Screen extends React.Component {
       addressText: '',
       cityText: '',
       zipText: '',
-      errorText: null
+      errorText: null,
+      loading: false
     };
   }
 
@@ -61,6 +63,11 @@ export default class SignUp2Screen extends React.Component {
     const password = this.props.navigation.getParam('password');
     const password2 = this.props.navigation.getParam('password2');
 
+    this.setState({
+      errorText: null,
+      loading: true
+    });
+
     this._removeData();
 
     let isSignUpOk = false;
@@ -80,6 +87,9 @@ export default class SignUp2Screen extends React.Component {
       })
       .catch(error => {
         Reactotron.error(error);
+        this.setState({
+          loading: false
+        });
         return false;
       });
 
@@ -91,12 +101,18 @@ export default class SignUp2Screen extends React.Component {
         })
         .catch(error => {
           Reactotron.error(error);
+          this.setState({
+            loading: false
+          });
           return false;
         });
     }
 
     if (isSaveProfileOk) {
       Reactotron.log('A Navegar');
+      this.setState({
+        loading: false
+      });
       this.props.navigation.navigate('SignUpOk', {
         name: this.state.nameText
       });
@@ -197,6 +213,17 @@ export default class SignUp2Screen extends React.Component {
               value={this.state.zipText}
               onChangeText={text => this.setState({ zipText: text })}
             />
+            <View>
+              <ActivityIndicator
+                animating={this.state.loading}
+                color={theme.PRIMARY_COLOR}
+                size={'large'}
+                style={[
+                  styles.loading,
+                  { display: this.state.loading ? 'flex' : 'none' }
+                ]}
+              />
+            </View>
             {this.state.errorText ? (
               <Text style={styles.error}>{this.state.errorText}</Text>
             ) : null}
@@ -266,6 +293,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: 'center',
     width: 250
+  },
+  loading: {
+    marginVertical: 10
   },
   nextButtonContainer: {
     // flex: 1,

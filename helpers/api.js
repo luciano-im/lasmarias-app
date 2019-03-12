@@ -7,8 +7,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-// const api = 'https://las-marias.localtunnel.me/';
-const api = 'https://e5ce9d88.ngrok.io/';
+const api = 'https://las-marias.localtunnel.me/';
 
 /////////
 
@@ -191,6 +190,42 @@ export let saveUserProfile = async (email, userData) => {
         return {
           error: true,
           msg: 'No se pudo registrar los datos del usuario',
+          data: error
+        };
+      }
+    });
+};
+
+export let resetPassword = async email => {
+  const config = {
+    timeout: 5000,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  };
+
+  const data = {
+    email: email
+  };
+
+  return await axios
+    .post(api + 'rest-auth/password/reset/', qs.stringify(data), config)
+    .then(response => {
+      Reactotron.log(response);
+      // if (response.status === 201) {
+      //   return { error: false };
+      // }
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
           data: error
         };
       }

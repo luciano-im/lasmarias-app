@@ -11,7 +11,6 @@ import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import InputPassword from '../../components/InputPassword';
 
-// TODO: add sign up logic
 export default class SignUpScreen extends React.Component {
   constructor(props) {
     super(props);

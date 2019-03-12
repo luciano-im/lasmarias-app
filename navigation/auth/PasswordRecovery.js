@@ -1,15 +1,24 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Image,
+  StyleSheet,
+  View,
+  ScrollView
+} from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import { resetPassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 
-// TODO: add password recovery logic
 export default class PasswordRecoveryScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userText: ''
+      userText: '',
+      errorText: null,
+      loading: false
     };
   }
 
@@ -19,33 +28,76 @@ export default class PasswordRecoveryScreen extends React.Component {
     });
   };
 
+  _resetPassword = async () => {
+    this.setState({
+      loginError: null,
+      loading: true
+    });
+    await resetPassword(this.state.passText).then(response => {
+      Reactotron.log(response);
+      // if (response.error === false) {
+      //   this.props.navigation.navigate('App');
+      // } else {
+      //   this.setState({
+      //     loginError: response.msg,
+      //     loading: false
+      //   });
+      // }
+
+      // this.props.navigation.navigate('PasswordRecoveryOk')
+    });
+  };
+
   render() {
     return (
-      <View style={styles.container}>
-        <Logo />
-        <View style={styles.titleContainer}>
-          <Image
-            style={{ width: 80, height: 80 }}
-            source={require('../../assets/user-128.png')}
-          />
-          <Text style={styles.title}>RECUPERAR CONTRASEÑA</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            label="Ingresá el correo registrado:"
-            placeholder="Correo"
-            style={styles.input}
-            value={this.state.userText}
-            onChangeText={text => this.setState({ userText: text })}
-          />
-        </View>
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidContainer}
+        behavior="padding"
+        keyboardVerticalOffset={100}
+      >
+        <ScrollView style={styles.container}>
+          <Logo />
+          <View style={styles.titleContainer}>
+            <Image
+              style={{ width: 80, height: 80 }}
+              source={require('../../assets/user-128.png')}
+            />
+            <Text style={styles.title}>RECUPERAR CONTRASEÑA</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              label="Ingresá el correo registrado:"
+              placeholder="Correo"
+              autoCapitalize={'none'}
+              autoComplete="email"
+              keyboardType="email-address"
+              style={styles.input}
+              value={this.state.userText}
+              onChangeText={text => this.setState({ userText: text })}
+            />
+            <View>
+              <ActivityIndicator
+                animating={this.state.loading}
+                color={theme.PRIMARY_COLOR}
+                size={'large'}
+                style={[
+                  styles.loading,
+                  { display: this.state.loading ? 'flex' : 'none' }
+                ]}
+              />
+            </View>
+            {this.state.loginError ? (
+              <Text style={styles.error}>{this.state.loginError}</Text>
+            ) : null}
+          </View>
+        </ScrollView>
         <View style={styles.dataButtonContainer}>
           <Button
             mode="contained"
             style={styles.dataButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this.props.navigation.navigate('PasswordRecoveryOk')}
+            onPress={() => this._resetPassword()}
           >
             <Text
               style={styles.dataButtonText}
@@ -59,15 +111,18 @@ export default class PasswordRecoveryScreen extends React.Component {
             </Text>
           </Button>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoidContainer: {
+    flex: 1
+  },
   container: {
-    flex: 1,
-    justifyContent: 'center'
+    flex: 1
+    // justifyContent: 'center'
   },
   titleContainer: {
     flex: 3.5,
@@ -81,19 +136,32 @@ const styles = StyleSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   inputContainer: {
-    flex: 5,
+    flex: 3,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginTop: 30
   },
   input: {
     backgroundColor: 'transparent',
     width: 260
   },
+  error: {
+    color: 'red',
+    marginVertical: 10,
+    textAlign: 'center',
+    width: 250
+  },
+  loading: {
+    marginVertical: 10
+  },
   dataButtonContainer: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 30
+    marginTop: 30,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%'
   },
   dataButton: {
     alignSelf: 'stretch',
