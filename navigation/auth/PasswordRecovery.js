@@ -11,7 +11,9 @@ import { Button, Text, TextInput } from 'react-native-paper';
 import { resetPassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
+import Reactotron from 'reactotron-react-native';
 
+// TODO: Recovery mail is not sending
 export default class PasswordRecoveryScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -33,19 +35,27 @@ export default class PasswordRecoveryScreen extends React.Component {
       loginError: null,
       loading: true
     });
-    await resetPassword(this.state.passText).then(response => {
-      Reactotron.log(response);
-      // if (response.error === false) {
-      //   this.props.navigation.navigate('App');
-      // } else {
-      //   this.setState({
-      //     loginError: response.msg,
-      //     loading: false
-      //   });
-      // }
-
-      // this.props.navigation.navigate('PasswordRecoveryOk')
-    });
+    await resetPassword(this.state.userText)
+      .then(response => {
+        Reactotron.log(response);
+        if (response.error === false) {
+          this.setState({
+            loading: false
+          });
+          this.props.navigation.navigate('PasswordRecoveryOk');
+        } else {
+          this.setState({
+            errorText: error.msg,
+            loading: false
+          });
+        }
+      })
+      .catch(error => {
+        Reactotron.error(error);
+        this.setState({
+          loading: false
+        });
+      });
   };
 
   render() {
@@ -86,8 +96,8 @@ export default class PasswordRecoveryScreen extends React.Component {
                 ]}
               />
             </View>
-            {this.state.loginError ? (
-              <Text style={styles.error}>{this.state.loginError}</Text>
+            {this.state.errorText ? (
+              <Text style={styles.error}>{this.state.errorText}</Text>
             ) : null}
           </View>
         </ScrollView>

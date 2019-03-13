@@ -42,7 +42,7 @@ export default class PasswordRecoveryOkScreen extends React.Component {
             style={styles.closeButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => console.log('cerrar')}
+            onPress={() => this.props.navigation.navigate('Login')}
           >
             <Text
               style={styles.closeButtonText}

@@ -210,9 +210,9 @@ export let resetPassword = async email => {
     .post(api + 'rest-auth/password/reset/', qs.stringify(data), config)
     .then(response => {
       Reactotron.log(response);
-      // if (response.status === 201) {
-      //   return { error: false };
-      // }
+      if (response.status === 200) {
+        return { error: false };
+      }
     })
     .catch(error => {
       Reactotron.error(error);
