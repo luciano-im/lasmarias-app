@@ -110,7 +110,7 @@ export let logout = async () => {
     });
 };
 
-export let signUp = async (email, password, password2) => {
+export let signUp = async (email, password, password2, relatedData) => {
   const config = {
     timeout: 5000,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -119,7 +119,15 @@ export let signUp = async (email, password, password2) => {
   const data = {
     email: email,
     password1: password,
-    password2: password2
+    password2: password2,
+    related_name: relatedData.nameText,
+    related_last_name: relatedData.lastNameText,
+    related_customer_name: relatedData.businessText,
+    related_customer_address: relatedData.addressText,
+    related_telephone: relatedData.telText,
+    related_cel_phone: relatedData.celText,
+    related_city: relatedData.cityText,
+    related_zip_code: relatedData.zipText
   };
 
   return await axios
@@ -142,54 +150,6 @@ export let signUp = async (email, password, password2) => {
         return {
           error: true,
           msg: 'No se pudo registrar el usuario',
-          data: error
-        };
-      }
-    });
-};
-
-export let saveUserProfile = async (email, userData) => {
-  const config = {
-    timeout: 5000,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  };
-
-  const data = {
-    email: email,
-    related_name: userData.nameText,
-    related_last_name: userData.lastNameText,
-    related_customer_name: userData.businessText,
-    related_customer_address: userData.addressText,
-    related_telephone: userData.telText,
-    related_cel_phone: userData.celText,
-    related_city: userData.cityText,
-    related_zip_code: userData.zipText
-  };
-
-  return await axios
-    .post(
-      api + 'api/registration/user-related-info/',
-      qs.stringify(data),
-      config
-    )
-    .then(response => {
-      Reactotron.log(response);
-      if (response.status === 200) {
-        return { error: false };
-      }
-    })
-    .catch(error => {
-      Reactotron.error(error);
-      if (error.code === 'ECONNABORTED') {
-        return {
-          error: true,
-          msg: 'El servidor no responde',
-          data: error
-        };
-      } else {
-        return {
-          error: true,
-          msg: 'No se pudo registrar los datos del usuario',
           data: error
         };
       }

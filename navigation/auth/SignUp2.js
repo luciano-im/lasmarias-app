@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
-import { signUp, saveUserProfile } from '../../helpers/api';
+import { signUp } from '../../helpers/api';
 import Logo from '../../components/Logo';
 import Reactotron from 'reactotron-react-native';
 
@@ -70,53 +70,30 @@ export default class SignUp2Screen extends React.Component {
 
     this._removeData();
 
-    let isSignUpOk = false;
-    let isSaveProfileOk = false;
-
-    isSignUpOk = await signUp(email, password, password2)
+    await signUp(email, password, password2, this.state)
       .then(response => {
         Reactotron.log(response);
         if (response.error === false) {
-          return true;
+          this.setState({
+            loading: false
+          });
+          this.props.navigation.navigate('SignUpOk', {
+            name: this.state.nameText
+          });
         } else {
           this.setState({
+            loading: false,
             errorText: response.msg
           });
-          return false;
         }
       })
       .catch(error => {
         Reactotron.error(error);
         this.setState({
-          loading: false
+          loading: false,
+          errorText: response.msg
         });
-        return false;
       });
-
-    if (isSignUpOk) {
-      isSaveProfileOk = await saveUserProfile(email, this.state)
-        .then(response => {
-          Reactotron.log(response);
-          return true;
-        })
-        .catch(error => {
-          Reactotron.error(error);
-          this.setState({
-            loading: false
-          });
-          return false;
-        });
-    }
-
-    if (isSaveProfileOk) {
-      Reactotron.log('A Navegar');
-      this.setState({
-        loading: false
-      });
-      this.props.navigation.navigate('SignUpOk', {
-        name: this.state.nameText
-      });
-    }
   };
 
   componentWillMount() {
