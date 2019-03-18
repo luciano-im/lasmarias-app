@@ -1,10 +1,14 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
+import { YellowBox } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
 import { Navigation } from './navigation/Navigation';
 import { theme } from './helpers/styles';
+import { pubnubConfig } from './PubnubConfig';
 import './ReactotronConfig';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
 
 const customTheme = {
   ...DefaultTheme,
@@ -22,8 +26,8 @@ export default class App extends React.Component {
       id: null
     };
     this.pubnub = new PubNubReact({
-      publishKey: '',
-      subscribeKey: ''
+      publishKey: pubnubConfig.PUBNUB_PUBLISH_KEY,
+      subscribeKey: pubnubConfig.PUBNUB_SUBSCRIBE_KEY
     });
     this.pubnub.init(this);
   }
