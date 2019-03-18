@@ -1,9 +1,10 @@
-import React from "react";
-import { SafeAreaView } from "react-native";
-import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import { Navigation } from "./navigation/Navigation";
-import { theme } from "./helpers/styles";
-import "./ReactotronConfig";
+import React from 'react';
+import { SafeAreaView } from 'react-native';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import PubNubReact from 'pubnub-react';
+import { Navigation } from './navigation/Navigation';
+import { theme } from './helpers/styles';
+import './ReactotronConfig';
 
 const customTheme = {
   ...DefaultTheme,
@@ -20,6 +21,11 @@ export default class App extends React.Component {
     this.state = {
       id: null
     };
+    this.pubnub = new PubNubReact({
+      publishKey: '',
+      subscribeKey: ''
+    });
+    this.pubnub.init(this);
   }
 
   _setId = data => {
@@ -35,6 +41,29 @@ export default class App extends React.Component {
       name: null
     });
   };
+
+  componentWillMount() {
+    this.pubnub.subscribe({
+      channels: ['lasmarias']
+    });
+
+    this.pubnub.getMessage('lasmarias', msg => {
+      console.log(msg);
+    });
+
+    //Get last message
+    this.pubnub.history(
+      {
+        channel: 'lasmarias',
+        reverse: false,
+        count: 1 // how many items to fetch
+      },
+      (status, response) => {
+        console.log(status);
+        console.log(response);
+      }
+    );
+  }
 
   render() {
     return (
