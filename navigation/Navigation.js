@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import {
+  createAppContainer,
   createDrawerNavigator,
   createStackNavigator,
   createSwitchNavigator
@@ -28,6 +29,7 @@ import ModifyDataScreen from './app/ModifyData';
 import ModifyDataValidationScreen from './app/ModifyDataValidation';
 import ModifyDataOkScreen from './app/ModifyDataOk';
 import ModifyPasswordScreen from './app/ModifyPassword';
+import UpdateInfoScreen from './app/UpdateInfoModal';
 
 // TODO: Styles for drawer menu
 const AuthStack = createStackNavigator(
@@ -283,15 +285,32 @@ const AppDrawer = createDrawerNavigator(
   }
 );
 
+const AppStack = createStackNavigator(
+  {
+    UpdateInfo: {
+      screen: UpdateInfoScreen
+    },
+    App: {
+      screen: AppDrawer
+    }
+  },
+  {
+    initialRouteName: 'App',
+    mode: 'modal',
+    headerMode: 'none'
+  }
+);
+
 const AppNavigation = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     Auth: AuthStack,
-    App: AppDrawer
+    // App: AppDrawer
+    App: AppStack
   },
   {
     initialRouteName: 'AuthLoading'
   }
 );
 
-export const Navigation = AppNavigation;
+export const Navigation = createAppContainer(AppNavigation);
