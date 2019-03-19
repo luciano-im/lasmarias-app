@@ -65,7 +65,7 @@ export default class App extends React.Component {
       });
       Reactotron.log(msg.message);
 
-      NavigationService.navigate('UpdateInfo');
+      NavigationService.navigate('UpdateModalScreen');
     });
 
     //Get last message from history
@@ -92,6 +92,7 @@ export default class App extends React.Component {
     });
   }
 
+  // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop
   render() {
     return (
       <PaperProvider theme={customTheme}>

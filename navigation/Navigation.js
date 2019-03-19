@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  SafeAreaView
+} from 'react-native';
 import {
   createAppContainer,
   createDrawerNavigator,
@@ -285,19 +291,37 @@ const AppDrawer = createDrawerNavigator(
   }
 );
 
+// Stack allow us to use transparentCard
 const AppStack = createStackNavigator(
   {
-    UpdateInfo: {
+    UpdateModalScreen: {
       screen: UpdateInfoScreen
     },
-    App: {
+    AppScreens: {
       screen: AppDrawer
     }
   },
   {
-    initialRouteName: 'App',
+    initialRouteName: 'AppScreens',
     mode: 'modal',
-    headerMode: 'none'
+    headerMode: 'none',
+    // Modal screen with transparent background
+    transparentCard: true,
+    // Rewrite transitionConfig() to mantain background transparent when screen transition ends
+    transitionConfig: () => ({
+      screenInterpolator: sceneProps => {
+        const { position, scene } = sceneProps;
+        const { index } = scene;
+        const opacity = position.interpolate({
+          inputRange: [index - 1, index],
+          outputRange: [0, 1]
+        });
+        return { opacity };
+      },
+      containerStyle: {
+        backgroundColor: 'transparent'
+      }
+    })
   }
 );
 
