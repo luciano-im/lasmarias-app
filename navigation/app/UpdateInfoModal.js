@@ -1,8 +1,16 @@
 import React from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Dialog, Text } from 'react-native-paper';
+import {
+  _saveDbData,
+  _getDbData,
+  fetchCustomers,
+  fetchProducts
+} from '../../helpers/api';
 import { theme } from '../../helpers/styles';
+import Reactotron from 'reactotron-react-native';
 
+// TODO: Review action to take when update fails
 export default class UpdateInfoScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -10,15 +18,71 @@ export default class UpdateInfoScreen extends React.Component {
       modal_one: true,
       modal_two: false,
       updating: '',
-      buttonDisabled: true
+      animating: true,
+      buttonDisabled: true,
+      customerError: false,
+      productsError: false
     };
   }
 
-  _changeDialog = () => {
-    this.setState({
-      modal_one: false,
-      modal_two: true
-    });
+  _changeDialog = async () => {
+    // animating is false when finish update with or without errors
+    if (!this.state.animating) {
+      this.props.navigation.goBack();
+    } else {
+      this.setState({
+        modal_one: false,
+        modal_two: true,
+        updating: 'Actualizando Clientes...'
+      });
+
+      const customers = await fetchCustomers();
+
+      this.setState({
+        updating: 'Actualizando Productos...'
+      });
+
+      const products = await fetchProducts();
+
+      Reactotron.log(customers);
+      Reactotron.log(products);
+
+      //Check for errors
+      if (customers.error === false) {
+        if (products.error === false) {
+          this.setState({
+            updating: 'Actualización terminada.',
+            animating: false,
+            buttonDisabled: false
+          });
+          //Once updated save the new DbData to AsyncStorage
+          const newDbData = await _getDbData('newDbData');
+          await _saveDbData('currentDbData', JSON.parse(newDbData));
+        } else {
+          this.setState({
+            updating:
+              'Hubo un problema actualizando la base de Productos. Los Clientes se actualizaron correctamente.',
+            animating: false,
+            buttonDisabled: false
+          });
+        }
+      } else {
+        if (products.error === false) {
+          this.setState({
+            updating:
+              'Hubo un problema actualizando la base de Clientes. Los Productos se actualizaron correctamente.',
+            animating: false,
+            buttonDisabled: false
+          });
+        } else {
+          this.setState({
+            updating: 'No se pudo actualizar la App.',
+            animating: false,
+            buttonDisabled: false
+          });
+        }
+      }
+    }
   };
 
   componentDidMount() {
@@ -63,9 +127,13 @@ export default class UpdateInfoScreen extends React.Component {
               <ActivityIndicator
                 color={theme.PRIMARY_COLOR}
                 size={30}
-                style={{ marginRight: 16 }}
+                style={{
+                  marginRight: 16,
+                  display: this.state.animating ? 'flex' : 'none'
+                }}
+                animating={this.state.animating}
               />
-              <Text>Actualizando {this.state.updating}...</Text>
+              <Text>{this.state.updating}</Text>
             </View>
           </Dialog.Content>
           <Dialog.Actions>
@@ -86,29 +154,6 @@ export default class UpdateInfoScreen extends React.Component {
           </Dialog.Actions>
         </Dialog>
       </View>
-
-      //     style={{
-      //       flex: 1,
-      //       alignItems: 'center',
-      //       justifyContent: 'center',
-      //       backgroundColor: 'rgba(0, 0, 0, 0.3)'
-      //     }}
-      //   >
-      //     <View
-      //       style={{
-      //         backgroundColor: 'white',
-      //         padding: 16,
-      //         borderRadius: 6,
-      //         elevation: 6,
-      //         shadowColor: 'black',
-      //         shadowOpacity: 0.15,
-      //         shadowOffset: { width: 0, height: 2 },
-      //         shadowRadius: 10
-      //       }}
-      //     >
-      //       <Text>Este es mi texto</Text>
-      //     </View>
-      //   </View>
     );
   }
 }

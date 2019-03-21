@@ -2,6 +2,7 @@
 import { SQLite } from 'expo';
 import axios from 'axios';
 import qs from 'qs';
+import NavigationService from '../navigation/NavigationService';
 import Reactotron from 'reactotron-react-native';
 
 // Open a database, creating it if it doesn't exist
@@ -9,7 +10,7 @@ const db = SQLite.openDatabase('lasmarias.db');
 
 const api = 'https://las-marias.localtunnel.me/';
 
-/////////
+///////// AsyncStorage
 
 _saveToken = async token => {
   try {
@@ -35,7 +36,41 @@ export let _removeToken = async () => {
   }
 };
 
-/////////
+export let _saveDbData = async (key, data) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    Reactotron.error('Error saving dbData');
+  }
+};
+
+export let _getDbData = async key => {
+  try {
+    return await AsyncStorage.getItem(key);
+  } catch {
+    Reactotron.error('Error retrieving dbData');
+  }
+};
+
+///////// Update dbData
+
+export let updateDbData = async () => {
+  // Check if there is dbData stored and compare with props dbData
+  // If stored dbData is null or it's distinct from props dbData then call update
+  try {
+    const currentDbData = await _getDbData('currentDbData');
+    const newDbData = await _getDbData('newDbData');
+    Reactotron.log('2 - current DB', JSON.parse(currentDbData));
+    Reactotron.log('2 - new DB', JSON.parse(newDbData));
+    if (currentDbData === null || currentDbData !== newDbData) {
+      NavigationService.navigate('UpdateModalScreen');
+    }
+  } catch (error) {
+    Reactotron.error(error);
+  }
+};
+
+///////// Fetch Auth API
 
 export let login = async (email, password) => {
   const config = {
@@ -192,6 +227,8 @@ export let resetPassword = async email => {
     });
 };
 
+///////// Fetch App Data API
+
 export let fetchCustomers = async () => {
   // Delete table customer
   // db.transaction(tx => {
@@ -202,59 +239,155 @@ export let fetchCustomers = async () => {
   //       Reactotron.log(results);
   //     },
   //     (tx, error) => {
-  //       Reactotron.log(error) ;
+  //       Reactotron.log(error);
   //     }
   //   );
   // });
 
-  //Create database table if not exists
+  // Create database table if not exists
   db.transaction(tx => {
     tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS customer (id integer PRIMARY KEY NOT NULL, name text, address text, city text)'
+      'CREATE TABLE IF NOT EXISTS customer (customer_id integer PRIMARY KEY NOT NULL, name text NOT NULL, city text NOT NULL, discount numeric)'
     );
   });
 
-  const config = {
-    responseType: 'json'
-  };
+  const token = await _getToken();
 
-  axios
-    .get(api + 'api/customer/', config)
-    .then(response => {
-      const data = response.data;
-      data.forEach(customer => {
-        db.transaction(tx => {
-          tx.executeSql(
-            'REPLACE INTO customer (id, name, address, city) VALUES (?, ?, ?, ?);',
-            [
-              customer.customer_id,
-              customer.name,
-              customer.address,
-              customer.city
-            ]
-          );
-        });
-      });
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export let fetchAccountBalance = async user => {
   const config = {
-    responseType: 'json'
+    timeout: 5000,
+    responseType: 'json',
+    headers: { Authorization: 'Token ' + token }
   };
 
   return await axios
-    .get(api + `api/balance/${user}/`, config)
+    .get(api + 'api/customer/', config)
     .then(response => {
-      return response.data[0];
+      Reactotron.log(response.data);
+      if (response.status === 200) {
+        const data = response.data;
+        data.forEach(customer => {
+          db.transaction(tx => {
+            tx.executeSql(
+              'REPLACE INTO customer (customer_id, name, city, discount) VALUES (?, ?, ?, ?);',
+              [
+                customer.customer_id,
+                customer.name,
+                customer.city,
+                customer.discount
+              ]
+            );
+          });
+        });
+        return { error: false };
+      }
     })
     .catch(error => {
-      console.log(error);
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
+          data: error
+        };
+      }
     });
 };
+
+export let fetchProducts = async () => {
+  // Delete table customer
+  // db.transaction(tx => {
+  //   tx.executeSql(
+  //     'DROP TABLE products;',
+  //     [],
+  //     (tx, results) => {
+  //       Reactotron.log(results);
+  //     },
+  //     (tx, error) => {
+  //       Reactotron.log(error);
+  //     }
+  //   );
+  // });
+
+  // Create database table if not exists
+  db.transaction(tx => {
+    tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS products (product_id text PRIMARY KEY NOT NULL, name text NOT NULL, brand text NOT NULL, product_line text NOT NULL, unit text NOT NULL, price number NOT NULL, offer boolean, offer_price number, package text)'
+    );
+  });
+
+  const token = await _getToken();
+
+  const config = {
+    timeout: 5000,
+    responseType: 'json',
+    headers: { Authorization: 'Token ' + token }
+  };
+
+  return await axios
+    .get(api + 'api/product/', config)
+    .then(response => {
+      Reactotron.log(response.data);
+      if (response.status === 200) {
+        const data = response.data;
+        data.forEach(product => {
+          db.transaction(tx => {
+            tx.executeSql(
+              'REPLACE INTO products (product_id, name, brand, product_line, unit, price, offer, offer_price, package) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);',
+              [
+                product.product_id,
+                product.name,
+                product.brand,
+                product.product_line,
+                product.unit,
+                product.price,
+                product.offer,
+                product.offer_price,
+                product.package
+              ]
+            );
+          });
+        });
+        return { error: false };
+      }
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
+          data: error
+        };
+      }
+    });
+};
+
+// export let fetchAccountBalance = async user => {
+//   const config = {
+//     responseType: 'json'
+//   };
+
+//   return await axios
+//     .get(api + `api/balance/${user}/`, config)
+//     .then(response => {
+//       return response.data[0];
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     });
+// };
 
 // Use a Promise to assign result asynchronously
 export let getCustomers = async (city, address) => {

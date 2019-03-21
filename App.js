@@ -1,12 +1,12 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { YellowBox } from 'react-native';
+import { AsyncStorage, SafeAreaView, YellowBox } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
 import { Navigation } from './navigation/Navigation';
 import NavigationService from './navigation/NavigationService';
 import { theme } from './helpers/styles';
 import { pubnubConfig } from './PubnubConfig';
+import { _saveDbData, updateDbData } from './helpers/api';
 import './ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
@@ -26,8 +26,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       id: null,
-      name: null,
-      db_data: null
+      name: null
     };
 
     // Init PubNub object
@@ -52,20 +51,17 @@ export default class App extends React.Component {
     });
   };
 
-  componentWillMount() {
+  async componentWillMount() {
     // Subscribe to channel
     this.pubnub.subscribe({
       channels: ['lasmarias']
     });
 
     // Get new messages
-    this.pubnub.getMessage('lasmarias', msg => {
-      this.setState({
-        db_data: msg.message
-      });
-      Reactotron.log(msg.message);
-
-      NavigationService.navigate('UpdateModalScreen');
+    this.pubnub.getMessage('lasmarias', async msg => {
+      // Save new data, later call updateDbData to compare new data vs existing/current data
+      await _saveDbData('newDbData', msg.message);
+      await updateDbData();
     });
 
     //Get last message from history
@@ -75,12 +71,11 @@ export default class App extends React.Component {
         reverse: false,
         count: 1 // how many items to fetch
       },
-      (status, response) => {
+      async (status, response) => {
         if (status.error === false) {
-          this.setState({
-            db_data: response.messages[0].entry
-          });
-          Reactotron.log(response.messages[0].entry);
+          // Save new data, later call updateDbData to compare new data vs existing/current data
+          await _saveDbData('newDbData', response.messages[0].entry);
+          await updateDbData();
         }
       }
     );
@@ -105,8 +100,7 @@ export default class App extends React.Component {
               setId: data => this._setId(data),
               removeId: () => this._removeId(),
               id: this.state.id,
-              name: this.state.name,
-              db_data: this.state.db_data
+              name: this.state.name
             }}
           />
         </SafeAreaView>
