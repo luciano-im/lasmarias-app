@@ -34,7 +34,7 @@ export default class Product extends React.Component {
   render() {
     const name = this.props.name;
     const brand = this.props.brand;
-    const category = this.props.category;
+    const productLine = this.props.productLine;
     const price = this.props.price.toFixed(2);
     const unit = this.props.unit;
     const packaging = this.props.packaging;
@@ -67,7 +67,7 @@ export default class Product extends React.Component {
             </Text>
             {/* <Text style={styles.unit}>{unit}</Text> */}
             <Text style={styles.unit}>{packaging}</Text>
-            <Text style={styles.category}>{category}</Text>
+            <Text style={styles.category}>{productLine}</Text>
           </View>
           <View style={styles.priceContainer}>
             <View style={styles.priceDetail}>

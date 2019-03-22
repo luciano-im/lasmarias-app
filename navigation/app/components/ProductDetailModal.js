@@ -66,7 +66,7 @@ export default class ProductDetailModal extends React.Component {
               {data.name.toUpperCase()} {data.brand.toUpperCase()}
             </Text>
             <Text style={styles.unit}>{data.package}</Text>
-            <Text style={styles.category}>{data.category}</Text>
+            <Text style={styles.category}>{data.product_line}</Text>
             <View style={styles.priceContainer}>
               <View style={styles.priceDetail}>
                 <Text style={styles.price}>${data.price.toFixed(2)}</Text>

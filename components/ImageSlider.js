@@ -11,6 +11,8 @@ export default class Slider extends Component {
   render() {
     const { images } = this.props;
 
+    Reactotron.log(images);
+
     let imageArray = [];
 
     images.map((uri, i) => {
@@ -18,7 +20,9 @@ export default class Slider extends Component {
       imageArray.push(
         <View style={styles.container} key={i}>
           <Image
-            source={{ uri: uri.image }}
+            source={{
+              uri: uri.image
+            }}
             style={styles.image}
             resizeMode="contain"
           />
@@ -48,6 +52,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 180,
+    width: '100%',
     alignSelf: 'center'
   }
 });
