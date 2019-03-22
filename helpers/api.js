@@ -491,19 +491,14 @@ export let getProductImages = async product_id => {
 };
 
 // Use a Promise to assign result asynchronously
-export let getCustomers = async (city, address) => {
+export let getCustomers = async city => {
   let where = '';
-  if (city && address) {
-    where = `WHERE city="${city}" AND UPPER(address) LIKE '%${address.toUpperCase()}%'`;
-  } else if (city) {
+  if (city) {
     where = `WHERE city="${city}"`;
-  } else if (address) {
-    where = `WHERE UPPER(address) LIKE '%${address.toUpperCase()}%'`;
   }
 
-  const sql = `SELECT id, name FROM customer ${where} ORDER BY name ASC;`;
+  const sql = `SELECT customer_id, name FROM customer ${where} ORDER BY name ASC;`;
 
-  console.log(sql);
   return new Promise((resolve, reject) =>
     db.transaction(tx => {
       tx.executeSql(
@@ -520,6 +515,7 @@ export let getCustomers = async (city, address) => {
 
 export let getCities = async () => {
   const sql = 'SELECT DISTINCT city FROM customer ORDER BY city ASC;';
+
   return new Promise((resolve, reject) =>
     db.transaction(tx => {
       tx.executeSql(

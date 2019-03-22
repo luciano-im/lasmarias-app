@@ -39,7 +39,7 @@ export default class App extends React.Component {
 
   _setId = data => {
     this.setState({
-      id: data.id,
+      id: data.customer_id,
       name: data.name
     });
   };

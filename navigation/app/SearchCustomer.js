@@ -16,19 +16,15 @@ export default class SearchCustomerScreen extends React.Component {
       filteredCustomers: [],
       cities: [],
       selectedCity: null,
-      showCitiesModal: false,
-      address: null,
-      showAddressModal: false
+      showCitiesModal: false
     };
   }
 
   async componentDidMount() {
     // Get customers asynchronously to prevent get "undefined"
-    const customers = await getCustomers(
-      this.state.selectedCity,
-      this.state.address
-    );
+    const customers = await getCustomers(this.state.selectedCity);
     const cities = await getCities();
+
     // Initialy load all customers in the FlatList
     this.setState({
       customers: customers,
@@ -59,14 +55,8 @@ export default class SearchCustomerScreen extends React.Component {
     });
   };
 
-  _handleShowInputAddress = visible => {
-    this.setState({
-      showAddressModal: visible
-    });
-  };
-
   _handleSelectCity = async city => {
-    const customers = await getCustomers(city, this.state.address);
+    const customers = await getCustomers(city);
     // Set customers of the selected city
     this.setState({
       customers: customers,
@@ -77,7 +67,7 @@ export default class SearchCustomerScreen extends React.Component {
   };
 
   _handleRemoveSelectCity = async () => {
-    const customers = await getCustomers(null, this.state.address);
+    const customers = await getCustomers(null);
     this.setState({
       customers: customers,
       selectedCity: null
@@ -86,30 +76,9 @@ export default class SearchCustomerScreen extends React.Component {
     this._handleSearch(this.state.searchQuery);
   };
 
-  _handleInputAddress = async address => {
-    const customers = await getCustomers(this.state.selectedCity, address);
-    this.setState({
-      customers: customers,
-      address: address
-    });
-    // Call _handleSearch to made the filter by search query over the new customers state
-    this._handleSearch(this.state.searchQuery);
-  };
-
-  _handleRemoveInputAddress = async () => {
-    const customers = await getCustomers(this.state.selectedCity, null);
-    this.setState({
-      customers: customers,
-      address: null
-    });
-    // Call _handleSearch to made the filter by search query over the new customers state
-    this._handleSearch(this.state.searchQuery);
-  };
-
   _handleSelectCustomer = item => {
     const { navigation } = this.props;
     navigation.goBack();
-    console.log(item);
     this.props.screenProps.setId(item);
   };
 
@@ -127,12 +96,12 @@ export default class SearchCustomerScreen extends React.Component {
         <List.Item
           title={this.state.selectedCity}
           left={props => (
-            <List.Icon {...props} style={{ padding: 0 }} icon="location-city" />
+            <List.Icon {...props} style={styles.item} icon="location-city" />
           )}
           right={props => (
             <List.Icon {...props} icon="close" color={theme.RED_COLOR} />
           )}
-          style={{ padding: 0 }}
+          style={styles.item}
           onPress={() => this._handleRemoveSelectCity()}
         />
       );
@@ -141,55 +110,18 @@ export default class SearchCustomerScreen extends React.Component {
         <List.Item
           title="Localidad"
           left={props => (
-            <List.Icon {...props} style={{ padding: 0 }} icon="location-city" />
+            <List.Icon {...props} style={styles.item} icon="location-city" />
           )}
           right={props => <List.Icon {...props} icon="chevron-right" />}
-          style={{ padding: 0 }}
+          style={styles.item}
           onPress={() => this._handleShowSelectCity(true)}
-        />
-      );
-    }
-
-    let addressComponent;
-    if (this.state.address) {
-      addressComponent = (
-        <List.Item
-          title={this.state.address}
-          left={props => (
-            <List.Icon {...props} style={{ padding: 0 }} icon="location-on" />
-          )}
-          right={props => (
-            <List.Icon {...props} icon="close" color={theme.RED_COLOR} />
-          )}
-          style={{ padding: 0 }}
-          onPress={() => this._handleRemoveInputAddress(true)}
-        />
-      );
-    } else {
-      addressComponent = (
-        <List.Item
-          title="Dirección"
-          left={props => (
-            <List.Icon {...props} style={{ padding: 0 }} icon="location-on" />
-          )}
-          right={props => <List.Icon {...props} icon="chevron-right" />}
-          style={{ padding: 0 }}
-          onPress={() => this._handleShowInputAddress(true)}
         />
       );
     }
 
     return (
       <View style={styles.container}>
-        <View
-          style={{
-            backgroundColor: theme.PRIMARY_COLOR,
-            marginTop: 10,
-            paddingTop: 10,
-            paddingLeft: 10,
-            paddingRight: 10
-          }}
-        >
+        <View style={styles.filterContainer}>
           <Searchbar
             placeholder="Buscar Cliente"
             onChangeText={query => this._handleSearch(query)}
@@ -199,10 +131,9 @@ export default class SearchCustomerScreen extends React.Component {
             title="Filtros"
             left={props => <List.Icon {...props} icon="filter-list" />}
             theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
-            style={{ padding: 0 }}
+            style={styles.item}
           >
             {cityComponent}
-            {addressComponent}
           </List.Accordion>
         </View>
         <FlatList
@@ -210,7 +141,7 @@ export default class SearchCustomerScreen extends React.Component {
           data={this.state.filteredCustomers}
           extraData={this.state}
           renderItem={this._renderItem}
-          keyExtractor={(item, index) => item.id.toString()}
+          keyExtractor={(item, index) => item.customer_id.toString()}
         />
         <SelectCity
           title="Localidad"
@@ -218,12 +149,6 @@ export default class SearchCustomerScreen extends React.Component {
           visible={this.state.showCitiesModal}
           onDismiss={this._handleShowSelectCity}
           onSelect={this._handleSelectCity}
-        />
-        <InputAddress
-          title="Dirección"
-          visible={this.state.showAddressModal}
-          onDismiss={this._handleShowInputAddress}
-          onSelect={this._handleInputAddress}
         />
       </View>
     );
@@ -233,5 +158,15 @@ export default class SearchCustomerScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  item: {
+    padding: 0
+  },
+  filterContainer: {
+    backgroundColor: theme.PRIMARY_COLOR,
+    marginTop: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10
   }
 });

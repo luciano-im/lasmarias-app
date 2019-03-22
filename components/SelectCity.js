@@ -1,52 +1,48 @@
 import React from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  View
-} from 'react-native';
-import {
-  Divider,
-  List,
-  Modal,
-  Portal,
-  Text
-} from 'react-native-paper';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { Divider, List, Modal, Portal, Text } from 'react-native-paper';
+import Reactotron from 'reactotron-react-native';
 
 export default class SelectCity extends React.Component {
-
   _hideModal = () => {
     this.props.onDismiss(false);
-  }
+  };
 
-  _handleSelectCity = (item) => {
+  _handleSelectCity = item => {
     this.props.onSelect(item.city);
     this.props.onDismiss(false);
-  }
+  };
 
-  _renderItem = ({item}) => {
+  _renderItem = ({ item }) => {
     return (
       <List.Item
         title={item.city}
-        onPress= {() => this._handleSelectCity(item)} />
+        onPress={() => this._handleSelectCity(item)}
+      />
     );
-  }
+  };
 
   render() {
-    const {visible} = this.props;
+    const { visible } = this.props;
 
     return (
-      <Portal>
-        <Modal visible={visible} onDismiss={this._hideModal} style={styles.container}>
+      <Portal style={styles.modal}>
+        <Modal
+          visible={visible}
+          onDismiss={this._hideModal}
+          style={styles.container}
+        >
           <View style={styles.modalContainer}>
             <View style={styles.modalInner}>
               <Text style={styles.title}>{this.props.title.toUpperCase()}</Text>
               <Divider />
               <FlatList
-                ItemSeparatorComponent={() => (<Divider />)}
+                ItemSeparatorComponent={() => <Divider />}
                 data={this.props.cities}
                 extraData={this.state}
                 renderItem={this._renderItem}
-                keyExtractor={(item, index) => index.toString()} />
+                keyExtractor={(item, index) => index.toString()}
+              />
             </View>
           </View>
         </Modal>
@@ -56,11 +52,14 @@ export default class SelectCity extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  modal: {
+    flex: 1
+  },
   container: {
-    flex: 1,
+    flex: 1
   },
   modalContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     padding: '5%'
   },
