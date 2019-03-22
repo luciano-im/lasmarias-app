@@ -1,50 +1,60 @@
 import React from 'react';
-import { AsyncStorage, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
-// import { fetchAccountBalance } from "../helpers/api";
+import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Button, Text } from 'react-native-paper';
+// import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../helpers/styles';
+import { fetchAccountBalance } from '../../helpers/api';
+import SelectCustomer from '../../components/SelectCustomer';
+import AccountBalanceTable from './components/AccountBalanceTable';
+import Reactotron from 'reactotron-react-native';
 
-const accountData = {
-  customer: 'La Biela',
-  balance: -274.98
-};
+// const accountData = {
+//   customer: 'La Biela',
+//   balance: -274.98
+// };
 
 export default class AccountBalanceScreen extends React.Component {
-  // AsyncStorage functions
-  // _getCustomer = async user => {
-  //   try {
-  //     const customer = await AsyncStorage.getItem("@Customer");
-  //     if (customer !== null) {
-  //       return JSON.parse(customer);
-  //     }
-  //     console.log("Retrieving data: " + data);
-  //   } catch (error) {
-  //     console.log("Error retrieving data: " + error);
-  //   }
-  // };
-  //////////
-
-  // async componentDidMount() {
-  //   // Get customers from AsyncStorage
-  //   const customer = await this._getCustomer();
-  //   const balance = await fetchAccountBalance(customer.customerId);
-  //   console.log(balance);
-  //   await this.setState({
-  //     customerId: customer.customerId,
-  //     customerName: customer.customerName,
-  //     balance: 0
-  //   });
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      accountData: null
+    };
+  }
 
   _formatBalance = balance => {
     return balance.charAt(0) === '-' ? '-$' + balance.slice(1) : '$' + balance;
   };
 
+  async componentDidMount() {
+    const accountData = await fetchAccountBalance(384);
+    console.log(accountData);
+
+    if (accountData.error === false) {
+      this.setState({
+        accountData: accountData.data
+      });
+    }
+  }
+
   render() {
+    const { screenProps } = this.props;
+    let content;
+    // if (!screenProps.id) {
+    //   content = <Text>Debe seleccionar un Cliente</Text>;
+    // } else {
+    if (!this.state.accountData) {
+      content = <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />;
+    } else {
+      content = <AccountBalanceTable data={this.state.accountData} />;
+    }
+    // }
     return (
       <View style={styles.container}>
-        <View style={styles.customer}>
+        <SelectCustomer
+          navigation={this.props.navigation}
+          screenProps={this.props.screenProps}
+        />
+        {/* <View style={styles.customer}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialIcons name="person" size={25} color="white" />
             <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
@@ -54,16 +64,17 @@ export default class AccountBalanceScreen extends React.Component {
           <View>
             <MaterialIcons name="monetization-on" size={25} color="white" />
           </View>
-        </View>
+        </View> */}
         <View style={styles.title}>
           <Text style={styles.titleText}>ESTADO DE CUENTA</Text>
         </View>
-        <View style={styles.account}>
+        <View>{content}</View>
+        {/* <View style={styles.account}>
           <Text style={styles.accountText}>Saldo:</Text>
           <Text style={styles.accountText}>
             {this._formatBalance(accountData.balance.toString())}
           </Text>
-        </View>
+        </View> */}
         <View style={styles.backButtonContainer}>
           <Button
             mode="contained"

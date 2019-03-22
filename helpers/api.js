@@ -393,20 +393,40 @@ export let fetchProducts = async () => {
     });
 };
 
-// export let fetchAccountBalance = async user => {
-//   const config = {
-//     responseType: 'json'
-//   };
+export let fetchAccountBalance = async user => {
+  const token = await _getToken();
 
-//   return await axios
-//     .get(api + `api/balance/${user}/`, config)
-//     .then(response => {
-//       return response.data[0];
-//     })
-//     .catch(error => {
-//       console.log(error);
-//     });
-// };
+  const config = {
+    timeout: 5000,
+    responseType: 'json',
+    headers: { Authorization: 'Token ' + token }
+  };
+
+  return await axios
+    .get(api + `api/balance/${user}/`, config)
+    .then(response => {
+      return {
+        error: false,
+        data: response.data
+      };
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
+          data: error
+        };
+      }
+    });
+};
 
 ///////// DB Querys
 
