@@ -1,31 +1,73 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
+import { getProductImages } from '../../../helpers/api';
+import Reactotron from 'reactotron-react-native';
 
 //TODO: Receive data and make to work "add" link
 export default class Product extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      images: []
+    };
+  }
+
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
+
+  async componentDidMount() {
+    const { product_id } = this.props.item;
+    const images = await getProductImages(product_id);
+
+    this.setState({
+      images: images
+    });
+  }
+
   render() {
     const name = this.props.name;
     const brand = this.props.brand;
     const category = this.props.category;
-    const price = this.props.price;
+    const price = this.props.price.toFixed(2);
     const unit = this.props.unit;
-    const image = this.props.image;
+    const packaging = this.props.packaging;
+
+    const images = Array.from(this.state.images);
+    const imagesEmpty = this._isEmpty(images);
+
+    let imageComponent;
+    if (!imagesEmpty) {
+      imageComponent = (
+        <Image
+          style={styles.image}
+          source={{ uri: Array.from(this.state.images)[0].image }}
+          resizeMode="contain"
+        />
+      );
+    } else {
+      imageComponent = (
+        <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+      );
+    }
 
     return (
       <View style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={image} resizeMode="contain" />
-        </View>
+        <View style={styles.imageContainer}>{imageComponent}</View>
         <View style={styles.dataContainer}>
           <View style={styles.nameContainer}>
             <Text style={styles.name}>
               {name} {brand}
             </Text>
+            {/* <Text style={styles.unit}>{unit}</Text> */}
+            <Text style={styles.unit}>{packaging}</Text>
             <Text style={styles.category}>{category}</Text>
-            <Text style={styles.unit}>{unit}</Text>
           </View>
           <View style={styles.priceContainer}>
             <View style={styles.priceDetail}>
@@ -63,7 +105,8 @@ styles = StyleSheet.create({
     flexDirection: 'row'
   },
   imageContainer: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'center'
   },
   image: {
     flex: 1,

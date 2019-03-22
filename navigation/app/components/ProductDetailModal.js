@@ -1,14 +1,52 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
+import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
+import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
+import Reactotron from 'reactotron-react-native';
 
 // //TODO: Receive data and make to work "add" link
 export default class ProductDetailModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      images: []
+    };
+  }
+
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
+
+  async componentDidMount() {
+    const { product_id } = this.props.data;
+    const images = await getProductImages(product_id);
+
+    this.setState({
+      images: images
+    });
+  }
+
   render() {
     const { data } = this.props;
+
+    const images = Array.from(this.state.images);
+    const imagesEmpty = this._isEmpty(images);
+
+    let sliderComponent;
+    if (!imagesEmpty) {
+      sliderComponent = <Slider images={images} />;
+    } else {
+      sliderComponent = (
+        <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.modalInner}>
@@ -20,17 +58,18 @@ export default class ProductDetailModal extends React.Component {
             style={styles.close}
           />
           <View style={styles.imageContainer}>
-            <Slider images={data.gallery} />
+            {/* <Slider images={data.gallery} /> */}
+            {sliderComponent}
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.name}>
               {data.name.toUpperCase()} {data.brand.toUpperCase()}
             </Text>
+            <Text style={styles.unit}>{data.package}</Text>
             <Text style={styles.category}>{data.category}</Text>
-            <Text style={styles.unit}>{data.unit}</Text>
             <View style={styles.priceContainer}>
               <View style={styles.priceDetail}>
-                <Text style={styles.price}>${data.price}</Text>
+                <Text style={styles.price}>${data.price.toFixed(2)}</Text>
               </View>
               <View style={styles.addProductContainer}>
                 <TouchableOpacity

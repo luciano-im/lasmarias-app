@@ -60,8 +60,8 @@ export let updateDbData = async () => {
   try {
     const currentDbData = await _getDbData('currentDbData');
     const newDbData = await _getDbData('newDbData');
-    Reactotron.log('2 - current DB', JSON.parse(currentDbData));
-    Reactotron.log('2 - new DB', JSON.parse(newDbData));
+    // Reactotron.log('2 - current DB', JSON.parse(currentDbData));
+    // Reactotron.log('2 - new DB', JSON.parse(newDbData));
     if (currentDbData === null || currentDbData !== newDbData) {
       NavigationService.navigate('UpdateModalScreen');
     }
@@ -312,12 +312,25 @@ export let fetchProducts = async () => {
   //       Reactotron.log(error);
   //     }
   //   );
+  //   tx.executeSql(
+  //     'DROP TABLE product_images;',
+  //     [],
+  //     (tx, results) => {
+  //       Reactotron.log(results);
+  //     },
+  //     (tx, error) => {
+  //       Reactotron.log(error);
+  //     }
+  //   );
   // });
 
   // Create database table if not exists
   db.transaction(tx => {
     tx.executeSql(
       'CREATE TABLE IF NOT EXISTS products (product_id text PRIMARY KEY NOT NULL, name text NOT NULL, brand text NOT NULL, product_line text NOT NULL, unit text NOT NULL, price number NOT NULL, offer boolean, offer_price number, package text)'
+    );
+    tx.executeSql(
+      'CREATE TABLE IF NOT EXISTS product_images (product_id text NOT NULL, image text NOT NULL, PRIMARY KEY (product_id, image))'
     );
   });
 
@@ -351,6 +364,12 @@ export let fetchProducts = async () => {
                 product.package
               ]
             );
+            product.images.forEach(image => {
+              tx.executeSql(
+                'REPLACE INTO product_images (product_id, image) VALUES (?, ?);',
+                [product.product_id, image.image]
+              );
+            });
           });
         });
         return { error: false };
@@ -388,6 +407,68 @@ export let fetchProducts = async () => {
 //       console.log(error);
 //     });
 // };
+
+///////// DB Querys
+
+export let getProducts = async (brand, productLine, unit) => {
+  let where = '';
+  if (brand || productLine || unit) {
+    where = 'WHERE';
+  }
+  if (brand) {
+    where += ` brand="${brand}"`;
+  }
+  if (productLine) {
+    if (brand) {
+      where += ` AND product_line="${productLine}"`;
+    } else {
+      where += ` product_line="${productLine}"`;
+    }
+  }
+  if (unit) {
+    if (brand || productLine) {
+      where += ` AND unit="${unit}"`;
+    } else {
+      where += ` unit="${unit}"`;
+    }
+  }
+
+  const sql = `SELECT * FROM products ${where} ORDER BY name ASC;`;
+
+  return new Promise((resolve, reject) =>
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, { rows }) => {
+          // Reactotron.log(rows);
+          resolve(rows._array);
+        },
+        reject
+      );
+    })
+  );
+};
+
+export let getProductImages = async product_id => {
+  const sql = `SELECT image FROM product_images WHERE product_id="${product_id}";`;
+
+  // Reactotron.log(sql);
+
+  return new Promise((resolve, reject) =>
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, { rows }) => {
+          // Reactotron.log(rows);
+          resolve(rows._array);
+        },
+        reject
+      );
+    })
+  );
+};
 
 // Use a Promise to assign result asynchronously
 export let getCustomers = async (city, address) => {
