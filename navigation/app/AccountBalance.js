@@ -8,16 +8,15 @@ import SelectCustomer from '../../components/SelectCustomer';
 import AccountBalanceTable from './components/AccountBalanceTable';
 import Reactotron from 'reactotron-react-native';
 
-// const accountData = {
-//   customer: 'La Biela',
-//   balance: -274.98
-// };
-
 export default class AccountBalanceScreen extends React.Component {
   constructor(props) {
     super(props);
+    Reactotron.log(this.props.screenProps);
     this.state = {
-      accountData: null
+      accountData: null,
+      accumulated: 0,
+      customerId: this.props.screenProps.id,
+      customerName: this.props.screenProps.name
     };
   }
 
@@ -25,13 +24,35 @@ export default class AccountBalanceScreen extends React.Component {
     return balance.charAt(0) === '-' ? '-$' + balance.slice(1) : '$' + balance;
   };
 
+  componentWillMount() {
+    Reactotron.log('WillMount balance');
+  }
+
+  componentWillUnmount() {
+    Reactotron.log('Unmount balance');
+  }
+
   async componentDidMount() {
-    const accountData = await fetchAccountBalance(384);
-    console.log(accountData);
+    Reactotron.log('DidMount balance');
+    const accountData = await fetchAccountBalance(this.props.screenProps.id);
+    // const accountData = await fetchAccountBalance(384);
 
     if (accountData.error === false) {
+      let accumulated = 0;
+      let newAccountData = [];
+      newAccountData = accountData.data.map((item, i) => {
+        accumulated += item.balance;
+        return {
+          voucher: item.voucher,
+          date: item.date,
+          balance: item.balance,
+          accum: accumulated
+        };
+      });
+
       this.setState({
-        accountData: accountData.data
+        accountData: newAccountData,
+        accumulated: accumulated
       });
     }
   }
@@ -39,15 +60,39 @@ export default class AccountBalanceScreen extends React.Component {
   render() {
     const { screenProps } = this.props;
     let content;
-    // if (!screenProps.id) {
-    //   content = <Text>Debe seleccionar un Cliente</Text>;
-    // } else {
-    if (!this.state.accountData) {
-      content = <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />;
+    if (!screenProps.id) {
+      content = (
+        <Text style={{ textAlign: 'center', marginTop: 40 }}>
+          Debe seleccionar un Cliente
+        </Text>
+      );
     } else {
-      content = <AccountBalanceTable data={this.state.accountData} />;
+      if (!this.state.accountData) {
+        content = (
+          <View style={{ marginTop: 40 }}>
+            <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+          </View>
+        );
+      } else {
+        // content = <AccountBalanceTable data={this.state.accountData} />;
+        content = (
+          <View>
+            <View style={styles.account}>
+              <Text style={styles.accountText}>Saldo:</Text>
+              <Text style={styles.accountText}>
+                {this._formatBalance(this.state.accumulated.toFixed(2))}
+              </Text>
+            </View>
+            <View style={styles.accountTable}>
+              <Text style={styles.accountTableTitle}>
+                COMPOSICION DEL SALDO
+              </Text>
+              <AccountBalanceTable data={this.state.accountData} />
+            </View>
+          </View>
+        );
+      }
     }
-    // }
     return (
       <View style={styles.container}>
         <SelectCustomer
@@ -68,13 +113,17 @@ export default class AccountBalanceScreen extends React.Component {
         <View style={styles.title}>
           <Text style={styles.titleText}>ESTADO DE CUENTA</Text>
         </View>
-        <View>{content}</View>
         {/* <View style={styles.account}>
           <Text style={styles.accountText}>Saldo:</Text>
           <Text style={styles.accountText}>
-            {this._formatBalance(accountData.balance.toString())}
+            {this._formatBalance(this.state.accumulated.toFixed(2))}
           </Text>
+        </View>
+        <View style={styles.accountTable}>
+          <Text style={styles.accountTableTitle}>COMPOSICION DEL SALDO</Text>
+          {content}
         </View> */}
+        {content}
         <View style={styles.backButtonContainer}>
           <Button
             mode="contained"
@@ -134,6 +183,16 @@ const styles = StyleSheet.create({
   accountText: {
     color: 'red',
     fontSize: 17,
+    fontWeight: theme.FONT_WEIGHT_MEDIUM
+  },
+  accountTable: {
+    paddingHorizontal: 5,
+    margin: 10,
+    marginTop: 20
+  },
+  accountTableTitle: {
+    color: 'red',
+    fontSize: 16,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   backButtonContainer: {

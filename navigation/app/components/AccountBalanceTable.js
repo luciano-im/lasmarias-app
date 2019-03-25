@@ -2,39 +2,38 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { theme } from '../../../helpers/styles';
+import { format, parse } from 'date-fns';
 
 export default class AccountBalanceTable extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   let myState = {};
-  //   this.props.data.map(item => {
-  //     const key = 'input' + item.id;
-  //     myState[key] = 1;
-  //   });
-  //   this.state = myState;
-  // }
-
   render() {
+    const { accum, data } = this.props;
+
     return (
       <View style={styles.container}>
         <View style={styles.row}>
-          <Text style={[styles.col1, styles.title]}>Comprobante</Text>
+          <Text style={[styles.col1, styles.title]}>COMPROBANTE</Text>
           <Text style={[styles.col2, styles.centerAlign, styles.title]}>
-            Fecha
+            FECHA
           </Text>
           <Text style={[styles.col3, styles.centerAlign, styles.title]}>
-            Saldo
+            SALDO
           </Text>
-          <Text style={[styles.col3, styles.centerAlign, styles.title]}>
-            Acumulado
-          </Text>
+          {/* <Text style={[styles.col4, styles.centerAlign, styles.title]}>
+            ACUMULADO
+          </Text> */}
         </View>
         {this.props.data.map((item, index) => (
           <View style={styles.row}>
             <Text style={styles.col1}>{item.voucher}</Text>
-            <Text style={[styles.col2, styles.centerAlign]}>{item.date}</Text>
-            <Text style={[styles.col3, styles.price]}>$ {item.balance}</Text>
+            <Text style={[styles.col2, styles.centerAlign]}>
+              {format(parse(item.date), 'DD/MM/YY')}
+            </Text>
+            <Text style={[styles.col3, styles.price]}>
+              $ {item.balance.toFixed(2)}
+            </Text>
+            {/* <Text style={[styles.col4, styles.price]}>
+              $ {item.accum.toFixed(2)}
+            </Text> */}
           </View>
         ))}
       </View>
@@ -44,10 +43,10 @@ export default class AccountBalanceTable extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    // flex: 1
   },
   row: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomColor: '#CCC',
@@ -76,6 +75,10 @@ const styles = StyleSheet.create({
     textAlign: 'right'
     // backgroundColor: '#AAA'
   },
+  // col4: {
+  //   flex: 0.25,
+  //   textAlign: 'right'
+  // },
   price: {
     color: theme.PRIMARY_COLOR
   }
