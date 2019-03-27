@@ -23,7 +23,7 @@ export default class AccountBalanceTable extends React.Component {
           </Text> */}
         </View>
         {this.props.data.map((item, index) => (
-          <View style={styles.row}>
+          <View style={styles.row} key={index}>
             <Text style={styles.col1}>{item.voucher}</Text>
             <Text style={[styles.col2, styles.centerAlign]}>
               {format(parse(item.date), 'DD/MM/YY')}

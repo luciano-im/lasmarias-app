@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Text } from 'react-native-paper';
-// import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../helpers/styles';
 import { fetchAccountBalance } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
@@ -11,7 +10,6 @@ import Reactotron from 'reactotron-react-native';
 export default class AccountBalanceScreen extends React.Component {
   constructor(props) {
     super(props);
-    Reactotron.log(this.props.screenProps);
     this.state = {
       accountData: null,
       accumulated: 0,
@@ -24,18 +22,8 @@ export default class AccountBalanceScreen extends React.Component {
     return balance.charAt(0) === '-' ? '-$' + balance.slice(1) : '$' + balance;
   };
 
-  componentWillMount() {
-    Reactotron.log('WillMount balance');
-  }
-
-  componentWillUnmount() {
-    Reactotron.log('Unmount balance');
-  }
-
-  async componentDidMount() {
-    Reactotron.log('DidMount balance');
-    const accountData = await fetchAccountBalance(this.props.screenProps.id);
-    // const accountData = await fetchAccountBalance(384);
+  _fetchAccount = async customer_id => {
+    const accountData = await fetchAccountBalance(customer_id);
 
     if (accountData.error === false) {
       let accumulated = 0;
@@ -54,6 +42,31 @@ export default class AccountBalanceScreen extends React.Component {
         accountData: newAccountData,
         accumulated: accumulated
       });
+    }
+  };
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (
+      (this.props.screenProps.id !== prevProps.screenProps.id ||
+        this.state.accountData === null) &&
+      this.props.screenProps.id !== null
+    ) {
+      await this._fetchAccount(this.props.screenProps.id);
+    } else {
+      if (
+        this.props.screenProps.id === null &&
+        this.state.accountData !== null
+      ) {
+        this.setState({
+          accountData: null
+        });
+      }
+    }
+  }
+
+  async componentDidMount() {
+    if (this.props.screenProps.id !== null) {
+      await this._fetchAccount(this.props.screenProps.id);
     }
   }
 
@@ -74,7 +87,6 @@ export default class AccountBalanceScreen extends React.Component {
           </View>
         );
       } else {
-        // content = <AccountBalanceTable data={this.state.accountData} />;
         content = (
           <View>
             <View style={styles.account}>
@@ -93,6 +105,7 @@ export default class AccountBalanceScreen extends React.Component {
         );
       }
     }
+
     return (
       <View style={styles.container}>
         <SelectCustomer
@@ -113,16 +126,6 @@ export default class AccountBalanceScreen extends React.Component {
         <View style={styles.title}>
           <Text style={styles.titleText}>ESTADO DE CUENTA</Text>
         </View>
-        {/* <View style={styles.account}>
-          <Text style={styles.accountText}>Saldo:</Text>
-          <Text style={styles.accountText}>
-            {this._formatBalance(this.state.accumulated.toFixed(2))}
-          </Text>
-        </View>
-        <View style={styles.accountTable}>
-          <Text style={styles.accountTableTitle}>COMPOSICION DEL SALDO</Text>
-          {content}
-        </View> */}
         {content}
         <View style={styles.backButtonContainer}>
           <Button
