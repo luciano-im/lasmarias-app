@@ -52,6 +52,13 @@ export let _getDbData = async key => {
   }
 };
 
+///////// Not Authenticated
+
+_notAuthenticated = () => {
+  this._removeToken();
+  NavigationService.navigate('Auth');
+};
+
 ///////// Update dbData
 
 export let updateDbData = async () => {
@@ -263,6 +270,9 @@ export let fetchCustomers = async () => {
     .get(api + 'api/customer/', config)
     .then(response => {
       Reactotron.log(response.data);
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
       if (response.status === 200) {
         const data = response.data;
         data.forEach(customer => {
@@ -346,6 +356,9 @@ export let fetchProducts = async () => {
     .get(api + 'api/product/', config)
     .then(response => {
       Reactotron.log(response.data);
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
       if (response.status === 200) {
         const data = response.data;
         data.forEach(product => {
@@ -405,10 +418,15 @@ export let fetchAccountBalance = async user => {
   return await axios
     .get(api + `api/balance/${user}/`, config)
     .then(response => {
-      return {
-        error: false,
-        data: response.data
-      };
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
+      if (response.status === 200) {
+        return {
+          error: false,
+          data: response.data
+        };
+      }
     })
     .catch(error => {
       Reactotron.error(error);

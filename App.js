@@ -73,8 +73,12 @@ export default class App extends React.Component {
       },
       async (status, response) => {
         if (status.error === false) {
-          // Save new data, later call updateDbData to compare new data vs existing/current data
-          await _saveDbData('newDbData', response.messages[0].entry);
+          const msgs = response.messages;
+          // Check for messages
+          if (msgs !== 'undefined' && msgs.length > 0) {
+            // Save new data, later call updateDbData to compare new data vs existing/current data
+            await _saveDbData('newDbData', msgs[0].entry);
+          }
         }
       }
     );

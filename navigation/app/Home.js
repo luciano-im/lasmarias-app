@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
-import { Modal, Portal, Text } from 'react-native-paper';
+import { ActivityIndicator, Modal, Portal, Text } from 'react-native-paper';
 import { theme } from '../../helpers/styles';
 import { updateDbData, getProducts } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
@@ -20,7 +20,8 @@ export default class HomeScreen extends React.Component {
       filteredProducts: [],
       selectedBrand: null,
       selectedProductLine: null,
-      selectedUnit: null
+      selectedUnit: null,
+      loading: true
     };
   }
 
@@ -69,11 +70,13 @@ export default class HomeScreen extends React.Component {
 
     this.setState({
       products: products,
-      filteredProducts: products
+      filteredProducts: products,
+      loading: false
     });
   }
 
   render() {
+    const { loading } = this.state;
     return (
       <ScrollView style={styles.container}>
         <SelectCustomer
@@ -85,6 +88,21 @@ export default class HomeScreen extends React.Component {
           <Text style={styles.title}>OFERTAS / DESTACADOS</Text>
         </View>
         <View style={styles.listContainer}>
+          {loading && (
+            <View>
+              <ActivityIndicator
+                animating={this.state.loading}
+                color={theme.PRIMARY_COLOR}
+                size={25}
+                style={{ marginTop: 30 }}
+              />
+              <Text
+                style={{ textAlign: 'center', color: '#AAA', marginTop: 15 }}
+              >
+                Cargando datos...
+              </Text>
+            </View>
+          )}
           <FlatList
             ItemSeparatorComponent={() => (
               <View style={{ height: 6, backgroundColor: '#EEE' }} />
@@ -126,7 +144,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   listContainer: {
-    flex: 1
+    flex: 1,
+    position: 'relative'
   },
   modal: {
     flex: 1
