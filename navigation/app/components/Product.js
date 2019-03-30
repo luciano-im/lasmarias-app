@@ -3,7 +3,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
-import { getProductImages } from '../../../helpers/api';
+import { api, getProductImages } from '../../../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
 //TODO: Receive data and make to work "add" link
@@ -44,10 +44,11 @@ export default class Product extends React.Component {
 
     let imageComponent;
     if (!imagesEmpty) {
+      const imgURL = api + Array.from(this.state.images)[0].image;
       imageComponent = (
         <Image
           style={styles.image}
-          source={{ uri: Array.from(this.state.images)[0].image }}
+          source={{ uri: imgURL }}
           resizeMode="contain"
         />
       );

@@ -9,7 +9,7 @@ import Reactotron from 'reactotron-react-native';
 const db = SQLite.openDatabase('lasmarias.db');
 
 // const api = 'https://las-marias.localtunnel.me/';
-const api = 'https://79e04a98.ngrok.io/';
+export const api = 'https://9c73d232.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -69,8 +69,8 @@ export let updateDbData = async () => {
   try {
     const currentDbData = await _getDbData('currentDbData');
     const newDbData = await _getDbData('newDbData');
-    Reactotron.log('2 - current DB', JSON.parse(currentDbData));
-    Reactotron.log('2 - new DB', JSON.parse(newDbData));
+    // Reactotron.log('2 - current DB', JSON.parse(currentDbData));
+    // Reactotron.log('2 - new DB', JSON.parse(newDbData));
     if (currentDbData === null || currentDbData !== newDbData) {
       NavigationService.navigate('UpdateModalScreen');
     }
@@ -93,12 +93,12 @@ export let login = async (email, password) => {
   };
 
   return await axios
-    .post(api + 'rest-auth/login/', qs.stringify(data), config)
+    .post(api + '/rest-auth/login/', qs.stringify(data), config)
     .then(response => {
       // Reactotron.log(response);
       if (response.status === 200) {
         this._saveToken(response.data);
-        return { error: false };
+        return { error: false, userType: response.data.user_type };
       }
     })
     .catch(error => {
@@ -128,7 +128,7 @@ export let logout = async () => {
   };
 
   return await axios
-    .post(api + 'rest-auth/logout/', {}, config)
+    .post(api + '/rest-auth/logout/', {}, config)
     .then(async response => {
       // Reactotron.log(response);
       if (response.status === 200) {
@@ -175,7 +175,7 @@ export let signUp = async (email, password, password2, relatedData) => {
   };
 
   return await axios
-    .post(api + 'rest-auth/registration/', qs.stringify(data), config)
+    .post(api + '/rest-auth/registration/', qs.stringify(data), config)
     .then(response => {
       // Reactotron.log(response);
       if (response.status === 201) {
@@ -211,7 +211,7 @@ export let resetPassword = async email => {
   };
 
   return await axios
-    .post(api + 'rest-auth/password/reset/', qs.stringify(data), config)
+    .post(api + '/rest-auth/password/reset/', qs.stringify(data), config)
     .then(response => {
       Reactotron.log(response);
       if (response.status === 200) {
@@ -269,7 +269,7 @@ export let fetchCustomers = async () => {
   };
 
   return await axios
-    .get(api + 'api/customer/', config)
+    .get(api + '/api/customer/', config)
     .then(response => {
       Reactotron.log(response.data);
       if (response.status === 401) {
@@ -355,7 +355,7 @@ export let fetchProducts = async () => {
   };
 
   return await axios
-    .get(api + 'api/product/', config)
+    .get(api + '/api/product/', config)
     .then(response => {
       Reactotron.log(response.data);
       if (response.status === 401) {
@@ -382,7 +382,7 @@ export let fetchProducts = async () => {
             product.images.forEach(image => {
               tx.executeSql(
                 'REPLACE INTO product_images (product_id, image) VALUES (?, ?);',
-                [product.product_id, image.image]
+                [product.product_id, image.image_relative_url]
               );
             });
           });
@@ -418,7 +418,7 @@ export let fetchAccountBalance = async user => {
   };
 
   return await axios
-    .get(api + `api/balance/${user}/`, config)
+    .get(api + `/api/balance/${user}/`, config)
     .then(response => {
       if (response.status === 401) {
         this._notAuthenticated();

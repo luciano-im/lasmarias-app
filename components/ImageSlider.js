@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-swiper';
+import { api } from '../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
 export default class Slider extends Component {
@@ -16,12 +17,12 @@ export default class Slider extends Component {
     let imageArray = [];
 
     images.map((uri, i) => {
-      Reactotron.log(uri.image);
+      const imgURL = api + uri.image;
       imageArray.push(
         <View style={styles.container} key={i}>
           <Image
             source={{
-              uri: uri.image
+              uri: imgURL
             }}
             style={styles.image}
             resizeMode="contain"

@@ -26,12 +26,16 @@ export default class HomeScreen extends React.Component {
       loading: true
     };
 
-    // Init PubNub object
-    this.pubnub = new PubNubReact({
-      publishKey: pubnubConfig.PUBNUB_PUBLISH_KEY,
-      subscribeKey: pubnubConfig.PUBNUB_SUBSCRIBE_KEY
-    });
-    this.pubnub.init(this);
+    this.userType = this.props.screenProps.userType;
+
+    if (this.userType === 'VEN') {
+      // Init PubNub object
+      this.pubnub = new PubNubReact({
+        publishKey: pubnubConfig.PUBNUB_PUBLISH_KEY,
+        subscribeKey: pubnubConfig.PUBNUB_SUBSCRIBE_KEY
+      });
+      this.pubnub.init(this);
+    }
   }
 
   _navigateCheckout = () => {
@@ -66,59 +70,60 @@ export default class HomeScreen extends React.Component {
     />
   );
 
-  componentWillUnmount() {
-    this.pubnub.unsubscribe({
-      channels: ['lasmarias']
-    });
-  }
-
-  async componentDidMount() {
-    // await updateDbData();
-    // Subscribe to channel
-    this.pubnub.subscribe({
-      channels: ['lasmarias']
-    });
-
-    // Get new messages
-    this.pubnub.getMessage('lasmarias', async msg => {
-      Reactotron.log('Msg: ' + msg);
-      // Save new data, later call updateDbData to compare new data vs existing/current data
-      await _saveDbData('newDbData', msg.message);
-      await updateDbData();
-    });
-
-    //Get last message from history
-    await this.pubnub.history(
-      {
-        channel: 'lasmarias',
-        reverse: false,
-        count: 1 // how many items to fetch
-      },
-      async (status, response) => {
-        if (status.error === false) {
-          const msgs = response.messages;
-          Reactotron.log('History Msg: ' + msgs);
-          // Check for messages
-          if (msgs !== 'undefined' && msgs.length > 0) {
-            // Save new data, later call updateDbData to compare new data vs existing/current data
-            await _saveDbData('newDbData', msgs[0].entry);
-          }
-        }
-      }
-    );
-
+  _updateData = async dbData => {
+    // Save new data, later call updateDbData to compare new data vs existing/current data
+    // Finally set new state
+    await _saveDbData('newDbData', dbData);
+    await updateDbData();
     const products = await getProducts(
       this.state.selectedBrand,
       this.state.selectedProductLine,
       this.state.selectedUnit
     );
-
-    Reactotron.log('Products' + products);
-
     this.setState({
       products: products,
       filteredProducts: products,
       loading: false
+    });
+  };
+
+  componentDidMount() {
+    if (this.userType === 'VEN') {
+      // Subscribe to channel
+      this.pubnub.subscribe({
+        channels: ['lasmarias']
+      });
+
+      // Get new messages
+      this.pubnub.getMessage('lasmarias', async msg => {
+        this._updateData(msg.message);
+      });
+
+      //Get last message from history
+      this.pubnub.history(
+        {
+          channel: 'lasmarias',
+          reverse: false,
+          count: 1 // how many items to fetch
+        },
+        (status, response) => {
+          if (status.error === false) {
+            const msgs = response.messages;
+            // Check for messages
+            if (msgs !== 'undefined' && msgs.length > 0) {
+              this._updateData(msgs[0].entry);
+            }
+          }
+        }
+      );
+    } else {
+      // TODO: User is customer
+    }
+  }
+
+  componentWillUnmount() {
+    this.pubnub.unsubscribe({
+      channels: ['lasmarias']
     });
   }
 

@@ -29,13 +29,6 @@ export default class App extends React.Component {
       name: null,
       userType: null
     };
-
-    // // Init PubNub object
-    // this.pubnub = new PubNubReact({
-    //   publishKey: pubnubConfig.PUBNUB_PUBLISH_KEY,
-    //   subscribeKey: pubnubConfig.PUBNUB_SUBSCRIBE_KEY
-    // });
-    // this.pubnub.init(this);
   }
 
   _setId = data => {
@@ -57,45 +50,6 @@ export default class App extends React.Component {
       userType: data
     });
   };
-
-  // async componentWillMount() {
-  //   // Subscribe to channel
-  //   this.pubnub.subscribe({
-  //     channels: ['lasmarias']
-  //   });
-
-  //   // Get new messages
-  //   this.pubnub.getMessage('lasmarias', async msg => {
-  //     // Save new data, later call updateDbData to compare new data vs existing/current data
-  //     await _saveDbData('newDbData', msg.message);
-  //     await updateDbData();
-  //   });
-
-  //   //Get last message from history
-  //   this.pubnub.history(
-  //     {
-  //       channel: 'lasmarias',
-  //       reverse: false,
-  //       count: 1 // how many items to fetch
-  //     },
-  //     async (status, response) => {
-  //       if (status.error === false) {
-  //         const msgs = response.messages;
-  //         // Check for messages
-  //         if (msgs !== 'undefined' && msgs.length > 0) {
-  //           // Save new data, later call updateDbData to compare new data vs existing/current data
-  //           await _saveDbData('newDbData', msgs[0].entry);
-  //         }
-  //       }
-  //     }
-  //   );
-  // }
-
-  // componentWillUnmount() {
-  //   this.pubnub.unsubscribe({
-  //     channels: ['lasmarias']
-  //   });
-  // }
 
   // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop
   render() {
