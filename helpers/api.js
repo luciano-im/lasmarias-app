@@ -8,13 +8,14 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-const api = 'https://las-marias.localtunnel.me/';
+// const api = 'https://las-marias.localtunnel.me/';
+const api = 'https://79e04a98.ngrok.io/';
 
 ///////// AsyncStorage
 
 _saveToken = async token => {
   try {
-    await AsyncStorage.setItem('Token', token);
+    await AsyncStorage.setItem('Token', JSON.stringify(token));
   } catch (error) {
     Reactotron.error('Error saving Token');
   }
@@ -22,7 +23,8 @@ _saveToken = async token => {
 
 export let _getToken = async () => {
   try {
-    return await AsyncStorage.getItem('Token');
+    const token = await AsyncStorage.getItem('Token');
+    return JSON.parse(token);
   } catch {
     Reactotron.error('Error retrieving Token');
   }
@@ -67,8 +69,8 @@ export let updateDbData = async () => {
   try {
     const currentDbData = await _getDbData('currentDbData');
     const newDbData = await _getDbData('newDbData');
-    // Reactotron.log('2 - current DB', JSON.parse(currentDbData));
-    // Reactotron.log('2 - new DB', JSON.parse(newDbData));
+    Reactotron.log('2 - current DB', JSON.parse(currentDbData));
+    Reactotron.log('2 - new DB', JSON.parse(newDbData));
     if (currentDbData === null || currentDbData !== newDbData) {
       NavigationService.navigate('UpdateModalScreen');
     }
@@ -95,7 +97,7 @@ export let login = async (email, password) => {
     .then(response => {
       // Reactotron.log(response);
       if (response.status === 200) {
-        this._saveToken(response.data.key);
+        this._saveToken(response.data);
         return { error: false };
       }
     })
@@ -122,7 +124,7 @@ export let logout = async () => {
 
   const config = {
     timeout: 5000,
-    headers: { Authorization: 'Token ' + token }
+    headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
@@ -263,7 +265,7 @@ export let fetchCustomers = async () => {
   const config = {
     timeout: 5000,
     responseType: 'json',
-    headers: { Authorization: 'Token ' + token }
+    headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
@@ -349,7 +351,7 @@ export let fetchProducts = async () => {
   const config = {
     timeout: 5000,
     responseType: 'json',
-    headers: { Authorization: 'Token ' + token }
+    headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
@@ -412,7 +414,7 @@ export let fetchAccountBalance = async user => {
   const config = {
     timeout: 5000,
     responseType: 'json',
-    headers: { Authorization: 'Token ' + token }
+    headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios

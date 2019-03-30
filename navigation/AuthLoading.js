@@ -8,7 +8,13 @@ import { _getToken } from '../helpers/api';
 export default class AuthLoadingScreen extends React.Component {
   async componentDidMount() {
     const token = await _getToken();
-    this.props.navigation.navigate(token !== null ? 'App' : 'Auth');
+    if (token !== null) {
+      this.props.screenProps.setUserType(token.user_type);
+      this.props.navigation.navigate('App');
+    } else {
+      this.props.navigation.navigate('Auth');
+    }
+    // this.props.navigation.navigate(token !== null ? 'App' : 'Auth');
   }
 
   render() {
