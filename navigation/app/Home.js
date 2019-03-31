@@ -75,11 +75,16 @@ export default class HomeScreen extends React.Component {
     // Finally set new state
     await _saveDbData('newDbData', dbData);
     await updateDbData();
+    this._fetchData();
+  };
+
+  _fetchData = async () => {
     const products = await getProducts(
       this.state.selectedBrand,
       this.state.selectedProductLine,
       this.state.selectedUnit
     );
+    Reactotron.log('Productos', products);
     this.setState({
       products: products,
       filteredProducts: products,
@@ -122,13 +127,53 @@ export default class HomeScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.pubnub.unsubscribe({
-      channels: ['lasmarias']
-    });
+    if (this.userType === 'VEN') {
+      this.pubnub.unsubscribe({
+        channels: ['lasmarias']
+      });
+    }
+  }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.screenProps.updated !== null &&
+      this.props.screenProps.updated !== prevProps.screenProps.updated
+    ) {
+      await this._fetchData();
+    }
   }
 
   render() {
     const { loading } = this.state;
+
+    let content;
+    if (loading) {
+      content = (
+        <View>
+          <ActivityIndicator
+            animating={this.state.loading}
+            color={theme.PRIMARY_COLOR}
+            size={25}
+            style={{ marginTop: 30 }}
+          />
+          <Text style={{ textAlign: 'center', color: '#AAA', marginTop: 15 }}>
+            Cargando datos...
+          </Text>
+        </View>
+      );
+    } else {
+      content = (
+        <FlatList
+          ItemSeparatorComponent={() => (
+            <View style={{ height: 6, backgroundColor: '#EEE' }} />
+          )}
+          data={this.state.filteredProducts}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+        />
+      );
+    }
+
     return (
       <ScrollView style={styles.container}>
         <SelectCustomer
@@ -140,7 +185,8 @@ export default class HomeScreen extends React.Component {
           <Text style={styles.title}>OFERTAS / DESTACADOS</Text>
         </View>
         <View style={styles.listContainer}>
-          {loading && (
+          {content}
+          {/* {loading && (
             <View>
               <ActivityIndicator
                 animating={this.state.loading}
@@ -162,7 +208,7 @@ export default class HomeScreen extends React.Component {
             data={this.state.filteredProducts}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
-          />
+          /> */}
         </View>
         <Portal style={styles.modal}>
           <Modal

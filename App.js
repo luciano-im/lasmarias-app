@@ -27,7 +27,8 @@ export default class App extends React.Component {
     this.state = {
       id: null,
       name: null,
-      userType: null
+      userType: null,
+      updated: null
     };
   }
 
@@ -51,6 +52,12 @@ export default class App extends React.Component {
     });
   };
 
+  _setUpdated = isUpdated => {
+    this.setState({
+      updated: isUpdated
+    });
+  };
+
   // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop
   render() {
     return (
@@ -64,9 +71,11 @@ export default class App extends React.Component {
               setId: data => this._setId(data),
               removeId: () => this._removeId(),
               setUserType: data => this._setUserType(data),
+              setUpdated: isUpdated => this._setUpdated(isUpdated),
               id: this.state.id,
               name: this.state.name,
-              userType: this.state.userType
+              userType: this.state.userType,
+              updated: this.state.updated
             }}
           />
         </SafeAreaView>

@@ -44,8 +44,8 @@ export default class UpdateInfoScreen extends React.Component {
 
       const products = await fetchProducts();
 
-      Reactotron.log(customers);
-      Reactotron.log(products);
+      // Reactotron.log(customers);
+      // Reactotron.log(products);
 
       //Check for errors
       if (customers.error === false) {
@@ -55,6 +55,8 @@ export default class UpdateInfoScreen extends React.Component {
             animating: false,
             buttonDisabled: false
           });
+          //Set updated true
+          this.props.screenProps.setUpdated(new Date().toString());
           //Once updated save the new DbData to AsyncStorage
           const newDbData = await _getDbData('newDbData');
           await _saveDbData('currentDbData', JSON.parse(newDbData));

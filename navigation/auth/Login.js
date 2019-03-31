@@ -39,9 +39,8 @@ export default class LoginScreen extends React.Component {
       loading: true
     });
     await login(this.state.userText, this.state.passText).then(response => {
-      Reactotron.log(response);
       if (response.error === false) {
-        this.props.screenProps.setUserType(response.user_type);
+        this.props.screenProps.setUserType(response.userType);
         this.props.navigation.navigate('App');
       } else {
         this.setState({

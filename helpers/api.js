@@ -8,8 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-// const api = 'https://las-marias.localtunnel.me/';
-export const api = 'https://9c73d232.ngrok.io';
+export const api = 'https://8abe39cf.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -474,6 +473,7 @@ export let getProducts = async (brand, productLine, unit) => {
   }
 
   const sql = `SELECT * FROM products ${where} ORDER BY name ASC;`;
+  Reactotron.log(sql);
 
   return new Promise((resolve, reject) =>
     db.transaction(tx => {
@@ -484,7 +484,9 @@ export let getProducts = async (brand, productLine, unit) => {
           // Reactotron.log(rows);
           resolve(rows._array);
         },
-        reject
+        (tx, error) => {
+          Reactotron.log('Error', tx, error, reject);
+        }
       );
     })
   );
@@ -504,7 +506,9 @@ export let getProductImages = async product_id => {
           // Reactotron.log(rows);
           resolve(rows._array);
         },
-        reject
+        (tx, error) => {
+          Reactotron.log('Error', tx, error, reject);
+        }
       );
     })
   );
@@ -527,7 +531,9 @@ export let getCustomers = async city => {
         (tx, { rows }) => {
           resolve(rows._array);
         },
-        reject
+        (tx, error) => {
+          Reactotron.log('Error', tx, error, reject);
+        }
       );
     })
   );
@@ -544,7 +550,9 @@ export let getCities = async () => {
         (tx, { rows }) => {
           resolve(rows._array);
         },
-        reject
+        (tx, error) => {
+          Reactotron.log('Error', tx, error, reject);
+        }
       );
     })
   );
