@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
 import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
+import NavigationService from '../../../navigation/NavigationService';
 import Reactotron from 'reactotron-react-native';
 
 // //TODO: Receive data and make to work "add" link
@@ -21,6 +22,15 @@ export default class ProductDetailModal extends React.Component {
       if (obj.hasOwnProperty(key)) return false;
     }
     return true;
+  };
+
+  _addProductToCart = () => {
+    const customer = this.props.customer;
+    if (customer === null) {
+      this.props.showSnackCustomer();
+    } else {
+      NavigationService.navigate('Checkout');
+    }
   };
 
   async componentDidMount() {
@@ -57,10 +67,7 @@ export default class ProductDetailModal extends React.Component {
             onPress={this.props.onDismiss}
             style={styles.close}
           />
-          <View style={styles.imageContainer}>
-            {/* <Slider images={data.gallery} /> */}
-            {sliderComponent}
-          </View>
+          <View style={styles.imageContainer}>{sliderComponent}</View>
           <View style={styles.infoContainer}>
             <Text style={styles.name}>
               {data.name.toUpperCase()} {data.brand.toUpperCase()}
@@ -73,7 +80,7 @@ export default class ProductDetailModal extends React.Component {
               </View>
               <View style={styles.addProductContainer}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigateCheckout}
+                  onPress={() => this._addProductToCart()}
                   style={styles.addButton}
                 >
                   <MaterialIcons

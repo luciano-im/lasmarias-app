@@ -4,6 +4,7 @@ import { ActivityIndicator, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
 import { api, getProductImages } from '../../../helpers/api';
+import NavigationService from '../../../navigation/NavigationService';
 import Reactotron from 'reactotron-react-native';
 
 //TODO: Receive data and make to work "add" link
@@ -20,6 +21,16 @@ export default class Product extends React.Component {
       if (obj.hasOwnProperty(key)) return false;
     }
     return true;
+  };
+
+  _addProductToCart = () => {
+    const customer = this.props.customer;
+    if (customer === null) {
+      // NavigationService.navigate('SearchCustomer');
+      this.props.showSnackCustomer();
+    } else {
+      NavigationService.navigate('Checkout');
+    }
   };
 
   async componentDidMount() {
@@ -73,7 +84,8 @@ export default class Product extends React.Component {
           <View style={styles.priceContainer}>
             <View style={styles.priceDetail}>
               <TouchableOpacity
-                onPress={() => this.props.onPress(this.props.item)}
+                // onPress={() => this.props.onPress(this.props.item)}
+                onPress={() => this.props.showModal(this.props.item)}
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>Ver detalle</Text>
@@ -82,7 +94,7 @@ export default class Product extends React.Component {
             </View>
             <View style={styles.addProductContainer}>
               <TouchableOpacity
-                onPress={() => this.props.navigateCheckout()}
+                onPress={() => this._addProductToCart()}
                 style={styles.addButton}
               >
                 <MaterialIcons

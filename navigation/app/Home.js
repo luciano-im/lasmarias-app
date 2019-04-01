@@ -1,6 +1,12 @@
 import React from 'react';
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Modal, Portal, Text } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Modal,
+  Portal,
+  Snackbar,
+  Text
+} from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
 import { theme } from '../../helpers/styles';
 import { _saveDbData, updateDbData, getProducts } from '../../helpers/api';
@@ -23,7 +29,8 @@ export default class HomeScreen extends React.Component {
       selectedBrand: null,
       selectedProductLine: null,
       selectedUnit: null,
-      loading: true
+      loading: true,
+      snackVisible: false
     };
 
     this.userType = this.props.screenProps.userType;
@@ -38,12 +45,20 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  _navigateCheckout = () => {
-    this.props.navigation.navigate('Checkout');
+  _getCustomerId = () => {
+    return this.props.screenProps.id;
   };
 
-  _onPressItem = item => {
-    this._showModal(item);
+  _showSnackCustomer = () => {
+    this.setState({
+      snackVisible: true
+    });
+  };
+
+  _hideSnackCustomer = () => {
+    this.setState({
+      snackVisible: false
+    });
   };
 
   _showModal = selectedItem => {
@@ -65,8 +80,9 @@ export default class HomeScreen extends React.Component {
       unit={item.unit}
       packaging={item.package}
       item={item}
-      onPress={this._onPressItem}
-      navigateCheckout={this._navigateCheckout}
+      showModal={this._showModal}
+      customer={this._getCustomerId()}
+      showSnackCustomer={this._showSnackCustomer}
     />
   );
 
@@ -84,7 +100,7 @@ export default class HomeScreen extends React.Component {
       this.state.selectedProductLine,
       this.state.selectedUnit
     );
-    Reactotron.log('Productos', products);
+    // Reactotron.log('Productos', products);
     this.setState({
       products: products,
       filteredProducts: products,
@@ -175,55 +191,50 @@ export default class HomeScreen extends React.Component {
     }
 
     return (
-      <ScrollView style={styles.container}>
-        <SelectCustomer
-          navigation={this.props.navigation}
-          screenProps={this.props.screenProps}
-        />
-        <CategoryFilter />
-        <View style={styles.titleBackground}>
-          <Text style={styles.title}>OFERTAS / DESTACADOS</Text>
-        </View>
-        <View style={styles.listContainer}>
-          {content}
-          {/* {loading && (
-            <View>
-              <ActivityIndicator
-                animating={this.state.loading}
-                color={theme.PRIMARY_COLOR}
-                size={25}
-                style={{ marginTop: 30 }}
-              />
-              <Text
-                style={{ textAlign: 'center', color: '#AAA', marginTop: 15 }}
-              >
-                Cargando datos...
-              </Text>
-            </View>
-          )}
-          <FlatList
-            ItemSeparatorComponent={() => (
-              <View style={{ height: 6, backgroundColor: '#EEE' }} />
-            )}
-            data={this.state.filteredProducts}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderItem}
-          /> */}
-        </View>
-        <Portal style={styles.modal}>
-          <Modal
-            visible={this.state.isModalVisible}
-            onDismiss={this._hideModal}
-            style={styles.modal}
-          >
-            <ProductDetailModal
-              data={this.state.selectedItem}
+      <View style={styles.container}>
+        <Snackbar
+          style={{ zIndex: 10000 }}
+          visible={this.state.snackVisible}
+          onDismiss={() => this._hideSnackCustomer()}
+          duration={5000}
+          action={{
+            label: 'OK',
+            onPress: () => this._hideSnackCustomer()
+          }}
+          theme={{
+            colors: {
+              accent: theme.ACCENT_COLOR
+            }
+          }}
+        >
+          Debe seleccionar un Cliente
+        </Snackbar>
+        <ScrollView style={styles.container}>
+          <SelectCustomer
+            navigation={this.props.navigation}
+            screenProps={this.props.screenProps}
+          />
+          <CategoryFilter />
+          <View style={styles.titleBackground}>
+            <Text style={styles.title}>OFERTAS / DESTACADOS</Text>
+          </View>
+          <View style={styles.listContainer}>{content}</View>
+          <Portal style={styles.modal}>
+            <Modal
+              visible={this.state.isModalVisible}
               onDismiss={this._hideModal}
-              navigateCheckout={this._navigateCheckout}
-            />
-          </Modal>
-        </Portal>
-      </ScrollView>
+              style={styles.modal}
+            >
+              <ProductDetailModal
+                data={this.state.selectedItem}
+                onDismiss={this._hideModal}
+                customer={this._getCustomerId()}
+                showSnackCustomer={this._showSnackCustomer}
+              />
+            </Modal>
+          </Portal>
+        </ScrollView>
+      </View>
     );
   }
 }
