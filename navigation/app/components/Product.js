@@ -3,7 +3,11 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../../../helpers/styles';
-import { api, getProductImages } from '../../../helpers/api';
+import {
+  api,
+  _addProductToOrder,
+  getProductImages
+} from '../../../helpers/api';
 import NavigationService from '../../../navigation/NavigationService';
 import Reactotron from 'reactotron-react-native';
 
@@ -23,13 +27,17 @@ export default class Product extends React.Component {
     return true;
   };
 
-  _addProductToCart = () => {
+  _addProductToCart = async () => {
     const customer = this.props.customer;
     if (customer === null) {
-      // NavigationService.navigate('SearchCustomer');
       this.props.showSnackCustomer();
     } else {
-      NavigationService.navigate('Checkout');
+      const addProduct = await _addProductToOrder(this.props.item);
+      if (addProduct) {
+        NavigationService.navigate('Checkout');
+      } else {
+        Reactotron.log('Error en addProduct');
+      }
     }
   };
 
@@ -84,7 +92,6 @@ export default class Product extends React.Component {
           <View style={styles.priceContainer}>
             <View style={styles.priceDetail}>
               <TouchableOpacity
-                // onPress={() => this.props.onPress(this.props.item)}
                 onPress={() => this.props.showModal(this.props.item)}
                 style={styles.button}
               >

@@ -9,7 +9,12 @@ import {
 } from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
 import { theme } from '../../helpers/styles';
-import { _saveDbData, updateDbData, getProducts } from '../../helpers/api';
+import {
+  _saveDbData,
+  _removeOrder,
+  updateDbData,
+  getProducts
+} from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import CategoryFilter from './components/CategoryFilter';
 import Product from './components/Product';
@@ -148,6 +153,7 @@ export default class HomeScreen extends React.Component {
         channels: ['lasmarias']
       });
     }
+    _removeOrder();
   }
 
   async componentDidUpdate(prevProps, prevState) {
