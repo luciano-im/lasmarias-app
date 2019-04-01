@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://6c58569c.ngrok.io';
+export const api = 'https://510c8ace.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -56,47 +56,43 @@ export let _getDbData = async key => {
 export let _addProductToOrder = async (item, qty = 0) => {
   try {
     const orderProducts = await AsyncStorage.getItem('OrderProducts');
-    if(orderProducts === null) {
-      let products = []
-      products[item.product_id]['item'] = item
-      products[item.product_id]['qty'] = qty
+    let products = orderProducts === null ? [] : JSON.parse(orderProducts);
+    products.push({ id: item.product_id, item: item, qty: qty });
+    try {
       await AsyncStorage.setItem('OrderProducts', JSON.stringify(products));
-      return {error: false}
-    } else {
-      let products = JSON.parse(orderProducts);
-      products[item.product_id]['item'] = item
-      products[item.product_id]['qty'] = qty
-      await AsyncStorage.setItem('OrderProducts', JSON.stringify(products));
-      return {error: false}
+      return { error: false };
+    } catch {
+      Reactotron.error('Error saving product');
+      return { error: true };
     }
   } catch {
     Reactotron.error('Error retrieving OrderProducts');
-    return {error: true}
+    return { error: true };
   }
-}
+};
 
-_removeProductFromOrder = (product_id) => {
+export let _removeProductFromOrder = async product_id => {
   try {
     const orderProducts = await AsyncStorage.getItem('OrderProducts');
-    if(orderProducts !== null) {
+    if (orderProducts !== null) {
       let products = JSON.parse(orderProducts);
-      delete products[product_id]
+      delete products[product_id];
       await AsyncStorage.setItem('OrderProducts', JSON.stringify(products));
-      return {error: false}
+      return { error: false };
     }
   } catch {
     Reactotron.error('Error retrieving OrderProducts');
-    return {error: true}
+    return { error: true };
   }
-}
+};
 
-_removeOrder = () => {
+_removeOrder = async () => {
   try {
     await AsyncStorage.removeItem('OrderProducts');
   } catch {
     Reactotron.error('Error deleting OrderProducts');
   }
-}
+};
 
 ///////// Not Authenticated
 
