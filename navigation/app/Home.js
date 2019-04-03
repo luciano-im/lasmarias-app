@@ -13,6 +13,7 @@ import {
   _saveDbData,
   _addProductToOrder,
   _removeOrder,
+  _getOrder,
   updateDbData,
   getProducts
 } from '../../helpers/api';
@@ -23,7 +24,6 @@ import ProductDetailModal from './components/ProductDetailModal';
 import { pubnubConfig } from '../../PubnubConfig';
 import Reactotron from 'reactotron-react-native';
 
-//TODO: Add logic and products fetch
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +36,8 @@ export default class HomeScreen extends React.Component {
       selectedProductLine: null,
       selectedUnit: null,
       loading: true,
-      snackVisible: false
+      snackVisible: false,
+      snackText: ''
     };
 
     this.userType = this.props.screenProps.userType;
@@ -55,13 +56,14 @@ export default class HomeScreen extends React.Component {
     return this.props.screenProps.id;
   };
 
-  _showSnackCustomer = () => {
+  _showSnack = text => {
     this.setState({
-      snackVisible: true
+      snackVisible: true,
+      snackText: text
     });
   };
 
-  _hideSnackCustomer = () => {
+  _hideSnack = () => {
     this.setState({
       snackVisible: false
     });
@@ -88,8 +90,6 @@ export default class HomeScreen extends React.Component {
       item={item}
       showModal={this._showModal}
       addToCart={this._addProductToCart}
-      // customer={this._getCustomerId()}
-      // showSnackCustomer={this._showSnackCustomer}
     />
   );
 
@@ -117,16 +117,26 @@ export default class HomeScreen extends React.Component {
 
   _addProductToCart = async product => {
     const customer = this._getCustomerId();
+    const storedProducts = await _getOrder();
+    let productExists = false;
+    if (storedProducts !== null) {
+      productExists = storedProducts.some(
+        item => item.id === product.product_id
+      );
+    }
     if (customer === null) {
-      this._showSnackCustomer();
+      this._showSnack('Debe seleccionar un Cliente');
     } else {
-      this._hideModal();
-      const addProduct = await _addProductToOrder(product);
-      // Reactotron.log('Add product', addProduct);
-      if (addProduct.error === false) {
-        this.props.navigation.navigate('Checkout');
+      if (storedProducts !== null && productExists) {
+        this._showSnack('El producto ya existe en su Pedido');
       } else {
-        Reactotron.log('Error en addProduct');
+        this._hideModal();
+        const addProduct = await _addProductToOrder(product);
+        if (addProduct.error === false) {
+          this.props.navigation.navigate('Checkout');
+        } else {
+          Reactotron.log('Error en addProduct');
+        }
       }
     }
   };
@@ -218,11 +228,11 @@ export default class HomeScreen extends React.Component {
         <Snackbar
           style={{ zIndex: 10000 }}
           visible={this.state.snackVisible}
-          onDismiss={() => this._hideSnackCustomer()}
+          onDismiss={() => this._hideSnack()}
           duration={5000}
           action={{
             label: 'OK',
-            onPress: () => this._hideSnackCustomer()
+            onPress: () => this._hideSnack()
           }}
           theme={{
             colors: {
@@ -230,7 +240,7 @@ export default class HomeScreen extends React.Component {
             }
           }}
         >
-          Debe seleccionar un Cliente
+          {this.state.snackText}
         </Snackbar>
         <ScrollView style={styles.container}>
           <SelectCustomer
@@ -251,8 +261,6 @@ export default class HomeScreen extends React.Component {
               <ProductDetailModal
                 data={this.state.selectedItem}
                 onDismiss={this._hideModal}
-                // customer={this._getCustomerId()}
-                // showSnackCustomer={this._showSnackCustomer}
                 addToCart={this._addProductToCart}
               />
             </Modal>

@@ -11,22 +11,51 @@ import PayMethod from './components/PayMethod';
 import DeliveryMethod from './components/DeliveryMethod';
 import Reactotron from 'reactotron-react-native';
 
-//TODO: Add checkout logic
 export default class CheckoutScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: null
+      products: [],
+      inputs: []
     };
   }
 
+  _updateInputText = (input, type, qty) => {
+    Reactotron.log(input, type, qty);
+    Reactotron.log(this.state.inputs[input]);
+    // if (type === 'sum') {
+    //   this.setState(prevState => {
+    //     return { [inputs[input]]: parseInt(prevState[inputs[input]]) + qty };
+    //   });
+    // } else {
+    //   if (type === 'sub') {
+    //     this.setState(prevState => {
+    //       return { [inputs[input]]: parseInt(prevState[inputs[input]]) - qty };
+    //     });
+    //   } else {
+    //     if (type === null) {
+    //       this.setState({
+    //         [inputs[input]]: parseInt(qty)
+    //       });
+    //     }
+    //   }
+    // }
+  };
+
   async componentDidMount() {
     const products = await _getOrder();
-    if (products !== null) {
-      this.setState({
-        products: products
-      });
-    }
+    Reactotron.log('Checkout Products', products);
+    let inputs = {};
+    products.map(item => {
+      const key = 'input' + item.item.product_id.toString().trim();
+      inputs[key] = item.qty;
+    });
+    Reactotron.log('Checkout Inputs', inputs);
+
+    this.setState({
+      products: products,
+      inputs: inputs
+    });
   }
 
   render() {
@@ -47,7 +76,11 @@ export default class CheckoutScreen extends React.Component {
             </Text>
           </View>
           <View style={styles.productList}>
-            <CheckoutProductsTable products={this.state.products} />
+            <CheckoutProductsTable
+              products={this.state.products}
+              inputs={this.state.inputs}
+              onUpdateInput={this._updateInputText}
+            />
           </View>
           <View style={styles.addProductsButtonContainer}>
             <TouchableRipple
