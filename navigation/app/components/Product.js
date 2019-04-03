@@ -8,7 +8,6 @@ import {
   _addProductToOrder,
   getProductImages
 } from '../../../helpers/api';
-import NavigationService from '../../../navigation/NavigationService';
 import Reactotron from 'reactotron-react-native';
 
 //TODO: Receive data and make to work "add" link
@@ -27,19 +26,8 @@ export default class Product extends React.Component {
     return true;
   };
 
-  _addProductToCart = async () => {
-    const customer = this.props.customer;
-    if (customer === null) {
-      this.props.showSnackCustomer();
-    } else {
-      const addProduct = await _addProductToOrder(this.props.item);
-      // Reactotron.log('Add product', addProduct);
-      if (addProduct.error === false) {
-        NavigationService.navigate('Checkout');
-      } else {
-        Reactotron.log('Error en addProduct');
-      }
-    }
+  _addToCart = product => {
+    this.props.addToCart(product);
   };
 
   async componentDidMount() {
@@ -102,7 +90,7 @@ export default class Product extends React.Component {
             </View>
             <View style={styles.addProductContainer}>
               <TouchableOpacity
-                onPress={() => this._addProductToCart()}
+                onPress={() => this._addToCart(this.props.item)}
                 style={styles.addButton}
               >
                 <MaterialIcons

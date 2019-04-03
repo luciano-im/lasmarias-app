@@ -20,9 +20,8 @@ export default class CheckoutScreen extends React.Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     const products = await _getOrder();
-    Reactotron.log('Productos:', products);
     if (products !== null) {
       this.setState({
         products: products

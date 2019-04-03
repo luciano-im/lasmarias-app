@@ -11,6 +11,7 @@ import PubNubReact from 'pubnub-react';
 import { theme } from '../../helpers/styles';
 import {
   _saveDbData,
+  _addProductToOrder,
   _removeOrder,
   updateDbData,
   getProducts
@@ -86,8 +87,9 @@ export default class HomeScreen extends React.Component {
       packaging={item.package}
       item={item}
       showModal={this._showModal}
-      customer={this._getCustomerId()}
-      showSnackCustomer={this._showSnackCustomer}
+      addToCart={this._addProductToCart}
+      // customer={this._getCustomerId()}
+      // showSnackCustomer={this._showSnackCustomer}
     />
   );
 
@@ -111,6 +113,22 @@ export default class HomeScreen extends React.Component {
       filteredProducts: products,
       loading: false
     });
+  };
+
+  _addProductToCart = async product => {
+    const customer = this._getCustomerId();
+    if (customer === null) {
+      this._showSnackCustomer();
+    } else {
+      this._hideModal();
+      const addProduct = await _addProductToOrder(product);
+      // Reactotron.log('Add product', addProduct);
+      if (addProduct.error === false) {
+        this.props.navigation.navigate('Checkout');
+      } else {
+        Reactotron.log('Error en addProduct');
+      }
+    }
   };
 
   componentDidMount() {
@@ -233,8 +251,9 @@ export default class HomeScreen extends React.Component {
               <ProductDetailModal
                 data={this.state.selectedItem}
                 onDismiss={this._hideModal}
-                customer={this._getCustomerId()}
-                showSnackCustomer={this._showSnackCustomer}
+                // customer={this._getCustomerId()}
+                // showSnackCustomer={this._showSnackCustomer}
+                addToCart={this._addProductToCart}
               />
             </Modal>
           </Portal>

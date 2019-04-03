@@ -28,23 +28,24 @@ export default class CheckoutProductsTable extends React.Component {
     if (prevProps.products !== this.props.products) {
       let myState = {};
       this.props.products.map(item => {
-        const key = 'input' + item.item.product_id.toString();
+        const key = 'input' + item.item.product_id.toString().trim();
         myState[key] = 1;
       });
       //Add products
       myState['products'] = this.props.products;
       this.setState({
-        myState
+        ...myState
       });
     }
   }
 
   render() {
     const { products } = this.state;
-    Reactotron.log('Products: ', products);
-    let content;
+    Reactotron.log('Estado: ', this.state);
+    let content = [];
     if (products !== null && products !== undefined) {
-      products.map((item, index) =>
+      products.map((item, index) => {
+        Reactotron.log(item);
         content.push(
           <View style={styles.row} key={'input' + item.item.product_id}>
             <Text style={styles.col1}>{item.item.name}</Text>
@@ -55,19 +56,23 @@ export default class CheckoutProductsTable extends React.Component {
                 color={theme.PRIMARY_COLOR}
                 size={20}
                 onPress={() =>
-                  this._subQuantity('input' + item.item.product_id.toString())
+                  this._subQuantity(
+                    'input' + item.item.product_id.toString().trim()
+                  )
                 }
               />
               <TextInput
                 style={styles.quantityInput}
                 keyboardType="numeric"
-                value={this.state['input' + item.item.product_id.toString()]}
+                value={
+                  this.state['input' + item.item.product_id.toString().trim()]
+                }
                 // value={`${
                 //   this.state['input' + item.item.product_id.toString()]
                 // }`} //here
                 onChangeText={text =>
                   this.setState({
-                    ['input' + item.item.product_id.toString()]: text
+                    ['input' + item.item.product_id.toString().trim()]: text
                   })
                 }
               />
@@ -77,7 +82,9 @@ export default class CheckoutProductsTable extends React.Component {
                 color={theme.PRIMARY_COLOR}
                 size={20}
                 onPress={() =>
-                  this._addQuantity('input' + item.item.product_id.toString())
+                  this._addQuantity(
+                    'input' + item.item.product_id.toString().trim()
+                  )
                 }
               />
             </View>
@@ -85,8 +92,8 @@ export default class CheckoutProductsTable extends React.Component {
               $ {item.item.price.toFixed(2)}
             </Text>
           </View>
-        )
-      );
+        );
+      });
     }
 
     return (
