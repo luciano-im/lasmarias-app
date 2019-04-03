@@ -33,8 +33,8 @@ export default class Product extends React.Component {
       this.props.showSnackCustomer();
     } else {
       const addProduct = await _addProductToOrder(this.props.item);
-      Reactotron.log('Add product', addProduct);
-      if (addProduct.error) {
+      // Reactotron.log('Add product', addProduct);
+      if (addProduct.error === false) {
         NavigationService.navigate('Checkout');
       } else {
         Reactotron.log('Error en addProduct');

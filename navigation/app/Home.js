@@ -153,7 +153,6 @@ export default class HomeScreen extends React.Component {
         channels: ['lasmarias']
       });
     }
-    _removeOrder();
   }
 
   async componentDidUpdate(prevProps, prevState) {

@@ -2,14 +2,34 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, TouchableRipple } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { format, parse } from 'date-fns';
 import { theme } from '../../helpers/styles';
+import { _getOrder } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
 import DeliveryMethod from './components/DeliveryMethod';
+import Reactotron from 'reactotron-react-native';
 
 //TODO: Add checkout logic
 export default class CheckoutScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: null
+    };
+  }
+
+  async componentWillMount() {
+    const products = await _getOrder();
+    Reactotron.log('Productos:', products);
+    if (products !== null) {
+      this.setState({
+        products: products
+      });
+    }
+  }
+
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -22,11 +42,13 @@ export default class CheckoutScreen extends React.Component {
         </View>
         <View style={styles.dataContainer}>
           <View style={styles.header}>
-            <Text style={styles.headerText}>Pedido Nº: 000128</Text>
-            <Text style={styles.headerText}>Fecha: 17/10/18</Text>
+            <Text style={styles.headerText}>Pedido Nº: XXXXXX</Text>
+            <Text style={styles.headerText}>
+              Fecha: {format(parse(new Date()), 'DD/MM/YY')}
+            </Text>
           </View>
           <View style={styles.productList}>
-            <CheckoutProductsTable />
+            <CheckoutProductsTable products={this.state.products} />
           </View>
           <View style={styles.addProductsButtonContainer}>
             <TouchableRipple

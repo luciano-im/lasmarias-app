@@ -2,37 +2,14 @@ import React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 import { theme } from '../../../helpers/styles';
-
-const productData = [
-  {
-    id: 1,
-    name: 'Mortadela Chica',
-    brand: 'Paladini',
-    category: 'Frescos y Congelados',
-    price: 55.0,
-    unit: '2,5 Kg'
-  },
-  {
-    id: 2,
-    name: 'Yerba',
-    brand: 'Rosamonte',
-    category: 'Almacen',
-    price: 89.6,
-    unit: '1 Kg'
-  }
-];
+import Reactotron from 'reactotron-react-native';
 
 //TODO: Add checkout logic
 export default class CheckoutProductsTable extends React.Component {
   constructor(props) {
     super(props);
 
-    let myState = {};
-    productData.map(item => {
-      const key = 'input' + item.id;
-      myState[key] = 1;
-    });
-    this.state = myState;
+    this.state = {};
   }
 
   _addQuantity = input => {
@@ -47,7 +24,71 @@ export default class CheckoutProductsTable extends React.Component {
     });
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.products !== this.props.products) {
+      let myState = {};
+      this.props.products.map(item => {
+        const key = 'input' + item.item.product_id.toString();
+        myState[key] = 1;
+      });
+      //Add products
+      myState['products'] = this.props.products;
+      this.setState({
+        myState
+      });
+    }
+  }
+
   render() {
+    const { products } = this.state;
+    Reactotron.log('Products: ', products);
+    let content;
+    if (products !== null && products !== undefined) {
+      products.map((item, index) =>
+        content.push(
+          <View style={styles.row} key={'input' + item.item.product_id}>
+            <Text style={styles.col1}>{item.item.name}</Text>
+            <View style={[styles.col2, styles.controls]}>
+              <IconButton
+                style={styles.quantityButton}
+                icon="remove-circle-outline"
+                color={theme.PRIMARY_COLOR}
+                size={20}
+                onPress={() =>
+                  this._subQuantity('input' + item.item.product_id.toString())
+                }
+              />
+              <TextInput
+                style={styles.quantityInput}
+                keyboardType="numeric"
+                value={this.state['input' + item.item.product_id.toString()]}
+                // value={`${
+                //   this.state['input' + item.item.product_id.toString()]
+                // }`} //here
+                onChangeText={text =>
+                  this.setState({
+                    ['input' + item.item.product_id.toString()]: text
+                  })
+                }
+              />
+              <IconButton
+                style={styles.quantityButton}
+                icon="add-circle-outline"
+                color={theme.PRIMARY_COLOR}
+                size={20}
+                onPress={() =>
+                  this._addQuantity('input' + item.item.product_id.toString())
+                }
+              />
+            </View>
+            <Text style={[styles.col3, styles.price]}>
+              $ {item.item.price.toFixed(2)}
+            </Text>
+          </View>
+        )
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -59,24 +100,30 @@ export default class CheckoutProductsTable extends React.Component {
             Importe
           </Text>
         </View>
-        {productData.map((item, index) => (
-          <View style={styles.row}>
-            <Text style={styles.col1}>{item.name}</Text>
+        {content}
+        {/* {products.map((item, index) => (
+          <View style={styles.row} key={'input' + item.item.product_id}>
+            <Text style={styles.col1}>{item.item.name}</Text>
             <View style={[styles.col2, styles.controls]}>
               <IconButton
                 style={styles.quantityButton}
                 icon="remove-circle-outline"
                 color={theme.PRIMARY_COLOR}
                 size={20}
-                onPress={() => this._subQuantity('input' + item.id)}
+                onPress={() =>
+                  this._subQuantity('input' + item.item.product_id.toString())
+                }
               />
               <TextInput
                 style={styles.quantityInput}
                 keyboardType="numeric"
-                value={this.state['input' + item.id].toString()}
+                value={this.state['input' + item.item.product_id.toString()]}
+                // value={`${
+                //   this.state['input' + item.item.product_id.toString()]
+                // }`} //here
                 onChangeText={text =>
                   this.setState({
-                    ['input' + item.id]: text
+                    ['input' + item.item.product_id.toString()]: text
                   })
                 }
               />
@@ -85,12 +132,16 @@ export default class CheckoutProductsTable extends React.Component {
                 icon="add-circle-outline"
                 color={theme.PRIMARY_COLOR}
                 size={20}
-                onPress={() => this._addQuantity('input' + item.id)}
+                onPress={() =>
+                  this._addQuantity('input' + item.item.product_id.toString())
+                }
               />
             </View>
-            <Text style={[styles.col3, styles.price]}>$ 110.262,50</Text>
+            <Text style={[styles.col3, styles.price]}>
+              $ {item.item.price.toFixed(2)}
+            </Text>
           </View>
-        ))}
+        ))} */}
       </View>
     );
   }

@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://510c8ace.ngrok.io';
+export const api = 'https://efecc30d.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -86,7 +86,16 @@ export let _removeProductFromOrder = async product_id => {
   }
 };
 
-_removeOrder = async () => {
+export let _getOrder = async () => {
+  try {
+    const products = await AsyncStorage.getItem('OrderProducts');
+    return JSON.parse(products);
+  } catch {
+    Reactotron.error('Error getting OrderProducts');
+  }
+};
+
+export let _removeOrder = async () => {
   try {
     await AsyncStorage.removeItem('OrderProducts');
   } catch {
@@ -514,7 +523,6 @@ export let getProducts = async (brand, productLine, unit) => {
   }
 
   const sql = `SELECT * FROM products ${where} ORDER BY name ASC;`;
-  Reactotron.log(sql);
 
   return new Promise((resolve, reject) =>
     db.transaction(tx => {
