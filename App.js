@@ -28,7 +28,8 @@ export default class App extends React.Component {
       id: null,
       name: null,
       userType: null,
-      updated: null
+      updated: null,
+      productsInCart: null
     };
   }
 
@@ -58,6 +59,12 @@ export default class App extends React.Component {
     });
   };
 
+  _setProductsInCart = qty => {
+    this.setState({
+      productsInCart: qty
+    });
+  };
+
   // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop
   render() {
     return (
@@ -72,10 +79,12 @@ export default class App extends React.Component {
               removeId: () => this._removeId(),
               setUserType: data => this._setUserType(data),
               setUpdated: isUpdated => this._setUpdated(isUpdated),
+              setProductsInCart: qty => this._setProductsInCart(qty),
               id: this.state.id,
               name: this.state.name,
               userType: this.state.userType,
-              updated: this.state.updated
+              updated: this.state.updated,
+              productsInCart: this.state.productsInCart
             }}
           />
         </SafeAreaView>

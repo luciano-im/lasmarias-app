@@ -119,6 +119,7 @@ export default class HomeScreen extends React.Component {
     const customer = this._getCustomerId();
     const storedProducts = await _getOrder();
     let productExists = false;
+    //Check if product exists in cart
     if (storedProducts !== null) {
       productExists = storedProducts.some(
         item => item.id === product.product_id
@@ -130,9 +131,14 @@ export default class HomeScreen extends React.Component {
       if (storedProducts !== null && productExists) {
         this._showSnack('El producto ya existe en su Pedido');
       } else {
+        // If pass validations
         this._hideModal();
         const addProduct = await _addProductToOrder(product);
         if (addProduct.error === false) {
+          // Set quantity of products in cart
+          this.props.screenProps.setProductsInCart(
+            (storedProducts === null ? 0 : parseInt(storedProducts.length)) + 1
+          );
           this.props.navigation.navigate('Checkout');
         } else {
           Reactotron.log('Error en addProduct');

@@ -42,38 +42,50 @@ const AuthStack = createStackNavigator(
   {
     Login: {
       screen: LoginScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <EmptyHeader />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <EmptyHeader navigation={navigation} screenProps={screenProps} />
+        )
       })
     },
     SignUp: {
       screen: SignUpScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <EmptyHeader />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <EmptyHeader navigation={navigation} screenProps={screenProps} />
+        )
       })
     },
     SignUp2: {
       screen: SignUp2Screen,
-      navigationOptions: ({ navigation }) => ({
-        header: <EmptyHeader />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <EmptyHeader navigation={navigation} screenProps={screenProps} />
+        )
       })
     },
     SignUpOk: {
       screen: SignUpOkScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <EmptyHeader />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <EmptyHeader navigation={navigation} screenProps={screenProps} />
+        )
       })
     },
     PasswordRecovery: {
       screen: PasswordRecoveryScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <EmptyHeader />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <EmptyHeader navigation={navigation} screenProps={screenProps} />
+        )
       })
     },
     PasswordRecoveryOk: {
       screen: PasswordRecoveryOkScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <EmptyHeader />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <EmptyHeader navigation={navigation} screenProps={screenProps} />
+        )
       })
     }
   },
@@ -89,26 +101,50 @@ const HomeStack = createStackNavigator(
   {
     Home: {
       screen: HomeScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="drawer" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="drawer"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     SearchCustomer: {
       screen: SearchCustomerScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="back" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="back"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     Checkout: {
       screen: CheckoutScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="back" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="back"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     CheckoutOk: {
       screen: CheckoutOkScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="drawer" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="drawer"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     }
   },
@@ -124,20 +160,38 @@ const OrdersStack = createStackNavigator(
   {
     Orders: {
       screen: OrdersScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="drawer" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="drawer"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     OrderDetail: {
       screen: OrderDetailScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="back" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="back"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     SearchCustomer: {
       screen: SearchCustomerScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="back" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="back"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     }
   },
@@ -153,14 +207,26 @@ const AccountStack = createStackNavigator(
   {
     AccountBalance: {
       screen: AccountBalanceScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="drawer" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="drawer"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     SearchCustomer: {
       screen: SearchCustomerScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="back" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="back"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     }
   },
@@ -176,20 +242,34 @@ const ModifyDataStack = createStackNavigator(
   {
     ModifyData: {
       screen: ModifyDataScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="drawer" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="drawer"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     ModifyDataValidation: {
       screen: ModifyDataValidationScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <Header leftAction="back" navigation={navigation} />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <Header
+            leftAction="back"
+            navigation={navigation}
+            screenProps={screenProps}
+          />
+        )
       })
     },
     ModifyDataOk: {
       screen: ModifyDataOkScreen,
-      navigationOptions: ({ navigation }) => ({
-        header: <EmptyHeader />
+      navigationOptions: ({ navigation, screenProps }) => ({
+        header: (
+          <EmptyHeader navigation={navigation} screenProps={screenProps} />
+        )
       })
     }
   },
@@ -204,8 +284,14 @@ const ModifyDataStack = createStackNavigator(
 const ModifyPasswordStack = createStackNavigator({
   ModifyPassword: {
     screen: ModifyPasswordScreen,
-    navigationOptions: ({ navigation }) => ({
-      header: <Header leftAction="drawer" navigation={navigation} />
+    navigationOptions: ({ navigation, screenProps }) => ({
+      header: (
+        <Header
+          leftAction="drawer"
+          navigation={navigation}
+          screenProps={screenProps}
+        />
+      )
     })
   }
 });

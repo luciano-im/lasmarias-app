@@ -1,6 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Appbar, Searchbar } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import { Appbar, Badge, Searchbar } from 'react-native-paper';
 import { _getOrder } from '../helpers/api';
 
 // TODO: Add search products logic
@@ -8,16 +8,32 @@ export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText: ''
+      searchText: '',
+      productsInCart: null,
+      badgeVisible: false
     };
   }
 
   _navigateCheckout = async () => {
-    const order = await _getOrder();
-    if (order !== null) {
+    const customer = this.props.screenProps.id;
+    if (customer !== null) {
       this.props.navigation.navigate('Checkout');
     }
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.screenProps.productsInCart !==
+      prevProps.screenProps.productsInCart
+    ) {
+      if (this.props.screenProps.productsInCart > 0) {
+        this.setState({
+          badgeVisible: true,
+          productsInCart: this.props.screenProps.productsInCart
+        });
+      }
+    }
+  }
 
   render() {
     let leftAction;
@@ -51,11 +67,25 @@ export default class Header extends React.Component {
           icon="add-circle"
           onPress={() => console.log('nuevo pedido')}
         />
-        <Appbar.Action
-          icon="shopping-cart"
-          onPress={() => this._navigateCheckout()}
-        />
+        <View>
+          <Appbar.Action
+            color={'#FFFFFF'}
+            icon="shopping-cart"
+            onPress={() => this._navigateCheckout()}
+          />
+          <Badge visible={this.state.badgeVisible} style={styles.badge}>
+            {this.state.productsInCart}
+          </Badge>
+        </View>
       </Appbar.Header>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    position: 'absolute',
+    top: 4,
+    right: 0
+  }
+});
