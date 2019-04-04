@@ -1,10 +1,11 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text, TouchableRipple } from 'react-native-paper';
+import { Text, TouchableRipple } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { NavigationEvents } from 'react-navigation';
 import { format, parse } from 'date-fns';
 import { theme } from '../../helpers/styles';
-import { _getOrder } from '../../helpers/api';
+import { _getOrder, _setOrder } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
@@ -15,52 +16,81 @@ export default class CheckoutScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [],
-      inputs: []
+      products: null,
+      inputs: null,
+      subtotal: 0.0
     };
   }
 
-  _updateInputText = (input, type, qty) => {
-    Reactotron.log(input, type, qty);
-    Reactotron.log(this.state.inputs[input]);
-    // if (type === 'sum') {
-    //   this.setState(prevState => {
-    //     return { [inputs[input]]: parseInt(prevState[inputs[input]]) + qty };
-    //   });
-    // } else {
-    //   if (type === 'sub') {
-    //     this.setState(prevState => {
-    //       return { [inputs[input]]: parseInt(prevState[inputs[input]]) - qty };
-    //     });
-    //   } else {
-    //     if (type === null) {
-    //       this.setState({
-    //         [inputs[input]]: parseInt(qty)
-    //       });
-    //     }
-    //   }
-    // }
+  _updateInputText = (input, action, qty) => {
+    let newState;
+    if (action === 'add') {
+      newState = { [input]: parseInt(this.state.inputs[input]) + qty };
+    } else {
+      if (action === 'sub') {
+        newState = { [input]: parseInt(this.state.inputs[input]) - qty };
+      } else {
+        if (action === null) {
+          newState = { [input]: qty };
+        }
+      }
+    }
+
+    const subtotal = this.state.products.reduce((total, item) => {
+      // Use (+) unary operator to turn string into numbers
+      if ('input' + item.id === input) {
+        return +total + +item.item.price * +newState[input];
+      } else {
+        return +total + +item.item.price * +item.qty;
+      }
+    }, []);
+
+    this.setState({
+      inputs: {
+        ...this.state.inputs,
+        ...newState
+      },
+      subtotal: subtotal
+    });
+  };
+
+  _onBlurScreen = async () => {
+    const customer = this.props.screenProps.id;
+    // If customer is null = Remove customer button pressed
+    if (customer !== null) {
+      let { products } = this.state;
+      const updatedProducts = products.map(item => {
+        return { ...item, qty: this.state.inputs['input' + item.id] };
+      });
+      await _setOrder(updatedProducts);
+    }
   };
 
   async componentDidMount() {
     const products = await _getOrder();
-    Reactotron.log('Checkout Products', products);
     let inputs = {};
+    let subtotal = 0;
     products.map(item => {
       const key = 'input' + item.item.product_id.toString().trim();
       inputs[key] = item.qty;
+      // Calculate subtotal for products on initial view
+      subtotal += item.item.price * item.qty;
     });
-    Reactotron.log('Checkout Inputs', inputs);
 
     this.setState({
       products: products,
-      inputs: inputs
+      inputs: inputs,
+      subtotal: subtotal
     });
   }
 
   render() {
+    const iva = (this.state.subtotal * 21) / 100;
+    const total = this.state.subtotal + iva;
+
     return (
       <ScrollView style={styles.container}>
+        <NavigationEvents onWillBlur={payload => this._onBlurScreen()} />
         <SelectCustomer
           navigation={this.props.navigation}
           screenProps={this.props.screenProps}
@@ -111,21 +141,23 @@ export default class CheckoutScreen extends React.Component {
           <View style={styles.totalsContainer}>
             <View style={styles.totalRow}>
               <Text style={styles.totalText}>Subtotal:</Text>
-              <Text style={styles.totalText}>$1.515,00</Text>
+              <Text style={styles.totalText}>
+                $ {this.state.subtotal.toFixed(2)}
+              </Text>
             </View>
             <View style={styles.totalRow}>
               <Text style={styles.totalText}>IVA (21%):</Text>
-              <Text style={styles.totalText}>$318,15</Text>
+              <Text style={styles.totalText}>$ {iva.toFixed(2)}</Text>
             </View>
             <View style={styles.totalRow}>
               <Text style={[styles.totalText, styles.totalRed]}>
                 DESCUENTO:
               </Text>
-              <Text style={[styles.totalText, styles.totalRed]}>$15,15</Text>
+              <Text style={[styles.totalText, styles.totalRed]}>$ -</Text>
             </View>
             <View style={styles.totalRow}>
               <Text style={styles.totalText}>(*) TOTAL:</Text>
-              <Text style={styles.totalText}>$1.818,00</Text>
+              <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
             </View>
             <View style={styles.legend}>
               <Text style={{ color: '#AAA' }}>

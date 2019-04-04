@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Appbar, Searchbar } from 'react-native-paper';
+import { _getOrder } from '../helpers/api';
 
 // TODO: Add search products logic
 export default class Header extends React.Component {
@@ -10,6 +11,13 @@ export default class Header extends React.Component {
       searchText: ''
     };
   }
+
+  _navigateCheckout = async () => {
+    const order = await _getOrder();
+    if (order !== null) {
+      this.props.navigation.navigate('Checkout');
+    }
+  };
 
   render() {
     let leftAction;
@@ -45,7 +53,7 @@ export default class Header extends React.Component {
         />
         <Appbar.Action
           icon="shopping-cart"
-          onPress={() => console.log('carrito')}
+          onPress={() => this._navigateCheckout()}
         />
       </Appbar.Header>
     );

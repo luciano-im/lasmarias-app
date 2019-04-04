@@ -7,36 +7,6 @@ import Reactotron from 'reactotron-react-native';
 export default class CheckoutProductsTable extends React.Component {
   constructor(props) {
     super(props);
-
-    //this.state = {};
-  }
-
-  // _addQuantity = input => {
-  //   // this.setState(prevState => {
-  //   //   return { [input]: parseInt(prevState[input]) + 1 };
-  //   // });
-  // };
-
-  // _subQuantity = input => {
-  //   this.setState(prevState => {
-  //     return { [input]: parseInt(prevState[input]) - 1 };
-  //   });
-  // };
-
-  componentDidUpdate(prevProps, prevState) {
-    // Reactotron.log('PrevPropsState', prevProps, prevState);
-    // if (prevProps.products !== this.props.products) {
-    // let myState = {};
-    // this.props.products.map(item => {
-    //   const key = 'input' + item.item.product_id.toString().trim();
-    //   myState[key] = 1;
-    // });
-    // //Add products
-    // myState['products'] = this.props.products;
-    // this.setState({
-    //   ...myState
-    // });
-    // }
   }
 
   render() {
@@ -63,18 +33,10 @@ export default class CheckoutProductsTable extends React.Component {
                     1
                   )
                 }
-                // onPress={() =>
-                //   this._subQuantity(
-                //     'input' + item.item.product_id.toString().trim()
-                //   )
-                // }
               />
               <TextInput
                 style={styles.quantityInput}
                 keyboardType="numeric"
-                // value={this.state[
-                //   'input' + item.item.product_id.toString().trim()
-                // ].toString()}
                 value={this.props.inputs[
                   'input' + item.item.product_id.toString().trim()
                 ].toString()}
@@ -85,11 +47,6 @@ export default class CheckoutProductsTable extends React.Component {
                     text
                   );
                 }}
-                // onChangeText={
-                //   this.setState({
-                //     ['input' + item.item.product_id.toString().trim()]: text
-                //   })
-                // }
               />
               <IconButton
                 style={styles.quantityButton}
@@ -103,11 +60,6 @@ export default class CheckoutProductsTable extends React.Component {
                     1
                   )
                 }
-                // onPress={() =>
-                //   this._addQuantity(
-                //     'input' + item.item.product_id.toString().trim()
-                //   )
-                // }
               />
             </View>
             <Text style={[styles.col3, styles.price]}>
