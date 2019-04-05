@@ -13,6 +13,7 @@ const deliveryMethods = [
   }
 ];
 
+// TODO: Read delivery methods from backend
 export default class DeliveryMethod extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +21,11 @@ export default class DeliveryMethod extends React.Component {
       checked: null
     };
   }
+
+  _selectMethod = val => {
+    this.setState({ checked: val });
+    this.props.onSelect(val);
+  };
 
   render() {
     const { checked } = this.state;
@@ -38,14 +44,14 @@ export default class DeliveryMethod extends React.Component {
               style={styles.accordionItem}
               title={pay.name}
               onPress={() => {
-                this.setState({ checked: pay.name });
+                this._selectMethod(pay.name);
               }}
               left={props => (
                 <RadioButton
                   value={pay.id}
                   status={checked === pay.name ? 'checked' : 'unchecked'}
                   onPress={() => {
-                    this.setState({ checked: pay.name });
+                    this._selectMethod(pay.name);
                   }}
                 />
               )}

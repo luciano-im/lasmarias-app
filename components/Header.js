@@ -2,15 +2,14 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Appbar, Badge, Searchbar } from 'react-native-paper';
 import { _getOrder } from '../helpers/api';
+import Reactotron from 'reactotron-react-native';
 
 // TODO: Add search products logic
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText: '',
-      productsInCart: null,
-      badgeVisible: false
+      searchText: ''
     };
   }
 
@@ -21,21 +20,9 @@ export default class Header extends React.Component {
     }
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.screenProps.productsInCart !==
-      prevProps.screenProps.productsInCart
-    ) {
-      if (this.props.screenProps.productsInCart > 0) {
-        this.setState({
-          badgeVisible: true,
-          productsInCart: this.props.screenProps.productsInCart
-        });
-      }
-    }
-  }
-
   render() {
+    const { productsInCart } = this.props.screenProps;
+
     let leftAction;
     if (this.props.leftAction === 'drawer') {
       leftAction = (
@@ -73,8 +60,11 @@ export default class Header extends React.Component {
             icon="shopping-cart"
             onPress={() => this._navigateCheckout()}
           />
-          <Badge visible={this.state.badgeVisible} style={styles.badge}>
-            {this.state.productsInCart}
+          <Badge
+            visible={productsInCart > 0 ? true : false}
+            style={styles.badge}
+          >
+            {productsInCart}
           </Badge>
         </View>
       </Appbar.Header>

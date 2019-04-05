@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Text, TouchableRipple } from 'react-native-paper';
+import { Snackbar, Text, TouchableRipple } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
 import { format, parse } from 'date-fns';
@@ -17,10 +17,26 @@ export default class CheckoutScreen extends React.Component {
     super(props);
     this.state = {
       products: null,
+      delivery: null,
       inputs: null,
-      subtotal: 0.0
+      subtotal: 0.0,
+      snackVisible: false,
+      snackText: ''
     };
   }
+
+  _showSnack = text => {
+    this.setState({
+      snackVisible: true,
+      snackText: text
+    });
+  };
+
+  _hideSnack = () => {
+    this.setState({
+      snackVisible: false
+    });
+  };
 
   _updateInputText = (input, action, qty) => {
     let newState;
@@ -52,6 +68,25 @@ export default class CheckoutScreen extends React.Component {
       },
       subtotal: subtotal
     });
+  };
+
+  _setDeliveryMethod = val => {
+    this.setState({
+      delivery: val
+    });
+  };
+
+  _onCheckout = () => {
+    const { products, delivery } = this.state;
+    if (products === null) {
+      this._showSnack('Debe seleccionar al menos un Producto');
+    } else {
+      if (delivery === null) {
+        this._showSnack('Debe seleccionar la forma de Envío');
+      } else {
+        Reactotron.log('Enviar pedido al servidor');
+      }
+    }
   };
 
   _onBlurScreen = async () => {
@@ -89,110 +124,46 @@ export default class CheckoutScreen extends React.Component {
     const total = this.state.subtotal + iva;
 
     return (
-      <ScrollView style={styles.container}>
-        <NavigationEvents onWillBlur={payload => this._onBlurScreen()} />
-        <SelectCustomer
-          navigation={this.props.navigation}
-          screenProps={this.props.screenProps}
-        />
-        <View style={styles.title}>
-          <Text style={styles.titleText}>CARRITO DE PEDIDO</Text>
-        </View>
-        <View style={styles.dataContainer}>
-          <View style={styles.header}>
-            <Text style={styles.headerText}>Pedido Nº: XXXXXX</Text>
-            <Text style={styles.headerText}>
-              Fecha: {format(parse(new Date()), 'DD/MM/YY')}
-            </Text>
+      <View style={styles.container}>
+        <Snackbar
+          style={{ zIndex: 10000 }}
+          visible={this.state.snackVisible}
+          onDismiss={() => this._hideSnack()}
+          duration={5000}
+          action={{
+            label: 'OK',
+            onPress: () => this._hideSnack()
+          }}
+          theme={{
+            colors: {
+              accent: theme.ACCENT_COLOR
+            }
+          }}
+        >
+          {this.state.snackText}
+        </Snackbar>
+        <ScrollView style={styles.container}>
+          <NavigationEvents onWillBlur={payload => this._onBlurScreen()} />
+          <SelectCustomer
+            navigation={this.props.navigation}
+            screenProps={this.props.screenProps}
+          />
+          <View style={styles.title}>
+            <Text style={styles.titleText}>CARRITO DE PEDIDO</Text>
           </View>
-          <View style={styles.productList}>
-            <CheckoutProductsTable
-              products={this.state.products}
-              inputs={this.state.inputs}
-              onUpdateInput={this._updateInputText}
-            />
-          </View>
-          <View style={styles.addProductsButtonContainer}>
-            <TouchableRipple
-              borderless
-              onPress={() => this.props.navigation.navigate('Home')}
-              style={styles.addProductsButton}
-            >
-              <View style={{ flexDirection: 'row' }}>
-                <MaterialIcons
-                  name="add-circle"
-                  size={25}
-                  color="white"
-                  style={styles.addProductsButtonIcon}
-                />
-                <Text
-                  theme={{
-                    colors: {
-                      text: '#FFFFFF'
-                    }
-                  }}
-                  style={styles.addProductsButtonText}
-                >
-                  AGREGAR PRODUCTOS
-                </Text>
-              </View>
-            </TouchableRipple>
-          </View>
-          <View style={styles.totalsContainer}>
-            <View style={styles.totalRow}>
-              <Text style={styles.totalText}>Subtotal:</Text>
-              <Text style={styles.totalText}>
-                $ {this.state.subtotal.toFixed(2)}
+          <View style={styles.dataContainer}>
+            <View style={styles.header}>
+              <Text style={styles.headerText}>Pedido Nº: XXXXXX</Text>
+              <Text style={styles.headerText}>
+                Fecha: {format(parse(new Date()), 'DD/MM/YY')}
               </Text>
             </View>
-            <View style={styles.totalRow}>
-              <Text style={styles.totalText}>IVA (21%):</Text>
-              <Text style={styles.totalText}>$ {iva.toFixed(2)}</Text>
-            </View>
-            <View style={styles.totalRow}>
-              <Text style={[styles.totalText, styles.totalRed]}>
-                DESCUENTO:
-              </Text>
-              <Text style={[styles.totalText, styles.totalRed]}>$ -</Text>
-            </View>
-            <View style={styles.totalRow}>
-              <Text style={styles.totalText}>(*) TOTAL:</Text>
-              <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
-            </View>
-            <View style={styles.legend}>
-              <Text style={{ color: '#AAA' }}>
-                (*) Los importes quedarán sujetos al valor final de facturación
-                debido a la merma en el peso. Cuando el pedido pase al estado de
-                <Text style={{ color: '#555' }}> Pedido Preparado </Text>
-                se actualizarán los valores finales tanto en el pedido como en
-                el <Text style={{ color: '#555' }}>Estado de Cuenta</Text>
-              </Text>
-            </View>
-            <View style={styles.payMethod}>
-              <PayMethod />
-            </View>
-            <View style={styles.deliveryMethod}>
-              <DeliveryMethod />
-            </View>
-            <View style={styles.addProductsButtonContainer}>
-              <TouchableRipple
-                borderless
-                onPress={() => this.props.navigation.navigate('CheckoutOk')}
-                style={styles.addProductsButton}
-              >
-                <View style={{ flexDirection: 'row' }}>
-                  <Text
-                    theme={{
-                      colors: {
-                        text: '#FFFFFF'
-                      }
-                    }}
-                    style={styles.addProductsButtonText}
-                  >
-                    CONFIRMAR PEDIDO
-                  </Text>
-                </View>
-              </TouchableRipple>
+            <View style={styles.productList}>
+              <CheckoutProductsTable
+                products={this.state.products}
+                inputs={this.state.inputs}
+                onUpdateInput={this._updateInputText}
+              />
             </View>
             <View style={styles.addProductsButtonContainer}>
               <TouchableRipple
@@ -220,9 +191,93 @@ export default class CheckoutScreen extends React.Component {
                 </View>
               </TouchableRipple>
             </View>
+            <View style={styles.totalsContainer}>
+              <View style={styles.totalRow}>
+                <Text style={styles.totalText}>Subtotal:</Text>
+                <Text style={styles.totalText}>
+                  $ {this.state.subtotal.toFixed(2)}
+                </Text>
+              </View>
+              <View style={styles.totalRow}>
+                <Text style={styles.totalText}>IVA (21%):</Text>
+                <Text style={styles.totalText}>$ {iva.toFixed(2)}</Text>
+              </View>
+              <View style={styles.totalRow}>
+                <Text style={[styles.totalText, styles.totalRed]}>
+                  DESCUENTO:
+                </Text>
+                <Text style={[styles.totalText, styles.totalRed]}>$ -</Text>
+              </View>
+              <View style={styles.totalRow}>
+                <Text style={styles.totalText}>(*) TOTAL:</Text>
+                <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
+              </View>
+              <View style={styles.legend}>
+                <Text style={{ color: '#AAA' }}>
+                  (*) Los importes quedarán sujetos al valor final de
+                  facturación debido a la merma en el peso. Cuando el pedido
+                  pase al estado de
+                  <Text style={{ color: '#555' }}> Pedido Preparado </Text>
+                  se actualizarán los valores finales tanto en el pedido como en
+                  el <Text style={{ color: '#555' }}>Estado de Cuenta</Text>
+                </Text>
+              </View>
+              {/* <View style={styles.payMethod}>
+              <PayMethod />
+            </View> */}
+              <View style={styles.deliveryMethod}>
+                <DeliveryMethod onSelect={this._setDeliveryMethod} />
+              </View>
+              <View style={styles.addProductsButtonContainer}>
+                <TouchableRipple
+                  borderless
+                  onPress={() => this._onCheckout()}
+                  style={styles.addProductsButton}
+                >
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text
+                      theme={{
+                        colors: {
+                          text: '#FFFFFF'
+                        }
+                      }}
+                      style={styles.addProductsButtonText}
+                    >
+                      CONFIRMAR PEDIDO
+                    </Text>
+                  </View>
+                </TouchableRipple>
+              </View>
+              <View style={styles.addProductsButtonContainer}>
+                <TouchableRipple
+                  borderless
+                  onPress={() => this.props.navigation.navigate('Home')}
+                  style={styles.addProductsButton}
+                >
+                  <View style={{ flexDirection: 'row' }}>
+                    <MaterialIcons
+                      name="add-circle"
+                      size={25}
+                      color="white"
+                      style={styles.addProductsButtonIcon}
+                    />
+                    <Text
+                      theme={{
+                        colors: {
+                          text: '#FFFFFF'
+                        }
+                      }}
+                      style={styles.addProductsButtonText}
+                    >
+                      AGREGAR PRODUCTOS
+                    </Text>
+                  </View>
+                </TouchableRipple>
+              </View>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }

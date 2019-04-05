@@ -36,13 +36,15 @@ export default class SelectCustomer extends React.Component {
 
   _removeCustomer = async () => {
     const { routeName } = this.props.navigation.state;
-    Reactotron.log(routeName);
 
     await _removeOrder();
     await this.props.screenProps.removeId();
     this.setState({
       visible: false
     });
+
+    // Set products in cart to 0
+    this.props.screenProps.setProductsInCart(0);
 
     if (routeName === 'Checkout') {
       this.props.navigation.navigate('Home');
