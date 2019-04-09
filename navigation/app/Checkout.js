@@ -1,11 +1,20 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Snackbar, Text, TouchableRipple } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  Dialog,
+  Paragraph,
+  Portal,
+  Snackbar,
+  Text,
+  TouchableRipple
+} from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
 import { format, parse } from 'date-fns';
 import { theme } from '../../helpers/styles';
-import { _getOrder, _setOrder } from '../../helpers/api';
+import { _getOrder, _setOrder, createOrder } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
@@ -21,7 +30,14 @@ export default class CheckoutScreen extends React.Component {
       inputs: null,
       subtotal: 0.0,
       snackVisible: false,
-      snackText: ''
+      snackText: '',
+      confirmVisible: false,
+      animating: false,
+      firstStep: true,
+      secondStep: false,
+      errorStep: false,
+      errorText: '',
+      buttonDisabled: true
     };
   }
 
@@ -35,6 +51,12 @@ export default class CheckoutScreen extends React.Component {
   _hideSnack = () => {
     this.setState({
       snackVisible: false
+    });
+  };
+
+  _cancelConfirm = () => {
+    this.setState({
+      confirmVisible: false
     });
   };
 
@@ -76,17 +98,67 @@ export default class CheckoutScreen extends React.Component {
     });
   };
 
-  _onCheckout = () => {
+  _processCheckout = async () => {
+    this.setState({
+      firstStep: false,
+      secondStep: true
+    });
+
     const { products, delivery } = this.state;
     if (products === null) {
+      this.setState({
+        confirmVisible: false
+      });
       this._showSnack('Debe seleccionar al menos un Producto');
     } else {
       if (delivery === null) {
+        this.setState({
+          confirmVisible: false
+        });
         this._showSnack('Debe seleccionar la forma de Envío');
       } else {
-        Reactotron.log('Enviar pedido al servidor');
+        const items = products.map(item => {
+          return {
+            product_id: item.id,
+            price: item.item.price,
+            quantity: item.qty
+          };
+        });
+        const data = {
+          status: 'Recibido',
+          date: format(parse(new Date()), 'YYYY-MM-DD'),
+          discount: 0,
+          payment: 'Cheque',
+          shipping: 'ENV',
+          items: [...items]
+        };
+
+        Reactotron.debug(data);
+        const result = await createOrder();
+        if (result.error === false) {
+          this.setState({
+            confirmVisible: false
+          });
+          Reactotron.log('Navegar a Checkout OK', result.order);
+        } else {
+          this.setState({
+            errorStep: true,
+            errorText: result.msg
+          });
+          Reactotron.log('Guardar Pedido en AsyncStorage');
+        }
       }
     }
+  };
+
+  _onCheckout = () => {
+    this.setState({
+      confirmVisible: true,
+      firstStep: true,
+      secondStep: false,
+      errorStep: false,
+      errorText: ''
+    });
   };
 
   _onBlurScreen = async () => {
@@ -120,6 +192,8 @@ export default class CheckoutScreen extends React.Component {
   }
 
   render() {
+    const { firstStep, secondStep, errorStep } = this.state;
+
     const iva = (this.state.subtotal * 21) / 100;
     const total = this.state.subtotal + iva;
 
@@ -277,6 +351,69 @@ export default class CheckoutScreen extends React.Component {
             </View>
           </View>
         </ScrollView>
+        <Portal>
+          <Dialog
+            visible={this.state.confirmVisible}
+            dismissable={false}
+            onDismiss={this._cancelConfirm}
+          >
+            <Dialog.Title style={styles.dialogTitle}>ATENCION!</Dialog.Title>
+            {firstStep && (
+              <Dialog.Content>
+                <Paragraph>¿Desea confirmar el pedido?</Paragraph>
+              </Dialog.Content>
+            )}
+            {secondStep && (
+              <Dialog.Content>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <ActivityIndicator
+                    color={theme.PRIMARY_COLOR}
+                    size={30}
+                    style={{
+                      marginRight: 16,
+                      display: this.state.animating ? 'flex' : 'none'
+                    }}
+                    animating={this.state.animating}
+                  />
+                  <Text>Confirmando pedido...</Text>
+                </View>
+              </Dialog.Content>
+            )}
+            {errorStep && (
+              <Dialog.Content>
+                <Paragraph>{this.state.errorText}</Paragraph>
+              </Dialog.Content>
+            )}
+            {firstStep && (
+              <Dialog.Actions>
+                <Button onPress={this._cancelConfirm}>
+                  <Text style={styles.dialogButton}>CANCELAR</Text>
+                </Button>
+                <Button onPress={this._processCheckout}>
+                  <Text style={styles.dialogButton}>ACEPTAR</Text>
+                </Button>
+              </Dialog.Actions>
+            )}
+            {errorStep && (
+              <Dialog.Actions>
+                <Button
+                  onPress={this._cancelConfirm}
+                  disabled={this.state.buttonDisabled}
+                >
+                  <Text
+                    style={
+                      this.state.buttonDisabled
+                        ? styles.buttonDisabled
+                        : styles.button
+                    }
+                  >
+                    OK
+                  </Text>
+                </Button>
+              </Dialog.Actions>
+            )}
+          </Dialog>
+        </Portal>
       </View>
     );
   }
@@ -359,5 +496,12 @@ const styles = StyleSheet.create({
   deliveryMethod: {
     marginTop: 5,
     marginBottom: 20
+  },
+  dialogTitle: {
+    color: theme.PRIMARY_COLOR
+  },
+  dialogButton: {
+    color: theme.PRIMARY_COLOR,
+    fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
