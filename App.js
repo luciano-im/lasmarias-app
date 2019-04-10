@@ -1,12 +1,10 @@
 import React from 'react';
 import { AsyncStorage, SafeAreaView, YellowBox } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-// import PubNubReact from 'pubnub-react';
 import { Navigation } from './navigation/Navigation';
 import NavigationService from './navigation/NavigationService';
 import { theme } from './helpers/styles';
-// import { pubnubConfig } from './PubnubConfig';
-// import { _saveDbData, updateDbData } from './helpers/api';
+import { _removeOrder } from './helpers/api';
 import './ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
@@ -64,6 +62,11 @@ export default class App extends React.Component {
       productsInCart: qty
     });
   };
+
+  componentDidMount() {
+    // Delete products in cart
+    _removeOrder();
+  }
 
   // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop
   render() {

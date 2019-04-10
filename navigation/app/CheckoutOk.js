@@ -8,6 +8,8 @@ import SelectCustomer from '../../components/SelectCustomer';
 //TODO: Add checkout logic
 export default class CheckoutOkScreen extends React.Component {
   render() {
+    const order = this.props.navigation.getParam('order');
+
     return (
       <View style={styles.container}>
         <SelectCustomer
@@ -24,10 +26,11 @@ export default class CheckoutOkScreen extends React.Component {
           <View style={styles.line} />
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.text}>
-            Te enviamos el detalle del pedido por e-mail y copia al e-mail del
-            Cliente.
-          </Text>
+          {/* <Text style={styles.text}>
+            Te enviamos el detalle del pedido por e-mail.
+          </Text> */}
+          <Text style={styles.text}>Nro de Pedido:</Text>
+          <Text style={[styles.text, styles.state]}>{order}</Text>
           <Text style={styles.text}>Tu pedido se encuentra:</Text>
           <Text style={[styles.text, styles.state]}>PENDIENTE</Text>
           <Text style={styles.text}>

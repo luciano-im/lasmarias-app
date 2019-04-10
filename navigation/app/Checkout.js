@@ -14,7 +14,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
 import { format, parse } from 'date-fns';
 import { theme } from '../../helpers/styles';
-import { _getOrder, _setOrder, createOrder } from '../../helpers/api';
+import {
+  _getOrder,
+  _setOrder,
+  _removeOrder,
+  createOrder
+} from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
@@ -36,7 +41,7 @@ export default class CheckoutScreen extends React.Component {
       firstStep: true,
       secondStep: false,
       errorStep: false,
-      errorText: '',
+      errorText: null,
       buttonDisabled: true
     };
   }
@@ -104,7 +109,13 @@ export default class CheckoutScreen extends React.Component {
       secondStep: true
     });
 
-    const { products, delivery } = this.state;
+    // Actualizo los productos guardados en AS
+    await this._onBlurScreen();
+
+    const { inputs, products, delivery } = this.state;
+    Reactotron.log(inputs);
+    const customer = this.props.screenProps.id;
+
     if (products === null) {
       this.setState({
         confirmVisible: false
@@ -121,7 +132,7 @@ export default class CheckoutScreen extends React.Component {
           return {
             product_id: item.id,
             price: item.item.price,
-            quantity: item.qty
+            quantity: inputs['input' + item.id]
           };
         });
         const data = {
@@ -133,19 +144,27 @@ export default class CheckoutScreen extends React.Component {
           items: [...items]
         };
 
-        Reactotron.debug(data);
-        const result = await createOrder();
+        const result = await createOrder(data, customer);
+        Reactotron.log(result);
         if (result.error === false) {
           this.setState({
             confirmVisible: false
           });
-          Reactotron.log('Navegar a Checkout OK', result.order);
+          await _removeOrder();
+          this.props.screenProps.setProductsInCart(0);
+          this.props.navigation.navigate('CheckoutOk', {
+            order: result.order
+          });
         } else {
           this.setState({
             errorStep: true,
-            errorText: result.msg
+            errorText: result.msg,
+            buttonDisabled: false
           });
           Reactotron.log('Guardar Pedido en AsyncStorage');
+          await _removeOrder();
+          this.props.screenProps.setProductsInCart(0);
+          this.props.navigation.navigate('Home');
         }
       }
     }
@@ -162,14 +181,16 @@ export default class CheckoutScreen extends React.Component {
   };
 
   _onBlurScreen = async () => {
-    const customer = this.props.screenProps.id;
-    // If customer is null = Remove customer button pressed
-    if (customer !== null) {
-      let { products } = this.state;
-      const updatedProducts = products.map(item => {
-        return { ...item, qty: this.state.inputs['input' + item.id] };
-      });
-      await _setOrder(updatedProducts);
+    if (this.state.errorText === null) {
+      const customer = this.props.screenProps.id;
+      // If customer is null = Remove customer button pressed
+      if (customer !== null) {
+        let { products } = this.state;
+        const updatedProducts = products.map(item => {
+          return { ...item, qty: this.state.inputs['input' + item.id] };
+        });
+        await _setOrder(updatedProducts);
+      }
     }
   };
 

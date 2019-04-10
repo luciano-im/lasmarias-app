@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://75030984.ngrok.io';
+export const api = 'https://960201b3.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -505,7 +505,7 @@ export let fetchAccountBalance = async user => {
     });
 };
 
-export let createOrder = async customer => {
+export let createOrder = async (data, customer) => {
   const token = await _getToken();
 
   const config = {
@@ -515,9 +515,8 @@ export let createOrder = async customer => {
   };
 
   return await axios
-    .get(api + `/api/order/${customer}/`, config)
+    .post(api + `/api/order/${customer}/`, data, config)
     .then(response => {
-      Reactotron.log(response.data);
       if (response.status === 401) {
         this._notAuthenticated();
       }
