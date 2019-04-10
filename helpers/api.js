@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://960201b3.ngrok.io';
+export const api = 'https://d386f8ad.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -71,12 +71,12 @@ export let _addProductToOrder = async (item, qty = 1) => {
   }
 };
 
-export let _removeProductFromOrder = async product_id => {
+export let _removeProductFromOrder = async productId => {
   try {
     const orderProducts = await AsyncStorage.getItem('OrderProducts');
     if (orderProducts !== null) {
       let products = JSON.parse(orderProducts);
-      delete products[product_id];
+      delete products[productId];
       await AsyncStorage.setItem('OrderProducts', JSON.stringify(products));
       return { error: false };
     }
@@ -108,6 +108,39 @@ export let _removeOrder = async () => {
     await AsyncStorage.removeItem('OrderProducts');
   } catch {
     Reactotron.error('Error deleting OrderProducts');
+  }
+};
+
+export let _addPendingOrder = async order => {
+  try {
+    const pendingOrders = await AsyncStorage.getItem('PendingOrders');
+    let orders = pendingOrders === null ? [] : JSON.parse(pendingOrders);
+    orders.push(order);
+    try {
+      await AsyncStorage.setItem('PendingOrders', JSON.stringify(orders));
+      return { error: false };
+    } catch {
+      Reactotron.error('Error saving PendingOrders');
+      return { error: true };
+    }
+  } catch {
+    Reactotron.error('Error retrieving PendingOrders');
+    return { error: true };
+  }
+};
+
+export let _removePendingOrder = async orderId => {
+  try {
+    const pendingOrders = await AsyncStorage.getItem('PendingOrders');
+    if (pendingOrders !== null) {
+      let orders = JSON.parse(pendingOrders);
+      delete orders[orderId];
+      await AsyncStorage.setItem('PendingOrders', JSON.stringify(orders));
+      return { error: false };
+    }
+  } catch {
+    Reactotron.error('Error retrieving PendingOrders');
+    return { error: true };
   }
 };
 

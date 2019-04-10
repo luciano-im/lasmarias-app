@@ -18,6 +18,7 @@ import {
   _getOrder,
   _setOrder,
   _removeOrder,
+  _addPendingOrder,
   createOrder
 } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
@@ -104,16 +105,16 @@ export default class CheckoutScreen extends React.Component {
   };
 
   _processCheckout = async () => {
+    // Show second modal view
     this.setState({
       firstStep: false,
       secondStep: true
     });
 
     // Actualizo los productos guardados en AS
-    await this._onBlurScreen();
+    // await this._onBlurScreen();
 
     const { inputs, products, delivery } = this.state;
-    Reactotron.log(inputs);
     const customer = this.props.screenProps.id;
 
     if (products === null) {
@@ -128,6 +129,7 @@ export default class CheckoutScreen extends React.Component {
         });
         this._showSnack('Debe seleccionar la forma de Envío');
       } else {
+        // Build payload
         const items = products.map(item => {
           return {
             product_id: item.id,
@@ -143,25 +145,32 @@ export default class CheckoutScreen extends React.Component {
           shipping: 'ENV',
           items: [...items]
         };
-
+        // Send request
         const result = await createOrder(data, customer);
-        Reactotron.log(result);
+
         if (result.error === false) {
           this.setState({
             confirmVisible: false
           });
+          // Remove products in cart
           await _removeOrder();
           this.props.screenProps.setProductsInCart(0);
+          // Navigate to success screen
           this.props.navigation.navigate('CheckoutOk', {
             order: result.order
           });
         } else {
+          // Show error message
           this.setState({
+            secondStep: false,
             errorStep: true,
             errorText: result.msg,
             buttonDisabled: false
           });
-          Reactotron.log('Guardar Pedido en AsyncStorage');
+          // Save pending order in AsyncStorage
+          const pendingOrder = { customer: customer, order: data };
+          await _addPendingOrder(JSON.stringify(pendingOrder));
+          // Remove products in cart
           await _removeOrder();
           this.props.screenProps.setProductsInCart(0);
           this.props.navigation.navigate('Home');
@@ -171,6 +180,7 @@ export default class CheckoutScreen extends React.Component {
   };
 
   _onCheckout = () => {
+    // Show confirm modal
     this.setState({
       confirmVisible: true,
       firstStep: true,
@@ -181,6 +191,7 @@ export default class CheckoutScreen extends React.Component {
   };
 
   _onBlurScreen = async () => {
+    // Update products in cart if leaving screen without errors
     if (this.state.errorText === null) {
       const customer = this.props.screenProps.id;
       // If customer is null = Remove customer button pressed
