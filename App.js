@@ -4,7 +4,7 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Navigation } from './navigation/Navigation';
 import NavigationService from './navigation/NavigationService';
 import { theme } from './helpers/styles';
-import { _removeOrder } from './helpers/api';
+import { _removeOrder, _getPendingOrders } from './helpers/api';
 import './ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
@@ -27,9 +27,17 @@ export default class App extends React.Component {
       name: null,
       userType: null,
       updated: null,
-      productsInCart: null
+      productsInCart: null,
+      pendingOrders: null
     };
   }
+
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
 
   _setId = data => {
     this.setState({
@@ -63,9 +71,25 @@ export default class App extends React.Component {
     });
   };
 
-  componentDidMount() {
+  _setPendingOrders = value => {
+    this.setState({
+      pendingOrders: value
+    });
+  };
+
+  async componentDidMount() {
+    // AsyncStorage.removeItem('PendingOrders');
+
     // Delete products in cart
     _removeOrder();
+
+    const pendingOrders = await _getPendingOrders();
+    this.setState({
+      pendingOrders:
+        pendingOrders === null || this._isEmpty(pendingOrders) === true
+          ? false
+          : true
+    });
   }
 
   // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop
@@ -83,11 +107,13 @@ export default class App extends React.Component {
               setUserType: data => this._setUserType(data),
               setUpdated: isUpdated => this._setUpdated(isUpdated),
               setProductsInCart: qty => this._setProductsInCart(qty),
+              setPendingOrders: qty => this._setPendingOrders(qty),
               id: this.state.id,
               name: this.state.name,
               userType: this.state.userType,
               updated: this.state.updated,
-              productsInCart: this.state.productsInCart
+              productsInCart: this.state.productsInCart,
+              pendingOrders: this.state.pendingOrders
             }}
           />
         </SafeAreaView>

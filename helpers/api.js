@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://d386f8ad.ngrok.io';
+export const api = 'https://05a7dfe20.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -71,20 +71,20 @@ export let _addProductToOrder = async (item, qty = 1) => {
   }
 };
 
-export let _removeProductFromOrder = async productId => {
-  try {
-    const orderProducts = await AsyncStorage.getItem('OrderProducts');
-    if (orderProducts !== null) {
-      let products = JSON.parse(orderProducts);
-      delete products[productId];
-      await AsyncStorage.setItem('OrderProducts', JSON.stringify(products));
-      return { error: false };
-    }
-  } catch {
-    Reactotron.error('Error retrieving OrderProducts');
-    return { error: true };
-  }
-};
+// export let _removeProductFromOrder = async productId => {
+//   try {
+//     const orderProducts = await AsyncStorage.getItem('OrderProducts');
+//     if (orderProducts !== null) {
+//       let products = JSON.parse(orderProducts);
+//       delete products[productId];
+//       await AsyncStorage.setItem('OrderProducts', JSON.stringify(products));
+//       return { error: false };
+//     }
+//   } catch {
+//     Reactotron.error('Error retrieving OrderProducts');
+//     return { error: true };
+//   }
+// };
 
 export let _getOrder = async () => {
   try {
@@ -129,18 +129,43 @@ export let _addPendingOrder = async order => {
   }
 };
 
-export let _removePendingOrder = async orderId => {
+export let _removePendingOrder = async index => {
   try {
     const pendingOrders = await AsyncStorage.getItem('PendingOrders');
     if (pendingOrders !== null) {
       let orders = JSON.parse(pendingOrders);
-      delete orders[orderId];
+      orders.splice(index, 1);
       await AsyncStorage.setItem('PendingOrders', JSON.stringify(orders));
-      return { error: false };
+      return { error: false, pendingOrders: orders };
     }
   } catch {
     Reactotron.error('Error retrieving PendingOrders');
     return { error: true };
+  }
+};
+
+export let _getPendingOrders = async () => {
+  try {
+    const pendingOrders = await AsyncStorage.getItem('PendingOrders');
+    return JSON.parse(pendingOrders);
+  } catch {
+    Reactotron.error('Error getting PendingOrders');
+  }
+};
+
+export let _setPendingOrders = async orders => {
+  try {
+    await AsyncStorage.setItem('PendingOrders', JSON.stringify(orders));
+  } catch {
+    Reactotron.error('Error saving PendingOrders');
+  }
+};
+
+export let _removePendingOrders = async () => {
+  try {
+    await AsyncStorage.removeItem('PendingOrders');
+  } catch {
+    Reactotron.error('Error deleting PendingOrders');
   }
 };
 

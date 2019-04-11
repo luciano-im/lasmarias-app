@@ -169,11 +169,11 @@ export default class CheckoutScreen extends React.Component {
           });
           // Save pending order in AsyncStorage
           const pendingOrder = { customer: customer, order: data };
-          await _addPendingOrder(JSON.stringify(pendingOrder));
+          await _addPendingOrder(pendingOrder);
+          this.props.screenProps.setPendingOrders(true);
           // Remove products in cart
           await _removeOrder();
           this.props.screenProps.setProductsInCart(0);
-          this.props.navigation.navigate('Home');
         }
       }
     }
@@ -429,14 +429,14 @@ export default class CheckoutScreen extends React.Component {
             {errorStep && (
               <Dialog.Actions>
                 <Button
-                  onPress={this._cancelConfirm}
+                  onPress={() => this.props.navigation.navigate('Home')}
                   disabled={this.state.buttonDisabled}
                 >
                   <Text
                     style={
                       this.state.buttonDisabled
                         ? styles.buttonDisabled
-                        : styles.button
+                        : styles.dialogButton
                     }
                   >
                     OK
@@ -534,6 +534,10 @@ const styles = StyleSheet.create({
   },
   dialogButton: {
     color: theme.PRIMARY_COLOR,
+    fontWeight: theme.FONT_WEIGHT_MEDIUM
+  },
+  buttonDisabled: {
+    color: '#AAAAAA',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
