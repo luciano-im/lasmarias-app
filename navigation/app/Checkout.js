@@ -130,6 +130,7 @@ export default class CheckoutScreen extends React.Component {
         this._showSnack('Debe seleccionar la forma de Envío');
       } else {
         // Build payload
+        const date = new Date();
         const items = products.map(item => {
           return {
             product_id: item.id,
@@ -139,10 +140,11 @@ export default class CheckoutScreen extends React.Component {
         });
         const data = {
           status: 'Recibido',
-          date: format(parse(new Date()), 'YYYY-MM-DD'),
+          date: format(parse(date), 'YYYY-MM-DD'),
           discount: 0,
           payment: 'Cheque',
           shipping: 'ENV',
+          created_at: format(parse(date), 'YYYY-MM-DD[T]HH:mm:ss'),
           items: [...items]
         };
         // Send request

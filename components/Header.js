@@ -29,34 +29,39 @@ export default class Header extends React.Component {
 
   _processPendingOrders = async () => {
     const pendingOrders = await _getPendingOrders();
-    Reactotron.log(pendingOrders);
-    // pendingOrders.map(async (order, index) => {
-    //   const result = await createOrder(order.order, order.customer);
-    //   if (result.error === false) {
-    //     const newPendingOrders = await _removePendingOrder(index);
-    //     this.props.screenProps.setPendingOrders(
-    //       newPendingOrders === null || this._isEmpty(newPendingOrders) === true
-    //         ? false
-    //         : true
-    //     );
-    //   }
-    // });
-    const newPendingOrders = await pendingOrders.map(async (order, index) => {
-      const result = await createOrder(order.order, order.customer);
-      if (result.error === true) {
-        return order;
+
+    // Create orders
+    const responses = await Promise.all(
+      pendingOrders.map(order => createOrder(order.order, order.customer))
+    );
+    Reactotron.log(responses);
+
+    // Get successful requests
+    let toRemove = [];
+    responses.forEach((operation, index) => {
+      if (operation.error === false) {
+        return toRemove.push(index);
       }
     });
-    if (newPendingOrders === null || this._isEmpty(newPendingOrders) === true) {
-      await _removePendingOrders();
-    } else {
-      await _setPendingOrders(newPendingOrders);
+
+    // Delete successfull requests from pendingOrders
+    if (this._isEmpty(toRemove) === false) {
+      for (var i = toRemove.length - 1; i >= 0; i--) {
+        pendingOrders.splice(toRemove[i], 1);
+      }
+
+      if (pendingOrders === null || this._isEmpty(pendingOrders) === true) {
+        await _removePendingOrders();
+      } else {
+        await _setPendingOrders(pendingOrders);
+      }
+
+      this.props.screenProps.setPendingOrders(
+        pendingOrders === null || this._isEmpty(pendingOrders) === true
+          ? false
+          : true
+      );
     }
-    this.props.screenProps.setPendingOrders(
-      newPendingOrders === null || this._isEmpty(newPendingOrders) === true
-        ? false
-        : true
-    );
   };
 
   _navigateCheckout = async () => {

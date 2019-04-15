@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://05a7dfe20.ngrok.io';
+export const api = 'https://a3540ae1.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -580,24 +580,37 @@ export let createOrder = async (data, customer) => {
       }
       if (response.status === 201) {
         const data = response.data;
-        return { error: false, order: data.order_id };
+        return {
+          error: false,
+          order: data.order_id,
+          status_code: response.status,
+          status_text: 'Created'
+        };
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      Reactotron.log(error);
+      if (error.response.status === 409) {
+        const data = error.response.data;
+        return {
+          error: false,
+          order: data.order_id,
+          status_code: error.response.status,
+          status_text: 'Duplicate'
+        };
+      }
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
           msg: 'El servidor no responde',
           data: error
         };
-      } else {
-        return {
-          error: true,
-          msg: 'No se pudo procesar la solicitud',
-          data: error
-        };
       }
+      return {
+        error: true,
+        msg: 'No se pudo procesar la solicitud',
+        data: error
+      };
     });
 };
 
