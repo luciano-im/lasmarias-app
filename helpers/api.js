@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://a3540ae1.ngrok.io';
+export const api = 'https://907d0d5f.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -331,6 +331,40 @@ export let resetPassword = async email => {
       Reactotron.log(response);
       if (response.status === 200) {
         return { error: false };
+      }
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
+          data: error
+        };
+      }
+    });
+};
+
+export let getUser = async () => {
+  const token = await _getToken();
+
+  const config = {
+    timeout: 5000,
+    headers: { Authorization: 'Token ' + token.key }
+  };
+
+  return await axios
+    .get(api + '/api/user/', config)
+    .then(response => {
+      Reactotron.log(response);
+      if (response.status === 200) {
+        return { error: false, data: response.data };
       }
     })
     .catch(error => {

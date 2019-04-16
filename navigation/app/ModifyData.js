@@ -7,7 +7,10 @@ import {
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { NavigationEvents } from 'react-navigation';
+import { getUser } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
+import Reactotron from 'reactotron-react-native';
 
 // TODO: add logic
 export default class ModifyDataScreen extends React.Component {
@@ -25,6 +28,18 @@ export default class ModifyDataScreen extends React.Component {
     };
   }
 
+  async _onFocusScreen() {
+    const user = await getUser();
+
+    Reactotron.log(user);
+    // Initialy load all customers in the FlatList
+    // this.setState({
+    //   customers: customers,
+    //   filteredCustomers: customers,
+    //   cities: cities
+    // });
+  }
+
   render() {
     return (
       <KeyboardAvoidingView
@@ -32,6 +47,7 @@ export default class ModifyDataScreen extends React.Component {
         behavior="padding"
         keyboardVerticalOffset={100}
       >
+        <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.seller}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>

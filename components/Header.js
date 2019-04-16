@@ -34,7 +34,6 @@ export default class Header extends React.Component {
     const responses = await Promise.all(
       pendingOrders.map(order => createOrder(order.order, order.customer))
     );
-    Reactotron.log(responses);
 
     // Get successful requests
     let toRemove = [];
