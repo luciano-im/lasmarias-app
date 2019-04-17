@@ -252,18 +252,18 @@ const ModifyDataStack = createStackNavigator(
         )
       })
     },
-    ModifyDataValidation: {
-      screen: ModifyDataValidationScreen,
-      navigationOptions: ({ navigation, screenProps }) => ({
-        header: (
-          <Header
-            leftAction="back"
-            navigation={navigation}
-            screenProps={screenProps}
-          />
-        )
-      })
-    },
+    // ModifyDataValidation: {
+    //   screen: ModifyDataValidationScreen,
+    //   navigationOptions: ({ navigation, screenProps }) => ({
+    //     header: (
+    //       <Header
+    //         leftAction="back"
+    //         navigation={navigation}
+    //         screenProps={screenProps}
+    //       />
+    //     )
+    //   })
+    // },
     ModifyDataOk: {
       screen: ModifyDataOkScreen,
       navigationOptions: ({ navigation, screenProps }) => ({

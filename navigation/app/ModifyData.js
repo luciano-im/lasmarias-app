@@ -5,10 +5,10 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
-import { getUser } from '../../helpers/api';
+import { getUser, updateUser } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
 
@@ -24,45 +24,78 @@ export default class ModifyDataScreen extends React.Component {
       celText: '',
       addressText: '',
       cityText: '',
-      zipText: ''
+      zipText: '',
+      loading: true,
+      updating: false,
+      errorText: null
     };
   }
+
+  _updateUser = async () => {
+    this.setState({
+      errorText: null,
+      updating: true
+    });
+
+    const update = await updateUser(this.state);
+
+    if (update.error === false) {
+      this.setState({
+        updating: false
+      });
+      this.props.navigation.navigate('ModifyDataOk', {
+        name: this.state.nameText
+      });
+    } else {
+      this.setState({
+        updating: false,
+        errorText: update.msg
+      });
+    }
+  };
 
   async _onFocusScreen() {
     const user = await getUser();
 
     Reactotron.log(user);
-    // Initialy load all customers in the FlatList
-    // this.setState({
-    //   customers: customers,
-    //   filteredCustomers: customers,
-    //   cities: cities
-    // });
+    if (user.error === false) {
+      const data = user.data;
+      this.setState({
+        nameText: data.related_name,
+        lastNameText: data.related_last_name,
+        businessText: data.related_customer_name,
+        telText: data.related_telephone,
+        celText: data.related_cel_phone,
+        addressText: data.related_customer_address,
+        cityText: data.related_city,
+        zipText: data.related_zip_code,
+        loading: false
+      });
+    }
   }
 
   render() {
-    return (
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidContainer}
-        behavior="padding"
-        keyboardVerticalOffset={100}
-      >
-        <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
-        <ScrollView contentContainerStyle={styles.container}>
-          <View style={styles.seller}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="person" size={25} color="white" />
-              <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
-                Vendedor 01
-              </Text>
-            </View>
-            <View>
-              <MaterialIcons name="account-box" size={25} color="white" />
-            </View>
-          </View>
-          <View style={styles.title}>
-            <Text style={styles.titleText}>MODIFICAR MIS DATOS</Text>
-          </View>
+    const { loading } = this.state;
+    const { nameText, lastNameText } = this.state;
+
+    let content;
+    if (loading) {
+      content = (
+        <View>
+          <ActivityIndicator
+            animating={this.state.loading}
+            color={theme.PRIMARY_COLOR}
+            size={25}
+            style={{ marginTop: 30 }}
+          />
+          <Text style={{ textAlign: 'center', color: '#AAA', marginTop: 15 }}>
+            Cargando datos...
+          </Text>
+        </View>
+      );
+    } else {
+      content = (
+        <View>
           <Text style={styles.sub}>Modificá tus Datos Personales:</Text>
           <View style={styles.inputContainer}>
             <TextInput
@@ -122,15 +155,27 @@ export default class ModifyDataScreen extends React.Component {
               onChangeText={text => this.setState({ zipText: text })}
             />
           </View>
+          <View>
+            <ActivityIndicator
+              animating={this.state.updating}
+              color={theme.PRIMARY_COLOR}
+              size={'large'}
+              style={[
+                styles.loading,
+                { display: this.state.updating ? 'flex' : 'none' }
+              ]}
+            />
+          </View>
+          {this.state.errorText ? (
+            <Text style={styles.error}>{this.state.errorText}</Text>
+          ) : null}
           <View style={styles.nextButtonContainer}>
             <Button
               mode="contained"
               style={styles.nextButton}
               color={theme.ACCENT_COLOR}
               theme={{ roundness: 0 }}
-              onPress={() =>
-                this.props.navigation.navigate('ModifyDataValidation')
-              }
+              onPress={() => this._updateUser()}
             >
               <Text
                 style={styles.nextButtonText}
@@ -140,10 +185,37 @@ export default class ModifyDataScreen extends React.Component {
                   }
                 }}
               >
-                SIGUIENTE
+                MODIFICAR
               </Text>
             </Button>
           </View>
+        </View>
+      );
+    }
+
+    return (
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidContainer}
+        behavior="padding"
+        keyboardVerticalOffset={100}
+      >
+        <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.seller}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialIcons name="person" size={25} color="white" />
+              <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
+                {nameText + ' ' + lastNameText}
+              </Text>
+            </View>
+            <View>
+              <MaterialIcons name="account-box" size={25} color="white" />
+            </View>
+          </View>
+          <View style={styles.title}>
+            <Text style={styles.titleText}>MODIFICAR MIS DATOS</Text>
+          </View>
+          {content}
         </ScrollView>
       </KeyboardAvoidingView>
     );
@@ -205,5 +277,14 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontSize: 16
+  },
+  loading: {
+    marginVertical: 10
+  },
+  error: {
+    color: 'red',
+    marginVertical: 10,
+    textAlign: 'center',
+    width: 250
   }
 });
