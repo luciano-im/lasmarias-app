@@ -1,12 +1,23 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { StackActions } from 'react-navigation';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 
-// TODO: add logic
 export default class ModifyDataOkScreen extends React.Component {
+  popAction = StackActions.pop({
+    n: 1
+  });
+
+  _onPress = () => {
+    this.props.navigation.dispatch(this.popAction);
+    this.props.navigation.navigate('Home');
+  };
+
   render() {
+    const name = this.props.navigation.getParam('name').toUpperCase();
+
     return (
       <View style={styles.container}>
         <Logo />
@@ -16,7 +27,7 @@ export default class ModifyDataOkScreen extends React.Component {
             source={require('../../assets/check-64.png')}
           />
           <Text style={styles.title}>¡MODIFICACIÓN EXITOSA!</Text>
-          <Text style={styles.seller}>VENDEDOR 01</Text>
+          <Text style={styles.seller}>{name}</Text>
           <Text style={styles.line} />
         </View>
         <View style={styles.closeButtonContainer}>
@@ -25,7 +36,7 @@ export default class ModifyDataOkScreen extends React.Component {
             style={styles.closeButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this.props.navigation.navigate('Home')}
+            onPress={() => this._onPress()}
           >
             <Text
               style={styles.closeButtonText}

@@ -185,7 +185,7 @@ export default class ModifyDataScreen extends React.Component {
                   }
                 }}
               >
-                MODIFICAR
+                GUARDAR CAMBIOS
               </Text>
             </Button>
           </View>

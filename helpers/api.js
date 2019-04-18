@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://929d9661.ngrok.io';
+export const api = 'https://22a183a0.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -247,7 +247,7 @@ export let logout = async () => {
     .then(async response => {
       // Reactotron.log(response);
       if (response.status === 200) {
-        await _removeToken();
+        this._removeToken();
         return { error: false };
       }
     })
@@ -351,6 +351,50 @@ export let resetPassword = async email => {
     });
 };
 
+export let changePassword = async (old, new1, new2) => {
+  const token = await _getToken();
+
+  const config = {
+    timeout: 5000,
+    headers: {
+      Authorization: 'Token ' + token.key,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+
+  const data = {
+    new_password1: new1,
+    new_password2: new2,
+    old_password: old
+  };
+
+  return await axios
+    .post(api + '/rest-auth/password/change/', qs.stringify(data), config)
+    .then(response => {
+      Reactotron.log(response);
+      if (response.status === 200) {
+        await this._removeToken();
+        return { error: false };
+      }
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
+          data: error
+        };
+      }
+    });
+};
+
 export let getUser = async () => {
   const token = await _getToken();
 
@@ -409,7 +453,6 @@ export let updateUser = async relatedData => {
   return await axios
     .put(api + '/rest-auth/user/', qs.stringify(data), config)
     .then(response => {
-      Reactotron.log(response);
       if (response.status === 200) {
         return { error: false, data: response.data };
       }

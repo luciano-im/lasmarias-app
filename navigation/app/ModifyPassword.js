@@ -1,7 +1,9 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { NavigationEvents } from 'react-navigation';
+import { getUser, changePassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import InputPassword from '../../components/InputPassword';
 
@@ -12,7 +14,10 @@ export default class ModifyPasswordScreen extends React.Component {
     this.state = {
       passText: '',
       newPass1: '',
-      newPass2: ''
+      newPass2: '',
+      errorText: null,
+      updating: false,
+      user: null
     };
   }
 
@@ -34,14 +39,53 @@ export default class ModifyPasswordScreen extends React.Component {
     });
   };
 
+  _changePassword = () => {
+    const { passText, newPass1, newPass2 } = this.state;
+
+    this.setState({
+      errorText: null,
+      updating: true
+    });
+
+    if (passText !== null && newPass1 !== null && newPass2 !== null) {
+      const result = changePassword(passText, newPass1, newPass2);
+
+      if (result.error === false) {
+        this.setState({
+          updating: false
+        });
+        this.props.navigation.navigate('Auth');
+      } else {
+        this.setState({
+          errorText: result.msg,
+          updating: false
+        });
+      }
+    }
+  };
+
+  async _onFocusScreen() {
+    const user = await getUser();
+
+    if (user.error === false) {
+      const data = user.data;
+      this.setState({
+        user: data.related_name + ' ' + data.related_last_name
+      });
+    }
+  }
+
   render() {
+    const { user } = this.state;
+
     return (
       <ScrollView contentContainerStyle={styles.container}>
+        <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
         <View style={styles.seller}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialIcons name="person" size={25} color="white" />
             <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
-              Vendedor 01
+              {user}
             </Text>
           </View>
           <View>
@@ -70,20 +114,34 @@ export default class ModifyPasswordScreen extends React.Component {
             onChangeText={this._onChangeNewPassword2}
             styles={styles.input}
           />
+          {this.state.errorText ? (
+            <Text style={styles.error}>{this.state.errorText}</Text>
+          ) : null}
         </View>
         <Text style={styles.line} />
-        <Text style={styles.legend}>
+        <View>
+          <ActivityIndicator
+            animating={this.state.updating}
+            color={theme.PRIMARY_COLOR}
+            size={'large'}
+            style={[
+              styles.loading,
+              { display: this.state.updating ? 'flex' : 'none' }
+            ]}
+          />
+        </View>
+        {/* <Text style={styles.legend}>
           Al guardar la nueva Contraseña serás deslogueado y redirigido a la
           pantalla de Login para que ingreses con tu Correo Usuario y la nueva
           Contraseña.
-        </Text>
+        </Text> */}
         <View style={styles.nextButtonContainer}>
           <Button
             mode="contained"
             style={styles.nextButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this.props.navigation.navigate('Auth')}
+            onPress={() => this._changePassword()}
           >
             <Text
               style={styles.nextButtonText}
@@ -93,7 +151,7 @@ export default class ModifyPasswordScreen extends React.Component {
                 }
               }}
             >
-              GUARDAR CAMBIOS
+              CAMBIAR CONTRASEÑA
             </Text>
           </Button>
         </View>
@@ -160,5 +218,14 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontSize: 16
+  },
+  loading: {
+    marginVertical: 10
+  },
+  error: {
+    color: 'red',
+    marginVertical: 10,
+    textAlign: 'center',
+    width: 250
   }
 });
