@@ -9,7 +9,12 @@ export default class AuthLoadingScreen extends React.Component {
   async componentDidMount() {
     const token = await _getToken();
     if (token !== null) {
-      this.props.screenProps.setUserType(token.user_type);
+      this.props.screenProps.setUserData(
+        token.user_type,
+        token.name,
+        token.last_name,
+        token.email
+      );
       this.props.navigation.navigate('App');
     } else {
       this.props.navigation.navigate('Auth');

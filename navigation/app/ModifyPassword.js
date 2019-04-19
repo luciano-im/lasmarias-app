@@ -39,7 +39,7 @@ export default class ModifyPasswordScreen extends React.Component {
     });
   };
 
-  _changePassword = () => {
+  _changePassword = async () => {
     const { passText, newPass1, newPass2 } = this.state;
 
     this.setState({
@@ -48,8 +48,7 @@ export default class ModifyPasswordScreen extends React.Component {
     });
 
     if (passText !== null && newPass1 !== null && newPass2 !== null) {
-      const result = changePassword(passText, newPass1, newPass2);
-
+      const result = await changePassword(passText, newPass1, newPass2);
       if (result.error === false) {
         this.setState({
           updating: false
@@ -118,23 +117,20 @@ export default class ModifyPasswordScreen extends React.Component {
             <Text style={styles.error}>{this.state.errorText}</Text>
           ) : null}
         </View>
-        <Text style={styles.line} />
         <View>
           <ActivityIndicator
             animating={this.state.updating}
             color={theme.PRIMARY_COLOR}
-            size={'large'}
-            style={[
-              styles.loading,
-              { display: this.state.updating ? 'flex' : 'none' }
-            ]}
+            size={'small'}
+            style={styles.loading}
           />
         </View>
-        {/* <Text style={styles.legend}>
+        <Text style={styles.line} />
+        <Text style={styles.legend}>
           Al guardar la nueva Contraseña serás deslogueado y redirigido a la
           pantalla de Login para que ingreses con tu Correo Usuario y la nueva
           Contraseña.
-        </Text> */}
+        </Text>
         <View style={styles.nextButtonContainer}>
           <Button
             mode="contained"
@@ -220,7 +216,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   loading: {
-    marginVertical: 10
+    marginTop: 10
   },
   error: {
     color: 'red',

@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://22a183a0.ngrok.io';
+export const api = 'https://221bf35e.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -212,8 +212,15 @@ export let login = async (email, password) => {
     .then(response => {
       // Reactotron.log(response);
       if (response.status === 200) {
-        this._saveToken(response.data);
-        return { error: false, userType: response.data.user_type };
+        const data = response.data;
+        this._saveToken(data);
+        return {
+          error: false,
+          userType: data.user_type,
+          userName: data.name,
+          userLastName: data.last_name,
+          userEmail: data.email
+        };
       }
     })
     .catch(error => {
@@ -247,7 +254,7 @@ export let logout = async () => {
     .then(async response => {
       // Reactotron.log(response);
       if (response.status === 200) {
-        this._removeToken();
+        _removeToken();
         return { error: false };
       }
     })
@@ -373,7 +380,7 @@ export let changePassword = async (old, new1, new2) => {
     .then(response => {
       Reactotron.log(response);
       if (response.status === 200) {
-        await this._removeToken();
+        _removeToken();
         return { error: false };
       }
     })

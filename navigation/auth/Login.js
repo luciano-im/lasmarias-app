@@ -40,7 +40,13 @@ export default class LoginScreen extends React.Component {
     });
     await login(this.state.userText, this.state.passText).then(response => {
       if (response.error === false) {
-        this.props.screenProps.setUserType(response.userType);
+        this.props.screenProps.setUserData(
+          response.userType,
+          response.userName,
+          response.userLastName,
+          response.userEmail
+        );
+
         this.props.navigation.navigate('App');
       } else {
         this.setState({

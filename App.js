@@ -22,10 +22,15 @@ const customTheme = {
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    //id => customer id
+    //name => customer name
     this.state = {
       id: null,
       name: null,
       userType: null,
+      userName: null,
+      userLastName: null,
+      userEmail: null,
       updated: null,
       productsInCart: null,
       pendingOrders: null
@@ -53,9 +58,12 @@ export default class App extends React.Component {
     });
   };
 
-  _setUserType = data => {
+  _setUserData = (userType, userName, userLastName, userEmail) => {
     this.setState({
-      userType: data
+      userType: userType,
+      userName: userName,
+      userLastName: userLastName,
+      userEmail: userEmail
     });
   };
 
@@ -104,13 +112,17 @@ export default class App extends React.Component {
             screenProps={{
               setId: data => this._setId(data),
               removeId: () => this._removeId(),
-              setUserType: data => this._setUserType(data),
+              setUserData: (userType, userName, userLastName, userEmail) =>
+                this._setUserData(userType, userName, userLastName, userEmail),
               setUpdated: isUpdated => this._setUpdated(isUpdated),
               setProductsInCart: qty => this._setProductsInCart(qty),
               setPendingOrders: qty => this._setPendingOrders(qty),
               id: this.state.id,
               name: this.state.name,
               userType: this.state.userType,
+              userName: this.state.userName,
+              userLastName: this.state.userLastName,
+              userEmail: this.state.userEmail,
               updated: this.state.updated,
               productsInCart: this.state.productsInCart,
               pendingOrders: this.state.pendingOrders
