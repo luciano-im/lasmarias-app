@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   View,
   Text,
   TouchableOpacity,
@@ -15,6 +16,8 @@ import {
 import { DrawerItems } from 'react-navigation';
 import { List } from 'react-native-paper';
 import { logout } from '../helpers/api';
+import { theme } from '../helpers/styles';
+import Logo from '../components/Logo';
 import Header from '../components/Header';
 import EmptyHeader from './auth/components/EmptyHeader';
 import AuthLoadingScreen from './AuthLoading';
@@ -347,30 +350,52 @@ const AppDrawer = createDrawerNavigator(
   {
     initialRouteName: 'Home',
     contentComponent: props => (
-      <View style={{ flex: 1 }}>
-        <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
-          <DrawerItems {...props} />
-          <View style={{ height: 172 }}>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                height: 172,
-                alignItems: 'center'
-              }}
-              onPress={async () => {
-                await logout().then(response => {
-                  if (response.error === false) {
-                    props.navigation.navigate('Auth');
-                  }
-                });
-              }}
-            >
-              <List.Icon style={{ opacity: 0.62 }} icon="exit-to-app" />
-              <Text style={{ margin: 16, fontWeight: 'bold' }}>
-                Cerrar Sesión
-              </Text>
-            </TouchableOpacity>
+      <View style={{ flex: 1, paddingTop: 25 }}>
+        <SafeAreaView
+          style={{ flex: 1 }}
+          forceInset={{ top: 'always', horizontal: 'never' }}
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              paddingVertical: 15
+            }}
+          >
+            <Image
+              style={{ width: 80, height: 80 }}
+              source={require('../assets/user-128.png')}
+            />
+            {/* <Logo /> */}
+            <Text style={{ fontSize: 13, marginTop: 15 }}>
+              {props.screenProps.userName}
+            </Text>
+            <Text style={{ fontSize: 13 }}>{props.screenProps.userEmail}</Text>
           </View>
+          <View
+            style={{ borderColor: '#CCC', borderTopWidth: 1, width: '100%' }}
+          />
+          <DrawerItems {...props} />
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%'
+            }}
+            onPress={async () => {
+              await logout().then(response => {
+                if (response.error === false) {
+                  props.navigation.navigate('Auth');
+                }
+              });
+            }}
+          >
+            <List.Icon style={{ opacity: 0.62 }} icon="exit-to-app" />
+            <Text style={{ margin: 16, fontWeight: 'bold' }}>
+              Cerrar Sesión
+            </Text>
+          </TouchableOpacity>
         </SafeAreaView>
       </View>
     )
