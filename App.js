@@ -33,7 +33,8 @@ export default class App extends React.Component {
       userEmail: null,
       updated: null,
       productsInCart: null,
-      pendingOrders: null
+      pendingOrders: null,
+      searchProductsQuery: []
     };
   }
 
@@ -85,6 +86,13 @@ export default class App extends React.Component {
     });
   };
 
+  _setSearchProductsQuery = query => {
+    // Store querys as an array of words
+    this.setState({
+      searchProductsQuery: query.match(/\S+/g)
+    });
+  };
+
   async componentDidMount() {
     // AsyncStorage.removeItem('PendingOrders');
 
@@ -117,6 +125,8 @@ export default class App extends React.Component {
               setUpdated: isUpdated => this._setUpdated(isUpdated),
               setProductsInCart: qty => this._setProductsInCart(qty),
               setPendingOrders: qty => this._setPendingOrders(qty),
+              setSearchProductsQuery: query =>
+                this._setSearchProductsQuery(query),
               id: this.state.id,
               name: this.state.name,
               userType: this.state.userType,
@@ -125,7 +135,8 @@ export default class App extends React.Component {
               userEmail: this.state.userEmail,
               updated: this.state.updated,
               productsInCart: this.state.productsInCart,
-              pendingOrders: this.state.pendingOrders
+              pendingOrders: this.state.pendingOrders,
+              searchProductsQuery: this.state.searchProductsQuery
             }}
           />
         </SafeAreaView>

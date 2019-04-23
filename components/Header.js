@@ -13,13 +13,6 @@ import Reactotron from 'reactotron-react-native';
 
 // TODO: Add search products logic
 export default class Header extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchText: ''
-    };
-  }
-
   _isEmpty = obj => {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) return false;
@@ -70,6 +63,10 @@ export default class Header extends React.Component {
     }
   };
 
+  _onSearch = query => {
+    this.props.screenProps.setSearchProductsQuery(query);
+  };
+
   render() {
     const { productsInCart, pendingOrders } = this.props.screenProps;
 
@@ -93,10 +90,12 @@ export default class Header extends React.Component {
         <View style={{ flex: 1 }}>
           <Searchbar
             placeholder="Buscar Productos"
-            onChangeText={query => {
-              this.setState({ searchText: query });
-            }}
-            value={this.state.searchText}
+            onChangeText={query => this._onSearch(query)}
+            value={
+              this.props.screenProps.searchProductsQuery === null
+                ? ''
+                : this.props.screenProps.searchProductsQuery.join(' ')
+            }
             style={{ height: 40 }}
           />
         </View>
