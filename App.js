@@ -1,5 +1,5 @@
 import React from 'react';
-import { AsyncStorage, SafeAreaView, YellowBox } from 'react-native';
+import { SafeAreaView, YellowBox } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { Navigation } from './navigation/Navigation';
 import NavigationService from './navigation/NavigationService';
@@ -52,7 +52,7 @@ export default class App extends React.Component {
     });
   };
 
-  _removeId = data => {
+  _removeId = () => {
     this.setState({
       id: null,
       name: null

@@ -178,16 +178,13 @@ _notAuthenticated = () => {
 
 ///////// Update dbData
 
-export let updateDbData = async () => {
+export let updateDbData = async newDbData => {
   // Check if there is dbData stored and compare with props dbData
   // If stored dbData is null or it's distinct from props dbData then call update
   try {
     const currentDbData = await _getDbData('currentDbData');
-    const newDbData = await _getDbData('newDbData');
-    // Reactotron.log('2 - current DB', JSON.parse(currentDbData));
-    // Reactotron.log('2 - new DB', JSON.parse(newDbData));
     if (currentDbData === null || currentDbData !== newDbData) {
-      NavigationService.navigate('UpdateModalScreen');
+      NavigationService.navigate('UpdateModalScreen', { newDbData: newDbData });
     }
   } catch (error) {
     Reactotron.error(error);
@@ -748,29 +745,31 @@ export let createOrder = async (data, customer) => {
 ///////// DB Querys
 
 export let getProducts = async (brand, productLine, unit) => {
-  let where = '';
-  if (brand || productLine || unit) {
-    where = 'WHERE';
-  }
-  if (brand) {
-    where += ` brand="${brand}"`;
-  }
-  if (productLine) {
-    if (brand) {
-      where += ` AND product_line="${productLine}"`;
-    } else {
-      where += ` product_line="${productLine}"`;
-    }
-  }
-  if (unit) {
-    if (brand || productLine) {
-      where += ` AND unit="${unit}"`;
-    } else {
-      where += ` unit="${unit}"`;
-    }
-  }
+  // let where = '';
+  // if (brand || productLine || unit) {
+  //   where = 'WHERE';
+  // }
+  // if (brand) {
+  //   where += ` brand="${brand}"`;
+  // }
+  // if (productLine) {
+  //   if (brand) {
+  //     where += ` AND product_line="${productLine}"`;
+  //   } else {
+  //     where += ` product_line="${productLine}"`;
+  //   }
+  // }
+  // if (unit) {
+  //   if (brand || productLine) {
+  //     where += ` AND unit="${unit}"`;
+  //   } else {
+  //     where += ` unit="${unit}"`;
+  //   }
+  // }
 
-  const sql = `SELECT * FROM products ${where} ORDER BY name ASC;`;
+  // const sql = `SELECT * FROM products ${where} ORDER BY name ASC;`;
+
+  const sql = `SELECT * FROM products ORDER BY name ASC;`;
 
   return new Promise((resolve, reject) =>
     db.transaction(tx => {
@@ -778,7 +777,6 @@ export let getProducts = async (brand, productLine, unit) => {
         sql,
         [],
         (tx, { rows }) => {
-          // Reactotron.log(rows);
           resolve(rows._array);
         },
         (tx, error) => {

@@ -96,8 +96,7 @@ export default class HomeScreen extends React.Component {
   _updateData = async dbData => {
     // Save new data, later call updateDbData to compare new data vs existing/current data
     // Finally set new state
-    await _saveDbData('newDbData', dbData);
-    await updateDbData();
+    await updateDbData(dbData);
     this._fetchData();
   };
 
@@ -107,7 +106,6 @@ export default class HomeScreen extends React.Component {
       this.state.selectedProductLine,
       this.state.selectedUnit
     );
-    // Reactotron.log('Productos', products);
     this.setState({
       products: products,
       filteredProducts: products,

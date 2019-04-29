@@ -4,7 +4,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Platform,
   SafeAreaView
 } from 'react-native';
 import {
@@ -17,7 +16,6 @@ import { DrawerItems } from 'react-navigation';
 import { List } from 'react-native-paper';
 import { logout } from '../helpers/api';
 import { theme } from '../helpers/styles';
-import Logo from '../components/Logo';
 import Header from '../components/Header';
 import EmptyHeader from './auth/components/EmptyHeader';
 import AuthLoadingScreen from './AuthLoading';
@@ -365,7 +363,6 @@ const AppDrawer = createDrawerNavigator(
               style={{ width: 80, height: 80 }}
               source={require('../assets/user-128.png')}
             />
-            {/* <Logo /> */}
             <Text style={{ fontSize: 13, marginTop: 15 }}>
               {props.screenProps.userName}
             </Text>
@@ -440,7 +437,6 @@ const AppNavigation = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     Auth: AuthStack,
-    // App: AppDrawer
     App: AppStack
   },
   {

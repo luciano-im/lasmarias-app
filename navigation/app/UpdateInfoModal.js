@@ -58,8 +58,8 @@ export default class UpdateInfoScreen extends React.Component {
           //Set updated true
           this.props.screenProps.setUpdated(new Date().toString());
           //Once updated save the new DbData to AsyncStorage
-          const newDbData = await _getDbData('newDbData');
-          await _saveDbData('currentDbData', JSON.parse(newDbData));
+          const newDbData = this.props.navigation.getParam('newDbData');
+          _saveDbData('currentDbData', JSON.parse(newDbData));
         } else {
           this.setState({
             updating:
