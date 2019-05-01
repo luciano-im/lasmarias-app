@@ -179,11 +179,12 @@ _notAuthenticated = () => {
 ///////// Update dbData
 
 export let updateDbData = async newDbData => {
+  const newData = JSON.stringify(newDbData);
   // Check if there is dbData stored and compare with props dbData
   // If stored dbData is null or it's distinct from props dbData then call update
   try {
     const currentDbData = await _getDbData('currentDbData');
-    if (currentDbData === null || currentDbData !== newDbData) {
+    if (currentDbData === null || currentDbData !== newData) {
       NavigationService.navigate('UpdateModalScreen', { newDbData: newDbData });
     }
   } catch (error) {
