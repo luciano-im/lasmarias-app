@@ -1,20 +1,21 @@
 import React from 'react';
 import { View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import { theme } from '../helpers/styles';
 import { _getToken } from '../helpers/api';
 
 // TODO: Style ActivityIndicator and create splash screen
-export default class AuthLoadingScreen extends React.Component {
+class AuthLoadingScreen extends React.Component {
   async componentDidMount() {
     const token = await _getToken();
     if (token !== null) {
-      this.props.screenProps.setUserData(
-        token.user_type,
-        token.name,
-        token.last_name,
-        token.email
-      );
+      this.props.store.set('userData', {
+        userType: token.user_type,
+        userName: token.name,
+        userLastName: token.last_name,
+        userEmail: token.email
+      });
       this.props.navigation.navigate('App');
     } else {
       this.props.navigation.navigate('Auth');
@@ -36,3 +37,5 @@ export default class AuthLoadingScreen extends React.Component {
     );
   }
 }
+
+export default withStore(AuthLoadingScreen, ['userData']);

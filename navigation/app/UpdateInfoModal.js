@@ -1,6 +1,7 @@
 import React from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Dialog, Text } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import {
   _saveDbData,
   _getDbData,
@@ -11,7 +12,7 @@ import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
 
 // TODO: Review action to take when update fails
-export default class UpdateInfoScreen extends React.Component {
+class UpdateInfoScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,7 +54,7 @@ export default class UpdateInfoScreen extends React.Component {
             buttonDisabled: false
           });
           //Set updated true
-          this.props.screenProps.setUpdated(new Date().toString());
+          this.props.store.set('updated', new Date().toString());
           //Once updated save the new DbData to AsyncStorage
           const newDbData = this.props.navigation.getParam('newDbData');
           _saveDbData('currentDbData', newDbData);
@@ -170,3 +171,5 @@ const styles = StyleSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
+
+export default withStore(UpdateInfoScreen, ['updated']);

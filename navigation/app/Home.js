@@ -8,6 +8,7 @@ import {
   Text
 } from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
+import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import {
   _saveDbData,
@@ -24,7 +25,7 @@ import ProductDetailModal from './components/ProductDetailModal';
 import { pubnubConfig } from '../../PubnubConfig';
 import Reactotron from 'reactotron-react-native';
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,15 +33,15 @@ export default class HomeScreen extends React.Component {
       selectedItem: null,
       products: [],
       filteredProducts: [],
-      selectedBrand: null,
-      selectedProductLine: null,
-      selectedUnit: null,
+      // selectedBrand: null,
+      // selectedProductLine: null,
+      // selectedUnit: null,
       loading: true,
       snackVisible: false,
       snackText: ''
     };
 
-    this.userType = this.props.screenProps.userType;
+    this.userType = this.props.userData.userType;
 
     if (this.userType === 'VEN') {
       // Init PubNub object
@@ -53,7 +54,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _getCustomerId = () => {
-    return this.props.screenProps.id;
+    return this.props.id;
   };
 
   _showSnack = text => {
@@ -101,11 +102,10 @@ export default class HomeScreen extends React.Component {
   };
 
   _fetchData = async () => {
-    const products = await getProducts(
-      this.state.selectedBrand,
-      this.state.selectedProductLine,
-      this.state.selectedUnit
-    );
+    const products = await getProducts();
+    // this.state.selectedBrand,
+    // this.state.selectedProductLine,
+    // this.state.selectedUnit
     this.setState({
       products: products,
       filteredProducts: products,
@@ -134,8 +134,9 @@ export default class HomeScreen extends React.Component {
         const addProduct = await _addProductToOrder(product);
         if (addProduct.error === false) {
           // Set quantity of products in cart
-          this.props.screenProps.setProductsInCart(
-            (storedProducts === null ? 0 : parseInt(storedProducts.length)) + 1
+          this.props.store.set(
+            'productsInCart',
+            storedProducts === null ? 0 : parseInt(storedProducts.length) + 1
           );
           this.props.navigation.navigate('Checkout');
         } else {
@@ -189,14 +190,19 @@ export default class HomeScreen extends React.Component {
 
   async componentDidUpdate(prevProps, prevState) {
     if (
-      this.props.screenProps.updated !== null &&
-      this.props.screenProps.updated !== prevProps.screenProps.updated
+      this.props.updated !== null &&
+      this.props.updated !== prevProps.updated
     ) {
       await this._fetchData();
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.filteredProducts !== this.state.filteredProducts;
+  }
+
   render() {
+    Reactotron.debug('Render Home');
     const { loading } = this.state;
 
     let content;
@@ -247,10 +253,7 @@ export default class HomeScreen extends React.Component {
           {this.state.snackText}
         </Snackbar>
         <ScrollView style={styles.container}>
-          <SelectCustomer
-            navigation={this.props.navigation}
-            screenProps={this.props.screenProps}
-          />
+          <SelectCustomer navigation={this.props.navigation} />
           <CategoryFilter />
           <View style={styles.titleBackground}>
             <Text style={styles.title}>OFERTAS / DESTACADOS</Text>
@@ -296,3 +299,10 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
+export default withStore(HomeScreen, [
+  'id',
+  'productsInCart',
+  'userData',
+  'updated'
+]);

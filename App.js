@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, YellowBox } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { createStore } from '@spyna/react-store';
 import { Navigation } from './navigation/Navigation';
 import NavigationService from './navigation/NavigationService';
 import { theme } from './helpers/styles';
@@ -19,20 +20,25 @@ const customTheme = {
   }
 };
 
-export default class App extends React.Component {
+const initialValue = {
+  //id => customer id
+  //name => customer name
+  id: null,
+  name: null,
+  productsInCart: null,
+  updated: null,
+  userData: {
+    userType: null,
+    userName: null,
+    userLastName: null,
+    userEmail: null
+  }
+};
+
+class App extends React.Component {
   constructor(props) {
     super(props);
-    //id => customer id
-    //name => customer name
     this.state = {
-      id: null,
-      name: null,
-      userType: null,
-      userName: null,
-      userLastName: null,
-      userEmail: null,
-      updated: null,
-      productsInCart: null,
       pendingOrders: null,
       searchProductsQuery: []
     };
@@ -43,41 +49,6 @@ export default class App extends React.Component {
       if (obj.hasOwnProperty(key)) return false;
     }
     return true;
-  };
-
-  _setId = data => {
-    this.setState({
-      id: data.customer_id,
-      name: data.name
-    });
-  };
-
-  _removeId = () => {
-    this.setState({
-      id: null,
-      name: null
-    });
-  };
-
-  _setUserData = (userType, userName, userLastName, userEmail) => {
-    this.setState({
-      userType: userType,
-      userName: userName,
-      userLastName: userLastName,
-      userEmail: userEmail
-    });
-  };
-
-  _setUpdated = isUpdated => {
-    this.setState({
-      updated: isUpdated
-    });
-  };
-
-  _setProductsInCart = qty => {
-    this.setState({
-      productsInCart: qty
-    });
   };
 
   _setPendingOrders = value => {
@@ -118,23 +89,23 @@ export default class App extends React.Component {
               NavigationService.setTopLevelNavigator(navigatorRef);
             }}
             screenProps={{
-              setId: data => this._setId(data),
-              removeId: () => this._removeId(),
-              setUserData: (userType, userName, userLastName, userEmail) =>
-                this._setUserData(userType, userName, userLastName, userEmail),
-              setUpdated: isUpdated => this._setUpdated(isUpdated),
-              setProductsInCart: qty => this._setProductsInCart(qty),
+              // setId: data => this._setId(data),
+              // removeId: () => this._removeId(),
+              // setUserData: (userType, userName, userLastName, userEmail) =>
+              //   this._setUserData(userType, userName, userLastName, userEmail),
+              // setUpdated: isUpdated => this._setUpdated(isUpdated),
+              // setProductsInCart: qty => this._setProductsInCart(qty),
               setPendingOrders: qty => this._setPendingOrders(qty),
               setSearchProductsQuery: query =>
                 this._setSearchProductsQuery(query),
-              id: this.state.id,
-              name: this.state.name,
-              userType: this.state.userType,
-              userName: this.state.userName,
-              userLastName: this.state.userLastName,
-              userEmail: this.state.userEmail,
-              updated: this.state.updated,
-              productsInCart: this.state.productsInCart,
+              // id: this.state.id,
+              // name: this.state.name,
+              // userType: this.state.userType,
+              // userName: this.state.userName,
+              // userLastName: this.state.userLastName,
+              // userEmail: this.state.userEmail,
+              // updated: this.state.updated,
+              // productsInCart: this.state.productsInCart,
               pendingOrders: this.state.pendingOrders,
               searchProductsQuery: this.state.searchProductsQuery
             }}
@@ -144,3 +115,5 @@ export default class App extends React.Component {
     );
   }
 }
+
+export default createStore(App, initialValue);

@@ -14,6 +14,7 @@ import {
 } from 'react-navigation';
 import { DrawerItems } from 'react-navigation';
 import { List } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import { logout } from '../helpers/api';
 import { theme } from '../helpers/styles';
 import Header from '../components/Header';
@@ -444,4 +445,6 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-export const Navigation = createAppContainer(AppNavigation);
+export const Navigation = withStore(createAppContainer(AppNavigation), [
+  'userData'
+]);

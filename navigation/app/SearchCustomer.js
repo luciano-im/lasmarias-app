@@ -1,13 +1,13 @@
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { Divider, List, Searchbar } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import SelectCity from '../../components/SelectCity';
-import InputAddress from '../../components/InputAddress';
 import { getCustomers, getCities } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
 
-export default class SearchCustomerScreen extends React.Component {
+class SearchCustomerScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,19 +18,6 @@ export default class SearchCustomerScreen extends React.Component {
       selectedCity: null,
       showCitiesModal: false
     };
-  }
-
-  async componentDidMount() {
-    // Get customers asynchronously to prevent get "undefined"
-    const customers = await getCustomers(this.state.selectedCity);
-    const cities = await getCities();
-
-    // Initialy load all customers in the FlatList
-    this.setState({
-      customers: customers,
-      filteredCustomers: customers,
-      cities: cities
-    });
   }
 
   _handleSearch = query => {
@@ -77,9 +64,9 @@ export default class SearchCustomerScreen extends React.Component {
   };
 
   _handleSelectCustomer = item => {
-    const { navigation } = this.props;
-    navigation.goBack();
-    this.props.screenProps.setId(item);
+    this.props.store.set('id', item.customer_id);
+    this.props.store.set('name', item.name);
+    this.props.navigation.goBack();
   };
 
   _renderItem = ({ item }) => (
@@ -89,7 +76,26 @@ export default class SearchCustomerScreen extends React.Component {
     />
   );
 
+  async componentDidMount() {
+    // Get customers asynchronously to prevent get "undefined"
+    const customers = await getCustomers(this.state.selectedCity);
+    const cities = await getCities();
+
+    // Initialy load all customers in the FlatList
+    this.setState({
+      customers: customers,
+      filteredCustomers: customers,
+      cities: cities
+    });
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.filteredCustomers !== this.state.filteredCustomers;
+  }
+
   render() {
+    Reactotron.debug('Render SearchCustomer');
+
     let cityComponent;
     if (this.state.selectedCity) {
       cityComponent = (
@@ -170,3 +176,5 @@ const styles = StyleSheet.create({
     paddingRight: 10
   }
 });
+
+export default withStore(SearchCustomerScreen, ['id', 'name']);

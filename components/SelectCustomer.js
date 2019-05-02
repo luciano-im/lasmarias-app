@@ -9,11 +9,12 @@ import {
   Portal,
   Text
 } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import { theme } from '../helpers/styles';
 import { _removeOrder } from '../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
-export default class SelectCustomer extends React.Component {
+class SelectCustomer extends React.Component {
   constructor(props) {
     super(props);
 
@@ -38,13 +39,14 @@ export default class SelectCustomer extends React.Component {
     const { routeName } = this.props.navigation.state;
 
     await _removeOrder();
-    await this.props.screenProps.removeId();
+    this.props.store.set('id', null);
+    this.props.store.set('name', null);
     this.setState({
       visible: false
     });
 
     // Set products in cart to 0
-    this.props.screenProps.setProductsInCart(0);
+    this.props.store.set('productsInCart', 0);
 
     if (routeName === 'Checkout') {
       this.props.navigation.navigate('Home');
@@ -52,9 +54,8 @@ export default class SelectCustomer extends React.Component {
   };
 
   render() {
-    const { screenProps } = this.props;
     let content;
-    if (!screenProps.id) {
+    if (!this.props.id) {
       content = (
         <List.Item
           title="Buscar Cliente"
@@ -82,7 +83,7 @@ export default class SelectCustomer extends React.Component {
     } else {
       content = (
         <List.Item
-          title={screenProps.name}
+          title={this.props.name}
           left={props => (
             <List.Icon
               {...props}
@@ -152,3 +153,5 @@ const styles = StyleSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
+
+export default withStore(SelectCustomer, ['id', 'name', 'productsInCart']);

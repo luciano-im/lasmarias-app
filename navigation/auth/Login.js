@@ -9,6 +9,7 @@ import {
   View
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import { login } from '../../helpers/api';
 import Logo from '../../components/Logo';
@@ -16,7 +17,7 @@ import InputPassword from '../../components/InputPassword';
 import Reactotron from 'reactotron-react-native';
 
 // TODO: Detect status code 0 and skipped (show credentials error)
-export default class LoginScreen extends React.Component {
+class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,12 +41,12 @@ export default class LoginScreen extends React.Component {
     });
     await login(this.state.userText, this.state.passText).then(response => {
       if (response.error === false) {
-        this.props.screenProps.setUserData(
-          response.userType,
-          response.userName,
-          response.userLastName,
-          response.userEmail
-        );
+        this.props.store.set('userData', {
+          userType: response.userType,
+          userName: response.userName,
+          userLastName: response.userLastName,
+          userEmail: response.userEmail
+        });
 
         this.props.navigation.navigate('App');
       } else {
@@ -210,3 +211,5 @@ const styles = StyleSheet.create({
     width: 280
   }
 });
+
+export default withStore(LoginScreen, ['userData']);
