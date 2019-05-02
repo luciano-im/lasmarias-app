@@ -13,6 +13,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
 import { format, parse } from 'date-fns';
+import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import {
   _getOrder,
@@ -27,7 +28,7 @@ import PayMethod from './components/PayMethod';
 import DeliveryMethod from './components/DeliveryMethod';
 import Reactotron from 'reactotron-react-native';
 
-export default class CheckoutScreen extends React.Component {
+class CheckoutScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -115,7 +116,7 @@ export default class CheckoutScreen extends React.Component {
     // await this._onBlurScreen();
 
     const { inputs, products, delivery } = this.state;
-    const customer = this.props.screenProps.id;
+    const customer = this.props.id;
 
     if (products === null) {
       this.setState({
@@ -156,7 +157,7 @@ export default class CheckoutScreen extends React.Component {
           });
           // Remove products in cart
           await _removeOrder();
-          this.props.screenProps.setProductsInCart(0);
+          this.props.store.set('productsInCart', 0);
           // Navigate to success screen
           this.props.navigation.navigate('CheckoutOk', {
             order: result.order
@@ -172,10 +173,10 @@ export default class CheckoutScreen extends React.Component {
           // Save pending order in AsyncStorage
           const pendingOrder = { customer: customer, order: data };
           await _addPendingOrder(pendingOrder);
-          this.props.screenProps.setPendingOrders(true);
+          this.props.store.set('pendingOrders', true);
           // Remove products in cart
           await _removeOrder();
-          this.props.screenProps.setProductsInCart(0);
+          this.props.store.set('productsInCart', 0);
         }
       }
     }
@@ -195,7 +196,7 @@ export default class CheckoutScreen extends React.Component {
   _onBlurScreen = async () => {
     // Update products in cart if leaving screen without errors
     if (this.state.errorText === null) {
-      const customer = this.props.screenProps.id;
+      const customer = this.props.id;
       // If customer is null = Remove customer button pressed
       if (customer !== null) {
         let { products } = this.state;
@@ -252,10 +253,7 @@ export default class CheckoutScreen extends React.Component {
         </Snackbar>
         <ScrollView style={styles.container}>
           <NavigationEvents onWillBlur={payload => this._onBlurScreen()} />
-          <SelectCustomer
-            navigation={this.props.navigation}
-            screenProps={this.props.screenProps}
-          />
+          <SelectCustomer navigation={this.props.navigation} />
           <View style={styles.title}>
             <Text style={styles.titleText}>CARRITO DE PEDIDO</Text>
           </View>
@@ -543,3 +541,9 @@ const styles = StyleSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
+
+export default withStore(CheckoutScreen, [
+  'id',
+  'productsInCart',
+  'pendingOrders'
+]);

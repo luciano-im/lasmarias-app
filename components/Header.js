@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Appbar, Badge, Searchbar } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import {
   _getOrder,
   _getPendingOrders,
@@ -11,8 +12,7 @@ import {
 } from '../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: Add search products logic
-export default class Header extends React.Component {
+class Header extends React.Component {
   _isEmpty = obj => {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) return false;
@@ -48,7 +48,7 @@ export default class Header extends React.Component {
         await _setPendingOrders(pendingOrders);
       }
 
-      this.props.screenProps.setPendingOrders(
+      this.props.store.set(
         pendingOrders === null || this._isEmpty(pendingOrders) === true
           ? false
           : true
@@ -57,18 +57,18 @@ export default class Header extends React.Component {
   };
 
   _navigateCheckout = async () => {
-    const customer = this.props.screenProps.id;
+    const customer = this.props.id;
     if (customer !== null) {
       this.props.navigation.navigate('Checkout');
     }
   };
 
   _onSearch = query => {
-    this.props.screenProps.setSearchProductsQuery(query);
+    this.props.store.set('searchProductsQuery', query.match(/\S+/g));
   };
 
   render() {
-    const { productsInCart, pendingOrders } = this.props.screenProps;
+    const { productsInCart, pendingOrders } = this.props;
 
     let leftAction;
     if (this.props.leftAction === 'drawer') {
@@ -92,9 +92,9 @@ export default class Header extends React.Component {
             placeholder="Buscar Productos"
             onChangeText={query => this._onSearch(query)}
             value={
-              this.props.screenProps.searchProductsQuery === null
+              this.props.searchProductsQuery === null
                 ? ''
-                : this.props.screenProps.searchProductsQuery.join(' ')
+                : this.props.searchProductsQuery.join(' ')
             }
             style={{ height: 40 }}
           />
@@ -142,3 +142,10 @@ const styles = StyleSheet.create({
     right: 0
   }
 });
+
+export default withStore(Header, [
+  'id',
+  'productsInCart',
+  'pendingOrders',
+  'searchProductsQuery'
+]);

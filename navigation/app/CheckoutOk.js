@@ -5,17 +5,13 @@ import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import SelectCustomer from '../../components/SelectCustomer';
 
-//TODO: Add checkout logic
 export default class CheckoutOkScreen extends React.Component {
   render() {
     const order = this.props.navigation.getParam('order');
 
     return (
       <View style={styles.container}>
-        <SelectCustomer
-          navigation={this.props.navigation}
-          screenProps={this.props.screenProps}
-        />
+        <SelectCustomer navigation={this.props.navigation} />
         <Logo />
         <View style={styles.titleContainer}>
           <Image

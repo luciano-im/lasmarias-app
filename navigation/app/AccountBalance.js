@@ -1,20 +1,21 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import { fetchAccountBalance } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import AccountBalanceTable from './components/AccountBalanceTable';
 import Reactotron from 'reactotron-react-native';
 
-export default class AccountBalanceScreen extends React.Component {
+class AccountBalanceScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       accountData: null,
       accumulated: 0,
-      customerId: this.props.screenProps.id,
-      customerName: this.props.screenProps.name
+      customerId: this.props.id,
+      customerName: this.props.name
     };
   }
 
@@ -47,16 +48,12 @@ export default class AccountBalanceScreen extends React.Component {
 
   async componentDidUpdate(prevProps, prevState) {
     if (
-      (this.props.screenProps.id !== prevProps.screenProps.id ||
-        this.state.accountData === null) &&
-      this.props.screenProps.id !== null
+      (this.props.id !== prevProps.id || this.state.accountData === null) &&
+      this.props.id !== null
     ) {
-      await this._fetchAccount(this.props.screenProps.id);
+      await this._fetchAccount(this.props.id);
     } else {
-      if (
-        this.props.screenProps.id === null &&
-        this.state.accountData !== null
-      ) {
+      if (this.props.id === null && this.state.accountData !== null) {
         this.setState({
           accountData: null
         });
@@ -65,15 +62,14 @@ export default class AccountBalanceScreen extends React.Component {
   }
 
   async componentDidMount() {
-    if (this.props.screenProps.id !== null) {
-      await this._fetchAccount(this.props.screenProps.id);
+    if (this.props.id !== null) {
+      await this._fetchAccount(this.props.id);
     }
   }
 
   render() {
-    const { screenProps } = this.props;
     let content;
-    if (!screenProps.id) {
+    if (!this.props.id) {
       content = (
         <Text style={{ textAlign: 'center', marginTop: 40 }}>
           Debe seleccionar un Cliente
@@ -108,10 +104,7 @@ export default class AccountBalanceScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <SelectCustomer
-          navigation={this.props.navigation}
-          screenProps={this.props.screenProps}
-        />
+        <SelectCustomer navigation={this.props.navigation} />
         {/* <View style={styles.customer}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialIcons name="person" size={25} color="white" />
@@ -212,3 +205,5 @@ const styles = StyleSheet.create({
     fontSize: 16
   }
 });
+
+export default withStore(AccountBalanceScreen, ['id', 'name']);

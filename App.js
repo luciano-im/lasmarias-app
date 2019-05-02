@@ -20,6 +20,8 @@ const customTheme = {
   }
 };
 
+const pendingOrders = await _getPendingOrders();
+
 const initialValue = {
   //id => customer id
   //name => customer name
@@ -32,36 +34,20 @@ const initialValue = {
     userName: null,
     userLastName: null,
     userEmail: null
-  }
+  },
+  pendingOrders:
+    pendingOrders === null || this._isEmpty(pendingOrders) === true
+      ? false
+      : true,
+  searchProductsQuery: []
 };
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pendingOrders: null,
-      searchProductsQuery: []
-    };
-  }
-
   _isEmpty = obj => {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) return false;
     }
     return true;
-  };
-
-  _setPendingOrders = value => {
-    this.setState({
-      pendingOrders: value
-    });
-  };
-
-  _setSearchProductsQuery = query => {
-    // Store querys as an array of words
-    this.setState({
-      searchProductsQuery: query.match(/\S+/g)
-    });
   };
 
   async componentDidMount() {
@@ -70,13 +56,13 @@ class App extends React.Component {
     // Delete products in cart
     _removeOrder();
 
-    const pendingOrders = await _getPendingOrders();
-    this.setState({
-      pendingOrders:
-        pendingOrders === null || this._isEmpty(pendingOrders) === true
-          ? false
-          : true
-    });
+    // const pendingOrders = await _getPendingOrders();
+    // this.setState({
+    //   pendingOrders:
+    //     pendingOrders === null || this._isEmpty(pendingOrders) === true
+    //       ? false
+    //       : true
+    // });
   }
 
   // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop
@@ -87,27 +73,6 @@ class App extends React.Component {
           <Navigation
             ref={navigatorRef => {
               NavigationService.setTopLevelNavigator(navigatorRef);
-            }}
-            screenProps={{
-              // setId: data => this._setId(data),
-              // removeId: () => this._removeId(),
-              // setUserData: (userType, userName, userLastName, userEmail) =>
-              //   this._setUserData(userType, userName, userLastName, userEmail),
-              // setUpdated: isUpdated => this._setUpdated(isUpdated),
-              // setProductsInCart: qty => this._setProductsInCart(qty),
-              setPendingOrders: qty => this._setPendingOrders(qty),
-              setSearchProductsQuery: query =>
-                this._setSearchProductsQuery(query),
-              // id: this.state.id,
-              // name: this.state.name,
-              // userType: this.state.userType,
-              // userName: this.state.userName,
-              // userLastName: this.state.userLastName,
-              // userEmail: this.state.userEmail,
-              // updated: this.state.updated,
-              // productsInCart: this.state.productsInCart,
-              pendingOrders: this.state.pendingOrders,
-              searchProductsQuery: this.state.searchProductsQuery
             }}
           />
         </SafeAreaView>
