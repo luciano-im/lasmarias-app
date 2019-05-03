@@ -15,6 +15,7 @@ import {
   _addProductToOrder,
   _removeOrder,
   _getOrder,
+  _getPendingOrders,
   updateDbData,
   getProducts
 } from '../../helpers/api';
@@ -52,6 +53,13 @@ class HomeScreen extends React.Component {
       this.pubnub.init(this);
     }
   }
+
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
 
   _getCustomerId = () => {
     return this.props.id;
@@ -146,7 +154,7 @@ class HomeScreen extends React.Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.userType === 'VEN') {
       // Subscribe to channel
       this.pubnub.subscribe({
@@ -175,6 +183,14 @@ class HomeScreen extends React.Component {
           }
         }
       );
+
+      const pendingOrders = await _getPendingOrders();
+      this.props.store.set(
+        'pendingOrders',
+        pendingOrders === null || this._isEmpty(pendingOrders) === true
+          ? false
+          : true
+      );
     } else {
       // TODO: User is customer
     }
@@ -195,14 +211,38 @@ class HomeScreen extends React.Component {
     ) {
       await this._fetchData();
     }
+
+    if (this.props.searchProductsQuery !== prevProps.searchProductsQuery) {
+      if (this.props.searchProductsQuery !== null) {
+        const querys = this.props.searchProductsQuery;
+        const products = this.state.products;
+        const filtered = products.filter(p => {
+          return querys.every(q => {
+            return (
+              p.name.toUpperCase().indexOf(q.toUpperCase()) >= 0 ||
+              p.brand.toUpperCase().indexOf(q.toUpperCase()) >= 0
+            );
+          });
+        });
+        this.setState({
+          filteredProducts: filtered
+        });
+      } else {
+        this.setState({
+          filteredProducts: this.state.products
+        });
+      }
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.filteredProducts !== this.state.filteredProducts;
+    return (
+      nextProps.searchProductsQuery !== this.props.searchProductsQuery ||
+      nextState.filteredProducts !== this.state.filteredProducts
+    );
   }
 
   render() {
-    Reactotron.debug('Render Home');
     const { loading } = this.state;
 
     let content;
@@ -303,6 +343,7 @@ const styles = StyleSheet.create({
 export default withStore(HomeScreen, [
   'id',
   'productsInCart',
+  'searchProductsQuery',
   'userData',
   'updated'
 ]);

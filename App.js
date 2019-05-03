@@ -5,7 +5,7 @@ import { createStore } from '@spyna/react-store';
 import { Navigation } from './navigation/Navigation';
 import NavigationService from './navigation/NavigationService';
 import { theme } from './helpers/styles';
-import { _removeOrder, _getPendingOrders } from './helpers/api';
+import { _removeOrder } from './helpers/api';
 import './ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
@@ -20,8 +20,6 @@ const customTheme = {
   }
 };
 
-const pendingOrders = await _getPendingOrders();
-
 const initialValue = {
   //id => customer id
   //name => customer name
@@ -35,34 +33,16 @@ const initialValue = {
     userLastName: null,
     userEmail: null
   },
-  pendingOrders:
-    pendingOrders === null || this._isEmpty(pendingOrders) === true
-      ? false
-      : true,
+  pendingOrders: false,
   searchProductsQuery: []
 };
 
 class App extends React.Component {
-  _isEmpty = obj => {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) return false;
-    }
-    return true;
-  };
-
   async componentDidMount() {
     // AsyncStorage.removeItem('PendingOrders');
 
     // Delete products in cart
     _removeOrder();
-
-    // const pendingOrders = await _getPendingOrders();
-    // this.setState({
-    //   pendingOrders:
-    //     pendingOrders === null || this._isEmpty(pendingOrders) === true
-    //       ? false
-    //       : true
-    // });
   }
 
   // Ref prop and NavigationService enable us to use navigate in App.js and any other screen that haven't navigation prop

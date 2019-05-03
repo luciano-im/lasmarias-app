@@ -12,6 +12,8 @@ import Reactotron from 'reactotron-react-native';
 
 //TODO: Receive data and make to work "add" link
 export default class Product extends React.Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,12 +33,19 @@ export default class Product extends React.Component {
   };
 
   async componentDidMount() {
+    this._isMounted = true;
+
     const { product_id } = this.props.item;
     const images = await getProductImages(product_id);
+    if (this._isMounted) {
+      this.setState({
+        images: images
+      });
+    }
+  }
 
-    this.setState({
-      images: images
-    });
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

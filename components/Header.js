@@ -13,6 +13,13 @@ import {
 import Reactotron from 'reactotron-react-native';
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchQuery: ''
+    };
+  }
+
   _isEmpty = obj => {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) return false;
@@ -64,7 +71,11 @@ class Header extends React.Component {
   };
 
   _onSearch = query => {
+    this.setState({
+      searchQuery: query
+    });
     this.props.store.set('searchProductsQuery', query.match(/\S+/g));
+    Reactotron.debug(query.match(/\S+/g));
   };
 
   render() {
@@ -91,11 +102,7 @@ class Header extends React.Component {
           <Searchbar
             placeholder="Buscar Productos"
             onChangeText={query => this._onSearch(query)}
-            value={
-              this.props.searchProductsQuery === null
-                ? ''
-                : this.props.searchProductsQuery.join(' ')
-            }
+            value={this.state.searchQuery}
             style={{ height: 40 }}
           />
         </View>
