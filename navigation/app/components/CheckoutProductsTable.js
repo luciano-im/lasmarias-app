@@ -9,6 +9,13 @@ export default class CheckoutProductsTable extends React.Component {
     super(props);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      nextProps.products !== this.props.products ||
+      nextProps.inputs !== this.props.inputs
+    );
+  }
+
   render() {
     const { products } = this.props;
     let content = [];

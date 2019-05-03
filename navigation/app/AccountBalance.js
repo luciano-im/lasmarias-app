@@ -13,9 +13,9 @@ class AccountBalanceScreen extends React.Component {
     super(props);
     this.state = {
       accountData: null,
-      accumulated: 0,
-      customerId: this.props.id,
-      customerName: this.props.name
+      accumulated: 0
+      // customerId: this.props.id,
+      // customerName: this.props.name
     };
   }
 
@@ -65,6 +65,10 @@ class AccountBalanceScreen extends React.Component {
     if (this.props.id !== null) {
       await this._fetchAccount(this.props.id);
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.accountData !== this.state.accountData;
   }
 
   render() {

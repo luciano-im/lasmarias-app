@@ -144,7 +144,7 @@ class HomeScreen extends React.Component {
           // Set quantity of products in cart
           this.props.store.set(
             'productsInCart',
-            storedProducts === null ? 0 : parseInt(storedProducts.length) + 1
+            (storedProducts === null ? 0 : parseInt(storedProducts.length)) + 1
           );
           this.props.navigation.navigate('Checkout');
         } else {
@@ -238,7 +238,9 @@ class HomeScreen extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (
       nextProps.searchProductsQuery !== this.props.searchProductsQuery ||
-      nextState.filteredProducts !== this.state.filteredProducts
+      nextState.filteredProducts !== this.state.filteredProducts ||
+      nextState.isModalVisible !== this.state.isModalVisible ||
+      nextState.snackVisible !== this.state.snackVisible
     );
   }
 

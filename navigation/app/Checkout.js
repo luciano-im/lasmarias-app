@@ -226,7 +226,20 @@ class CheckoutScreen extends React.Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      nextState.products !== this.state.products ||
+      nextState.inputs !== this.state.inputs ||
+      nextState.snackVisible !== this.state.snackVisible ||
+      nextState.confirmVisible !== this.state.confirmVisible ||
+      nextState.firstStep !== this.state.firstStep ||
+      nextState.secondStep !== this.state.secondStep ||
+      nextState.errorStep !== this.state.errorStep
+    );
+  }
+
   render() {
+    Reactotron.log('Render Checkout');
     const { firstStep, secondStep, errorStep } = this.state;
 
     const iva = (this.state.subtotal * 21) / 100;

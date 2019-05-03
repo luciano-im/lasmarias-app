@@ -36,7 +36,15 @@ export default class ProductDetailModal extends React.Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      nextProps.data !== this.props.data ||
+      nextState.images !== this.state.images
+    );
+  }
+
   render() {
+    Reactotron.log('Render Product Modal');
     const { data } = this.props;
 
     const images = Array.from(this.state.images);

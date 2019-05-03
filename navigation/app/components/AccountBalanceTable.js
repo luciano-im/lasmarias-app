@@ -5,6 +5,10 @@ import { theme } from '../../../helpers/styles';
 import { format, parse } from 'date-fns';
 
 export default class AccountBalanceTable extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.data !== this.props.data;
+  }
+
   render() {
     const { accum, data } = this.props;
 
