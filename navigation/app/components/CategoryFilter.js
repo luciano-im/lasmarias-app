@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import CategoryButton from './CategoryButton';
+import Reactotron from 'reactotron-react-native';
 
-//TODO: Add logic and see how to receive category
 const categoryData = [
   {
     category: 'ofertas',
@@ -21,8 +21,8 @@ const categoryData = [
     image: require('../../../assets/category/milk-128.png')
   },
   {
-    category: 'bebidas',
-    label: 'Bebidas',
+    category: 'fiambres',
+    label: 'Fiambres',
     image: require('../../../assets/category/drink-128.png')
   }
 ];
@@ -31,6 +31,10 @@ export default class CategoryFilter extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  _selectCategory = (category, label) => {
+    this.props.onPress(category, label);
+  };
 
   render() {
     return (
@@ -45,6 +49,8 @@ export default class CategoryFilter extends React.Component {
               size={70}
               image={category.image}
               label={category.label}
+              category={category.category}
+              onPress={this._selectCategory}
               key={index}
             />
           ))}

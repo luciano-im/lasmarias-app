@@ -68,7 +68,10 @@ class AccountBalanceScreen extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.accountData !== this.state.accountData;
+    return (
+      nextState.accountData !== this.state.accountData ||
+      nextProps.id !== this.props.id
+    );
   }
 
   render() {

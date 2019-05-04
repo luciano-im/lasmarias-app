@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://221bf35e.ngrok.io';
+export const api = 'https://4cbf3803.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -745,32 +745,17 @@ export let createOrder = async (data, customer) => {
 
 ///////// DB Querys
 
-export let getProducts = async (brand, productLine, unit) => {
-  // let where = '';
-  // if (brand || productLine || unit) {
-  //   where = 'WHERE';
-  // }
-  // if (brand) {
-  //   where += ` brand="${brand}"`;
-  // }
-  // if (productLine) {
-  //   if (brand) {
-  //     where += ` AND product_line="${productLine}"`;
-  //   } else {
-  //     where += ` product_line="${productLine}"`;
-  //   }
-  // }
-  // if (unit) {
-  //   if (brand || productLine) {
-  //     where += ` AND unit="${unit}"`;
-  //   } else {
-  //     where += ` unit="${unit}"`;
-  //   }
-  // }
+export let getProducts = async productLine => {
+  let where = '';
+  if (productLine) {
+    if (productLine === 'ofertas') {
+      where = `WHERE offer=0`;
+    } else {
+      where = `WHERE lower(product_line)="${productLine}"`;
+    }
+  }
 
-  // const sql = `SELECT * FROM products ${where} ORDER BY name ASC;`;
-
-  const sql = `SELECT * FROM products ORDER BY name ASC;`;
+  const sql = `SELECT * FROM products ${where} ORDER BY name ASC;`;
 
   return new Promise((resolve, reject) =>
     db.transaction(tx => {

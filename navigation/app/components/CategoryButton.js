@@ -1,8 +1,13 @@
 import React from 'react';
 import { Image, Platform, StyleSheet, View } from 'react-native';
 import { Text, TouchableRipple, Surface } from 'react-native-paper';
+import Reactotron from 'reactotron-react-native';
 
 export default class CategoryButton extends React.Component {
+  _onPress = (category, label) => {
+    this.props.onPress(category, label);
+  };
+
   render() {
     const backgroundColor = this.props.backgroundColor;
     const elevation = this.props.elevation;
@@ -32,7 +37,7 @@ export default class CategoryButton extends React.Component {
         >
           <TouchableRipple
             borderless
-            onPress={() => this.props.onPress(category)}
+            onPress={() => this._onPress(category, label)}
             style={[
               styles.touchable,
               {

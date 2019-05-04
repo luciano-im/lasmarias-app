@@ -34,12 +34,10 @@ class HomeScreen extends React.Component {
       selectedItem: null,
       products: [],
       filteredProducts: [],
-      // selectedBrand: null,
-      // selectedProductLine: null,
-      // selectedUnit: null,
       loading: true,
       snackVisible: false,
-      snackText: ''
+      snackText: '',
+      categoryTitle: 'OFERTAS / DESTACADOS'
     };
 
     this.userType = this.props.userData.userType;
@@ -102,6 +100,13 @@ class HomeScreen extends React.Component {
     />
   );
 
+  _filterCategory = (category, label) => {
+    this._fetchData(category);
+    this.setState({
+      categoryTitle: label.toUpperCase()
+    });
+  };
+
   _updateData = async dbData => {
     // Save new data, later call updateDbData to compare new data vs existing/current data
     // Finally set new state
@@ -109,11 +114,8 @@ class HomeScreen extends React.Component {
     this._fetchData();
   };
 
-  _fetchData = async () => {
-    const products = await getProducts();
-    // this.state.selectedBrand,
-    // this.state.selectedProductLine,
-    // this.state.selectedUnit
+  _fetchData = async category => {
+    const products = await getProducts(category);
     this.setState({
       products: products,
       filteredProducts: products,
@@ -237,6 +239,7 @@ class HomeScreen extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     return (
+      nextProps.updated !== this.props.updated ||
       nextProps.searchProductsQuery !== this.props.searchProductsQuery ||
       nextState.filteredProducts !== this.state.filteredProducts ||
       nextState.isModalVisible !== this.state.isModalVisible ||
@@ -296,9 +299,9 @@ class HomeScreen extends React.Component {
         </Snackbar>
         <ScrollView style={styles.container}>
           <SelectCustomer navigation={this.props.navigation} />
-          <CategoryFilter />
+          <CategoryFilter onPress={this._filterCategory} />
           <View style={styles.titleBackground}>
-            <Text style={styles.title}>OFERTAS / DESTACADOS</Text>
+            <Text style={styles.title}>{this.state.categoryTitle}</Text>
           </View>
           <View style={styles.listContainer}>{content}</View>
           <Portal style={styles.modal}>
