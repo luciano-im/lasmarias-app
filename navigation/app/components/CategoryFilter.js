@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
+import { theme } from '../../../helpers/styles';
 import CategoryButton from './CategoryButton';
 import Reactotron from 'reactotron-react-native';
 
@@ -30,16 +31,34 @@ const categoryData = [
 export default class CategoryFilter extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      category: null
+    };
   }
 
   _selectCategory = (category, label) => {
     this.props.onPress(category, label);
+    this.setState({
+      category: category
+    });
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>¿QUE ESTAS BUSCANDO?</Text>
+        <View style={styles.containerTitle}>
+          <Text style={styles.title}>¿QUE ESTAS BUSCANDO?</Text>
+          {this.state.category && (
+            <IconButton
+              style={styles.filterNone}
+              icon="filter-none"
+              color={'#AAAAAA'}
+              size={22}
+              onPress={() => this._selectCategory()}
+            />
+          )}
+        </View>
         <View style={styles.categoryContainer}>
           {categoryData.map((category, index) => (
             <CategoryButton
@@ -62,15 +81,23 @@ export default class CategoryFilter extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     paddingVertical: 12,
     backgroundColor: '#EEE'
+  },
+  containerTitle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10
   },
   title: {
     paddingHorizontal: 20,
     marginBottom: 10,
     fontSize: 16,
     color: 'grey'
+  },
+  filterNone: {
+    margin: 0,
+    marginRight: 12
   },
   categoryContainer: {
     flexDirection: 'row',
