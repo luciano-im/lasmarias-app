@@ -19,6 +19,7 @@ import {
   _getOrder,
   _setOrder,
   _removeOrder,
+  _removeProductFromOrder,
   _addPendingOrder,
   createOrder
 } from '../../helpers/api';
@@ -81,27 +82,63 @@ class CheckoutScreen extends React.Component {
       }
     }
 
-    const subtotal = this.state.products.reduce((total, item) => {
-      // Use (+) unary operator to turn string into numbers
-      if ('input' + item.id === input) {
-        return +total + +item.item.price * +newState[input];
-      } else {
-        return +total + +item.item.price * +item.qty;
-      }
-    }, []);
+    // Disable update on qty < 1
+    if (newState[input] >= 1) {
+      const subtotal = this.state.products.reduce((total, item) => {
+        // Use (+) unary operator to turn string into numbers
+        if ('input' + item.id === input) {
+          return +total + +item.item.price * +newState[input];
+        } else {
+          return +total + +item.item.price * +item.qty;
+        }
+      }, []);
 
-    this.setState({
-      inputs: {
-        ...this.state.inputs,
-        ...newState
-      },
-      subtotal: subtotal
-    });
+      this.setState({
+        inputs: {
+          ...this.state.inputs,
+          ...newState
+        },
+        subtotal: subtotal
+      });
+    }
   };
 
   _setDeliveryMethod = val => {
     this.setState({
       delivery: val
+    });
+  };
+
+  _removeProduct = async product => {
+    const removeProduct = await _removeProductFromOrder(product.id);
+    // Set productsinCart badge
+    if (removeProduct.error === false) {
+      this.props.store.set('productsInCart', removeProduct.productsInCart);
+    }
+    // Update state
+    let { inputs } = this.state;
+    const deletedInput = 'input' + product.id;
+    delete inputs[deletedInput];
+    let subtotal;
+    let products;
+    if (removeProduct.productsInCart > 0) {
+      subtotal = removeProduct.products.reduce((total, item) => {
+        // Use (+) unary operator to turn string into numbers
+        const currentInput = 'input' + item.id;
+        if (currentInput !== deletedInput) {
+          return +total + +item.item.price * +inputs[currentInput];
+        }
+      }, []);
+      products = removeProduct.products;
+    } else {
+      subtotal = 0;
+      products = null;
+    }
+
+    this.setState({
+      products: products,
+      inputs: { ...inputs },
+      subtotal: subtotal
     });
   };
 
@@ -282,6 +319,7 @@ class CheckoutScreen extends React.Component {
                 products={this.state.products}
                 inputs={this.state.inputs}
                 onUpdateInput={this._updateInputText}
+                onRemoveProduct={this._removeProduct}
               />
             </View>
             <View style={styles.addProductsButtonContainer}>

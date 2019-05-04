@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://4cbf3803.ngrok.io';
+export const api = 'https://494a8e84.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -71,20 +71,29 @@ export let _addProductToOrder = async (item, qty = 1) => {
   }
 };
 
-// export let _removeProductFromOrder = async productId => {
-//   try {
-//     const orderProducts = await AsyncStorage.getItem('OrderProducts');
-//     if (orderProducts !== null) {
-//       let products = JSON.parse(orderProducts);
-//       delete products[productId];
-//       await AsyncStorage.setItem('OrderProducts', JSON.stringify(products));
-//       return { error: false };
-//     }
-//   } catch {
-//     Reactotron.error('Error retrieving OrderProducts');
-//     return { error: true };
-//   }
-// };
+export let _removeProductFromOrder = async productId => {
+  try {
+    const orderProducts = await AsyncStorage.getItem('OrderProducts');
+    let products = JSON.parse(orderProducts);
+    const newProducts = products.filter(p => {
+      return p.id !== productId;
+    });
+    try {
+      await AsyncStorage.setItem('OrderProducts', JSON.stringify(newProducts));
+      return {
+        error: false,
+        products: newProducts,
+        productsInCart: newProducts.length
+      };
+    } catch {
+      Reactotron.error('Error saving product');
+      return { error: true };
+    }
+  } catch {
+    Reactotron.error('Error retrieving OrderProducts');
+    return { error: true };
+  }
+};
 
 export let _getOrder = async () => {
   try {

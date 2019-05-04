@@ -72,6 +72,13 @@ export default class CheckoutProductsTable extends React.Component {
             <Text style={[styles.col3, styles.price]}>
               $ {item.item.price.toFixed(2)}
             </Text>
+            <IconButton
+              style={[styles.quantityButton, { marginLeft: 3 }]}
+              icon="delete-forever"
+              color={'red'}
+              size={20}
+              onPress={() => this.props.onRemoveProduct(item)}
+            />
           </View>
         );
       });
