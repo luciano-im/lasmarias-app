@@ -44,8 +44,9 @@ export default class ProductDetailModal extends React.Component {
   }
 
   render() {
-    Reactotron.log('Render Product Modal');
     const { data } = this.props;
+    const offer = data.offer === 0 ? true : false;
+    const offerPrice = data.offer_price.toFixed(2);
 
     const images = Array.from(this.state.images);
     const imagesEmpty = this._isEmpty(images);
@@ -78,6 +79,7 @@ export default class ProductDetailModal extends React.Component {
             <Text style={styles.category}>{data.product_line}</Text>
             <View style={styles.priceContainer}>
               <View style={styles.priceDetail}>
+                {offer && <Text style={styles.prevPrice}>${offerPrice}</Text>}
                 <Text style={styles.price}>${data.price.toFixed(2)}</Text>
               </View>
               <View style={styles.addProductContainer}>
@@ -147,6 +149,13 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 28,
     fontWeight: theme.FONT_WEIGHT_BOLD
+  },
+  prevPrice: {
+    color: 'grey',
+    fontSize: 18,
+    fontWeight: theme.FONT_WEIGHT_BOLD,
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid'
   },
   addButton: {
     alignItems: 'center',

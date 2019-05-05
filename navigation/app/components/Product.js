@@ -55,6 +55,8 @@ export default class Product extends React.Component {
     const price = this.props.price.toFixed(2);
     const unit = this.props.unit;
     const packaging = this.props.packaging;
+    const offer = this.props.item.offer === 0 ? true : false;
+    const offerPrice = this.props.item.offer_price.toFixed(2);
 
     const images = Array.from(this.state.images);
     const imagesEmpty = this._isEmpty(images);
@@ -95,6 +97,8 @@ export default class Product extends React.Component {
               >
                 <Text style={styles.buttonText}>Ver detalle</Text>
               </TouchableOpacity>
+              <Text />
+              {offer && <Text style={styles.prevPrice}>${offerPrice}</Text>}
               <Text style={styles.price}>${price}</Text>
             </View>
             <View style={styles.addProductContainer}>
@@ -166,6 +170,13 @@ styles = StyleSheet.create({
   price: {
     fontSize: 28,
     fontWeight: theme.FONT_WEIGHT_BOLD
+  },
+  prevPrice: {
+    color: 'grey',
+    fontSize: 18,
+    fontWeight: theme.FONT_WEIGHT_BOLD,
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid'
   },
   addProductContainer: {},
   addButton: {
