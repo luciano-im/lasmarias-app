@@ -8,7 +8,7 @@ import Reactotron from 'reactotron-react-native';
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://494a8e84.ngrok.io';
+export const api = 'https://9f321265.ngrok.io';
 
 ///////// AsyncStorage
 
@@ -138,20 +138,20 @@ export let _addPendingOrder = async order => {
   }
 };
 
-export let _removePendingOrder = async index => {
-  try {
-    const pendingOrders = await AsyncStorage.getItem('PendingOrders');
-    if (pendingOrders !== null) {
-      let orders = JSON.parse(pendingOrders);
-      orders.splice(index, 1);
-      await AsyncStorage.setItem('PendingOrders', JSON.stringify(orders));
-      return { error: false, pendingOrders: orders };
-    }
-  } catch {
-    Reactotron.error('Error retrieving PendingOrders');
-    return { error: true };
-  }
-};
+// export let _removePendingOrder = async index => {
+//   try {
+//     const pendingOrders = await AsyncStorage.getItem('PendingOrders');
+//     if (pendingOrders !== null) {
+//       let orders = JSON.parse(pendingOrders);
+//       orders.splice(index, 1);
+//       await AsyncStorage.setItem('PendingOrders', JSON.stringify(orders));
+//       return { error: false, pendingOrders: orders };
+//     }
+//   } catch {
+//     Reactotron.error('Error retrieving PendingOrders');
+//     return { error: true };
+//   }
+// };
 
 export let _getPendingOrders = async () => {
   try {
@@ -713,6 +713,7 @@ export let createOrder = async (data, customer) => {
   return await axios
     .post(api + `/api/order/${customer}/`, data, config)
     .then(response => {
+      Reactotron.log(response);
       if (response.status === 401) {
         this._notAuthenticated();
       }
@@ -722,19 +723,25 @@ export let createOrder = async (data, customer) => {
           error: false,
           order: data.order_id,
           status_code: response.status,
-          status_text: 'Created'
+          msg: 'Pedido creado'
         };
       }
     })
     .catch(error => {
       Reactotron.log(error);
+      if (error.response.status === 404) {
+        return {
+          error: true,
+          msg: 'El servidor no esta disponible'
+        };
+      }
       if (error.response.status === 409) {
         const data = error.response.data;
         return {
           error: false,
           order: data.order_id,
           status_code: error.response.status,
-          status_text: 'Duplicate'
+          msg: 'El pedido ya existe'
         };
       }
       if (error.code === 'ECONNABORTED') {

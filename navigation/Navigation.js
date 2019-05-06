@@ -32,6 +32,7 @@ import ModifyDataValidationScreen from './app/ModifyDataValidation';
 import ModifyDataOkScreen from './app/ModifyDataOk';
 import ModifyPasswordScreen from './app/ModifyPassword';
 import UpdateInfoScreen from './app/UpdateInfoModal';
+import PendingOrdersScreen from './app/PendingOrders';
 
 const AuthStack = createStackNavigator(
   {
@@ -205,6 +206,15 @@ const ModifyPasswordStack = createStackNavigator({
   }
 });
 
+const PendingOrdersStack = createStackNavigator({
+  PendingOrders: {
+    screen: PendingOrdersScreen,
+    navigationOptions: ({ navigation }) => ({
+      header: <Header leftAction="pending" navigation={navigation} />
+    })
+  }
+});
+
 const AppDrawer = createDrawerNavigator(
   {
     Home: {
@@ -298,6 +308,9 @@ const AppStack = createStackNavigator(
     },
     AppScreens: {
       screen: AppDrawer
+    },
+    PendingScreen: {
+      screen: PendingOrdersStack
     }
   },
   {

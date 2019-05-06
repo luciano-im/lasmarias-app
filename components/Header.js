@@ -2,14 +2,6 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Appbar, Badge, Searchbar } from 'react-native-paper';
 import { withStore } from '@spyna/react-store';
-import {
-  _getOrder,
-  _getPendingOrders,
-  _setPendingOrders,
-  _removePendingOrders,
-  _removePendingOrder,
-  createOrder
-} from '../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
 class Header extends React.Component {
@@ -26,47 +18,18 @@ class Header extends React.Component {
     }
     return true;
   };
-
-  _processPendingOrders = async () => {
-    const pendingOrders = await _getPendingOrders();
-
-    // Create orders
-    const responses = await Promise.all(
-      pendingOrders.map(order => createOrder(order.order, order.customer))
-    );
-
-    // Get successful requests
-    let toRemove = [];
-    responses.forEach((operation, index) => {
-      if (operation.error === false) {
-        return toRemove.push(index);
-      }
-    });
-
-    // Delete successfull requests from pendingOrders
-    if (this._isEmpty(toRemove) === false) {
-      for (var i = toRemove.length - 1; i >= 0; i--) {
-        pendingOrders.splice(toRemove[i], 1);
-      }
-
-      if (pendingOrders === null || this._isEmpty(pendingOrders) === true) {
-        await _removePendingOrders();
-      } else {
-        await _setPendingOrders(pendingOrders);
-      }
-
-      this.props.store.set(
-        pendingOrders === null || this._isEmpty(pendingOrders) === true
-          ? false
-          : true
-      );
-    }
-  };
-
-  _navigateCheckout = async () => {
+  º;
+  _navigateCheckout = () => {
     const customer = this.props.id;
     if (customer !== null) {
       this.props.navigation.navigate('Checkout');
+    }
+  };
+
+  _navigatePendingOrders = () => {
+    const { pendingOrders } = this.props;
+    if (pendingOrders) {
+      this.props.navigation.navigate('PendingScreen');
     }
   };
 
@@ -93,6 +56,12 @@ class Header extends React.Component {
       leftAction = (
         <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
       );
+    } else if (this.props.leftAction === 'pending') {
+      leftAction = (
+        <Appbar.BackAction
+          onPress={() => this.props.navigation.navigate('AppScreens')}
+        />
+      );
     }
 
     return (
@@ -111,7 +80,7 @@ class Header extends React.Component {
             color={'#FFFFFF'}
             icon="autorenew"
             disabled={!pendingOrders}
-            onPress={() => this._processPendingOrders()}
+            onPress={() => this._navigatePendingOrders()}
           />
           <Badge
             visible={pendingOrders > 0 ? true : false}

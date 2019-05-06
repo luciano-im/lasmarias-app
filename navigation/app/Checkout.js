@@ -149,11 +149,9 @@ class CheckoutScreen extends React.Component {
       secondStep: true
     });
 
-    // Actualizo los productos guardados en AS
-    // await this._onBlurScreen();
-
     const { inputs, products, delivery } = this.state;
     const customer = this.props.id;
+    const customerName = this.props.name;
 
     if (products === null) {
       this.setState({
@@ -208,9 +206,15 @@ class CheckoutScreen extends React.Component {
             buttonDisabled: false
           });
           // Save pending order in AsyncStorage
-          const pendingOrder = { customer: customer, order: data };
+          const pendingOrder = {
+            customer: customer,
+            name: customerName,
+            order: data
+          };
           await _addPendingOrder(pendingOrder);
-          this.props.store.set('pendingOrders', true);
+          if (this.props.pendingOrders === false) {
+            this.props.store.set('pendingOrders', true);
+          }
           // Remove products in cart
           await _removeOrder();
           this.props.store.set('productsInCart', 0);
@@ -595,6 +599,7 @@ const styles = StyleSheet.create({
 
 export default withStore(CheckoutScreen, [
   'id',
+  'name',
   'productsInCart',
   'pendingOrders'
 ]);
