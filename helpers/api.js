@@ -3,12 +3,13 @@ import { SQLite } from 'expo';
 import axios from 'axios';
 import qs from 'qs';
 import NavigationService from '../navigation/NavigationService';
+import { API_URL } from 'react-native-dotenv';
 import Reactotron from 'reactotron-react-native';
 
 // Open a database, creating it if it doesn't exist
 const db = SQLite.openDatabase('lasmarias.db');
 
-export const api = 'https://9f321265.ngrok.io';
+const timeout = 30000;
 
 ///////// AsyncStorage
 
@@ -205,7 +206,7 @@ export let updateDbData = async newDbData => {
 
 export let login = async (email, password) => {
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   };
 
@@ -215,7 +216,7 @@ export let login = async (email, password) => {
   };
 
   return await axios
-    .post(api + '/rest-auth/login/', qs.stringify(data), config)
+    .post(API_URL + '/rest-auth/login/', qs.stringify(data), config)
     .then(response => {
       // Reactotron.log(response);
       if (response.status === 200) {
@@ -252,12 +253,12 @@ export let logout = async () => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
-    .post(api + '/rest-auth/logout/', {}, config)
+    .post(API_URL + '/rest-auth/logout/', {}, config)
     .then(async response => {
       // Reactotron.log(response);
       if (response.status === 200) {
@@ -285,7 +286,7 @@ export let logout = async () => {
 
 export let signUp = async (email, password, password2, relatedData) => {
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   };
 
@@ -304,7 +305,7 @@ export let signUp = async (email, password, password2, relatedData) => {
   };
 
   return await axios
-    .post(api + '/rest-auth/registration/', qs.stringify(data), config)
+    .post(API_URL + '/rest-auth/registration/', qs.stringify(data), config)
     .then(response => {
       // Reactotron.log(response);
       if (response.status === 201) {
@@ -331,7 +332,7 @@ export let signUp = async (email, password, password2, relatedData) => {
 
 export let resetPassword = async email => {
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   };
 
@@ -340,7 +341,7 @@ export let resetPassword = async email => {
   };
 
   return await axios
-    .post(api + '/rest-auth/password/reset/', qs.stringify(data), config)
+    .post(API_URL + '/rest-auth/password/reset/', qs.stringify(data), config)
     .then(response => {
       Reactotron.log(response);
       if (response.status === 200) {
@@ -369,7 +370,7 @@ export let changePassword = async (old, new1, new2) => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     headers: {
       Authorization: 'Token ' + token.key,
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -383,7 +384,7 @@ export let changePassword = async (old, new1, new2) => {
   };
 
   return await axios
-    .post(api + '/rest-auth/password/change/', qs.stringify(data), config)
+    .post(API_URL + '/rest-auth/password/change/', qs.stringify(data), config)
     .then(response => {
       Reactotron.log(response);
       if (response.status === 200) {
@@ -413,12 +414,12 @@ export let getUser = async () => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
-    .get(api + '/rest-auth/user/', config)
+    .get(API_URL + '/rest-auth/user/', config)
     .then(response => {
       if (response.status === 200) {
         return { error: false, data: response.data };
@@ -446,7 +447,7 @@ export let updateUser = async relatedData => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     headers: {
       Authorization: 'Token ' + token.key,
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -465,7 +466,7 @@ export let updateUser = async relatedData => {
   };
 
   return await axios
-    .put(api + '/rest-auth/user/', qs.stringify(data), config)
+    .put(API_URL + '/rest-auth/user/', qs.stringify(data), config)
     .then(response => {
       if (response.status === 200) {
         return { error: false, data: response.data };
@@ -516,13 +517,13 @@ export let fetchCustomers = async () => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     responseType: 'json',
     headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
-    .get(api + '/api/customer/', config)
+    .get(API_URL + '/api/customer/', config)
     .then(response => {
       Reactotron.log(response.data);
       if (response.status === 401) {
@@ -602,13 +603,13 @@ export let fetchProducts = async () => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     responseType: 'json',
     headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
-    .get(api + '/api/product/', config)
+    .get(API_URL + '/api/product/', config)
     .then(response => {
       Reactotron.log(response.data);
       if (response.status === 401) {
@@ -665,13 +666,13 @@ export let fetchAccountBalance = async user => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     responseType: 'json',
     headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
-    .get(api + `/api/balance/${user}/`, config)
+    .get(API_URL + `/api/balance/${user}/`, config)
     .then(response => {
       if (response.status === 401) {
         this._notAuthenticated();
@@ -705,13 +706,13 @@ export let createOrder = async (data, customer) => {
   const token = await _getToken();
 
   const config = {
-    timeout: 5000,
+    timeout: timeout,
     responseType: 'json',
     headers: { Authorization: 'Token ' + token.key }
   };
 
   return await axios
-    .post(api + `/api/order/${customer}/`, data, config)
+    .post(API_URL + `/api/order/${customer}/`, data, config)
     .then(response => {
       Reactotron.log(response);
       if (response.status === 401) {
