@@ -7,6 +7,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import InputPassword from '../../components/InputPassword';
@@ -72,7 +73,7 @@ export default class SignUpScreen extends React.Component {
           <Logo />
           <View style={styles.titleContainer}>
             <Image
-              style={{ width: 40, height: 40 }}
+              style={styles.titleImage}
               source={require('../../assets/user-128.png')}
             />
             <Text style={styles.title}>REGISTRATE</Text>
@@ -134,22 +135,26 @@ export default class SignUpScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   keyboardAvoidContainer: {
     flex: 1
   },
   container: {
     flex: 1
-    // justifyContent: 'center'
   },
   titleContainer: {
     flex: 3.5,
     flexDirection: 'row',
     justifyContent: 'center'
   },
+  titleImage: {
+    maxWidth: 128,
+    height: '40@ms0.3',
+    width: '40@ms0.3'
+  },
   title: {
-    fontSize: 22,
-    marginTop: 10,
+    fontSize: '22@ms0.3',
+    marginTop: '10@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
@@ -157,29 +162,29 @@ const styles = StyleSheet.create({
     flex: 3,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   input: {
     backgroundColor: 'transparent',
-    width: 260
+    width: '260@ms0.3'
   },
   error: {
     color: 'red',
-    marginVertical: 10,
+    marginVertical: '10@ms0.3',
     textAlign: 'center',
-    width: 250
+    width: '250@ms0.3'
   },
   helpText: {
     color: 'grey',
-    width: 260,
-    fontSize: 13,
-    marginTop: 10
+    width: '260@ms0.3',
+    fontSize: '13@ms0.3',
+    marginTop: '10@ms0.3'
   },
   nextButtonContainer: {
     //flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 30,
+    marginTop: '30@ms0.3',
     position: 'absolute',
     bottom: 0,
     width: '100%'
@@ -187,9 +192,9 @@ const styles = StyleSheet.create({
   nextButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   nextButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });

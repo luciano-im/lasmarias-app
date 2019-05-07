@@ -1,11 +1,10 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 
-// TODO: add sign up logic
-// TODO: add sign up error
 export default class SignUpOkScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -29,7 +28,7 @@ export default class SignUpOkScreen extends React.Component {
         <Logo />
         <View style={styles.titleContainer}>
           <Image
-            style={{ width: 40, height: 40 }}
+            style={styles.titleImage}
             source={require('../../assets/check-64.png')}
           />
           <Text style={styles.title}>¡GRACIAS POR REGISTRARTE!</Text>
@@ -75,7 +74,7 @@ export default class SignUpOkScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center'
@@ -84,43 +83,48 @@ const styles = StyleSheet.create({
     flex: 2.5,
     alignItems: 'center'
   },
+  titleImage: {
+    maxWidth: 60,
+    height: '40@ms0.3',
+    width: '40@ms0.3'
+  },
   title: {
-    fontSize: 18,
-    marginTop: 15,
+    fontSize: '18@ms0.3',
+    marginTop: '15@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   name: {
-    fontSize: 20,
+    fontSize: '20@ms0.3',
     borderBottomWidth: 1,
     borderBottomColor: 'grey',
-    width: 260,
+    width: '260@ms0.3',
     textAlign: 'center',
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   stepsContainer: {
     flex: 4,
-    paddingTop: 10,
+    paddingTop: '10@ms0.3',
     alignItems: 'center'
   },
   steps: {
     color: 'grey',
-    width: 260,
-    fontSize: 13,
-    marginTop: 8
+    width: '260@ms0.3',
+    fontSize: '13@ms0.3',
+    marginTop: '8@ms0.3'
   },
   closeButtonContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   closeButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   closeButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });

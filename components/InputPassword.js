@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 
 export default class InputPassword extends React.Component {
   constructor(props) {
@@ -49,7 +50,7 @@ export default class InputPassword extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   inputContainer: {
     alignItems: 'center'
   },
