@@ -90,7 +90,10 @@ class SearchCustomerScreen extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.filteredCustomers !== this.state.filteredCustomers;
+    return (
+      nextState.filteredCustomers !== this.state.filteredCustomers ||
+      nextState.showCitiesModal !== this.state.showCitiesModal
+    );
   }
 
   render() {
