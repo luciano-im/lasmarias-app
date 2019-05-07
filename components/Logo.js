@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../helpers/styles';
 
 export default class Logo extends React.Component {
@@ -17,17 +18,17 @@ export default class Logo extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 150
+    paddingVertical: '30@ms0.5'
   },
   title: {
-    fontSize: 45,
+    fontSize: '45@ms0.5',
     fontWeight: 'bold'
   },
   sub: {
-    fontSize: 17
+    fontSize: '17@ms0.5'
   }
 });
