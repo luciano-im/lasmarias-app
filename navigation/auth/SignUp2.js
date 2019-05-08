@@ -16,7 +16,6 @@ import { signUp } from '../../helpers/api';
 import Logo from '../../components/Logo';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: unify sign up in a single request
 export default class SignUp2Screen extends React.Component {
   constructor(props) {
     super(props);

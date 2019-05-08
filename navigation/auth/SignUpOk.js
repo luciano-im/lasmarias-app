@@ -6,20 +6,6 @@ import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 
 export default class SignUpOkScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userText: '',
-      passText: ''
-    };
-  }
-
-  _onChangePassword = text => {
-    this.setState({
-      passText: text
-    });
-  };
-
   render() {
     const name = this.props.navigation.getParam('name').toUpperCase();
 

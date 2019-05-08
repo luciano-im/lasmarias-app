@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
 
@@ -101,7 +102,7 @@ export default class CheckoutProductsTable extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   title: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM
@@ -142,17 +143,17 @@ const styles = StyleSheet.create({
   },
   quantityButton: {
     margin: 0,
-    height: 22,
-    width: 22
+    height: '22@ms0.3',
+    width: '22@ms0.3'
   },
   quantityInput: {
     borderColor: '#CCC',
     borderWidth: 1,
     backgroundColor: '#FFF',
     textAlign: 'center',
-    width: 35,
-    paddingHorizontal: 5,
-    marginHorizontal: 5
+    width: '35@ms0.3',
+    paddingHorizontal: '5@ms0.3',
+    marginHorizontal: '5@ms0.3'
   },
   price: {
     color: theme.PRIMARY_COLOR

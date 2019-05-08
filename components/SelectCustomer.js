@@ -9,6 +9,7 @@ import {
   Portal,
   Text
 } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../helpers/styles';
 import { _removeOrder } from '../helpers/api';
@@ -137,13 +138,13 @@ class SelectCustomer extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     backgroundColor: theme.PRIMARY_COLOR,
-    marginVertical: 5
+    marginVertical: '5@ms0.3'
   },
   listIcon: {
-    margin: 4
+    margin: '4@ms0.3'
   },
   title: {
     color: theme.PRIMARY_COLOR

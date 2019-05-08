@@ -11,6 +11,7 @@ import {
   TouchableRipple
 } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 import { NavigationEvents } from 'react-navigation';
 import { format, parse } from 'date-fns';
 import { withStore } from '@spyna/react-store';
@@ -506,83 +507,83 @@ class CheckoutScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   title: {
-    marginVertical: 5,
-    paddingVertical: 3,
+    marginVertical: '5@ms0.3',
+    paddingVertical: '3@ms0.3',
     alignItems: 'center',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white'
   },
   dataContainer: {
-    paddingHorizontal: 10,
-    paddingBottom: 20
+    paddingHorizontal: '10@ms0.3',
+    paddingBottom: '20@ms0.3'
   },
   header: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: '10@ms0.3',
     justifyContent: 'space-between',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    marginBottom: 20
+    marginBottom: '20@ms0.3'
   },
   headerText: {
-    fontSize: 16,
+    fontSize: '16@ms0.3',
     fontWeight: 'bold'
   },
   productList: {
-    marginBottom: 25
+    marginBottom: '25@ms0.3'
   },
   addProductsButtonContainer: {
     flex: 1,
     backgroundColor: theme.ACCENT_COLOR,
-    marginHorizontal: 20,
-    marginVertical: 5
+    marginHorizontal: '20@ms0.3',
+    marginVertical: '5@ms0.3'
   },
   addProductsButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10
+    padding: '10@ms0.3'
   },
   addProductsButtonIcon: {
-    marginRight: 10
+    marginRight: '10@ms0.3'
   },
   addProductsButtonText: {
-    fontSize: 18
+    fontSize: '18@ms0.3'
   },
   totalsContainer: {
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 5,
-    paddingVertical: 3,
+    paddingHorizontal: '5@ms0.3',
+    paddingVertical: '3@ms0.3',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1
   },
   totalText: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM,
-    fontSize: 17
+    fontSize: '17@ms0.3'
   },
   totalRed: {
     color: 'red'
   },
   legend: {
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   payMethod: {
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   deliveryMethod: {
-    marginTop: 5,
-    marginBottom: 20
+    marginTop: '5@ms0.3',
+    marginBottom: '20@ms0.3'
   },
   dialogTitle: {
     color: theme.PRIMARY_COLOR

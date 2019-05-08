@@ -5,7 +5,6 @@ import { withStore } from '@spyna/react-store';
 import { theme } from '../helpers/styles';
 import { _getToken } from '../helpers/api';
 
-// TODO: Style ActivityIndicator and create splash screen
 class AuthLoadingScreen extends React.Component {
   async componentDidMount() {
     const token = await _getToken();
@@ -20,7 +19,6 @@ class AuthLoadingScreen extends React.Component {
     } else {
       this.props.navigation.navigate('Auth');
     }
-    // this.props.navigation.navigate(token !== null ? 'App' : 'Auth');
   }
 
   render() {

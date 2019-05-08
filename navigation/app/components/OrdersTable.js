@@ -1,8 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { theme } from '../../../helpers/styles';
+import { ScaledSheet } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
+import { theme } from '../../../helpers/styles';
 
 const ordersData = [
   {
@@ -31,7 +32,6 @@ const ordersData = [
   }
 ];
 
-//TODO: Add checkout logic
 export default class OrdersTable extends React.Component {
   render() {
     return (
@@ -72,7 +72,7 @@ export default class OrdersTable extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   title: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM

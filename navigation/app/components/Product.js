@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import {
   api,
@@ -10,7 +11,6 @@ import {
 } from '../../../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
-//TODO: Receive data and make to work "add" link
 export default class Product extends React.Component {
   _isMounted = false;
 
@@ -121,7 +121,7 @@ export default class Product extends React.Component {
   }
 }
 
-styles = StyleSheet.create({
+styles = ScaledSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row'
@@ -138,11 +138,11 @@ styles = StyleSheet.create({
   dataContainer: {
     flex: 2,
     flexDirection: 'column',
-    padding: 10
+    padding: '10@ms0.3'
   },
   nameContainer: {},
   name: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   },
   category: {
     color: '#CCC'
@@ -154,26 +154,26 @@ styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   priceDetail: {},
   button: {
-    paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingVertical: '3@ms0.3',
+    paddingHorizontal: '8@ms0.3',
     backgroundColor: theme.PRIMARY_COLOR,
     alignItems: 'center',
-    width: 100
+    width: '100@ms0.3'
   },
   buttonText: {
     color: '#FFF'
   },
   price: {
-    fontSize: 28,
+    fontSize: '28@ms0.3',
     fontWeight: theme.FONT_WEIGHT_BOLD
   },
   prevPrice: {
     color: 'grey',
-    fontSize: 18,
+    fontSize: '18@ms0.3',
     fontWeight: theme.FONT_WEIGHT_BOLD,
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid'
@@ -181,12 +181,12 @@ styles = StyleSheet.create({
   addProductContainer: {},
   addButton: {
     alignItems: 'center',
-    marginRight: 5,
-    marginBottom: 5
+    marginRight: '5@ms0.3',
+    marginBottom: '5@ms0.3'
   },
   addButtonText: {
     color: theme.PRIMARY_COLOR,
-    fontSize: 12,
+    fontSize: '12@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });

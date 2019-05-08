@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import CategoryButton from './CategoryButton';
 import Reactotron from 'reactotron-react-native';
@@ -79,25 +80,25 @@ export default class CategoryFilter extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
-    paddingVertical: 12,
+    paddingVertical: '12@ms0.3',
     backgroundColor: '#EEE'
   },
   containerTitle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10
+    marginBottom: '10@ms0.3'
   },
   title: {
-    paddingHorizontal: 20,
-    marginBottom: 10,
-    fontSize: 16,
+    paddingHorizontal: '20@ms0.3',
+    marginBottom: '10@ms0.3',
+    fontSize: '16@ms0.3',
     color: 'grey'
   },
   filterNone: {
     margin: 0,
-    marginRight: 12
+    marginRight: '12@ms0.3'
   },
   categoryContainer: {
     flexDirection: 'row',

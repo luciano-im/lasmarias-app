@@ -8,6 +8,7 @@ import {
   Text
 } from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
+import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import {
@@ -328,17 +329,17 @@ class HomeScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   titleBackground: {
     backgroundColor: theme.PRIMARY_COLOR,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   title: {
     color: 'white',
-    fontSize: 16,
+    fontSize: '16@ms0.3',
     textAlign: 'center'
   },
   listContainer: {

@@ -9,6 +9,7 @@ import {
   TextInput,
   IconButton
 } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 
 export default class InputAddress extends React.Component {
   constructor(props) {
@@ -69,7 +70,7 @@ export default class InputAddress extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
@@ -82,26 +83,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5,
     flexShrink: 1,
-    padding: 8
+    padding: '8@ms0.3'
   },
   title: {
-    fontSize: 18,
+    fontSize: '18@ms0.3',
     fontWeight: 'bold',
-    padding: 5,
-    paddingBottom: 10,
+    padding: '5@ms0.3',
+    paddingBottom: '10@ms0.3',
     textAlign: 'center'
   },
   input: {
-    marginBottom: 20,
-    marginTop: 10
+    marginBottom: '20@ms0.3',
+    marginTop: '10@ms0.3'
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 5
+    marginBottom: '5@ms0.3'
   },
   button: {
-    paddingVertical: 5,
-    paddingHorizontal: 10
+    paddingVertical: '5@ms0.3',
+    paddingHorizontal: '10@ms0.3'
   }
 });

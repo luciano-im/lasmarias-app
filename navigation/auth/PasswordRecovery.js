@@ -14,7 +14,6 @@ import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: Recovery mail is not sending
 export default class PasswordRecoveryScreen extends React.Component {
   constructor(props) {
     super(props);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { List, RadioButton } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 
 const deliveryMethods = [
   {
@@ -63,7 +64,7 @@ export default class DeliveryMethod extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },

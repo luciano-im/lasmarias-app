@@ -5,22 +5,7 @@ import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 
-// TODO: add password recovery logic
 export default class PasswordRecoveryOkScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userText: '',
-      passText: ''
-    };
-  }
-
-  _onChangePassword = text => {
-    this.setState({
-      passText: text
-    });
-  };
-
   render() {
     return (
       <View style={styles.container}>

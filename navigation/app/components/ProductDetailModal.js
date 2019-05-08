@@ -2,12 +2,12 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
 import Reactotron from 'reactotron-react-native';
 
-// //TODO: Receive data and make to work "add" link
 export default class ProductDetailModal extends React.Component {
   constructor(props) {
     super(props);
@@ -103,36 +103,36 @@ export default class ProductDetailModal extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
-    marginHorizontal: 10,
+    marginHorizontal: '10@ms0.3',
     overflow: 'hidden'
   },
   modalInner: {
     backgroundColor: 'white',
     borderRadius: 5,
-    padding: 15
+    padding: '15@ms0.3'
   },
   close: {
     borderWidth: 1.5,
     borderColor: theme.PRIMARY_COLOR,
-    width: 25,
-    height: 25,
+    width: '25@ms0.3',
+    height: '25@ms0.3',
     position: 'absolute',
-    right: 10,
-    top: 10,
+    right: '10@ms0.3',
+    top: '10@ms0.3',
     zIndex: 2
   },
   imageContainer: {
     alignItems: 'center'
   },
   image: {
-    width: 150,
-    height: 150
+    width: '150@ms0.3',
+    height: '150@ms0.3'
   },
   infoContainer: {},
   name: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   },
   category: {
     color: '#CCC'
@@ -144,26 +144,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10
+    marginTop: '10@ms0.3'
   },
   price: {
-    fontSize: 28,
+    fontSize: '28@ms0.3',
     fontWeight: theme.FONT_WEIGHT_BOLD
   },
   prevPrice: {
     color: 'grey',
-    fontSize: 18,
+    fontSize: '18@ms0.3',
     fontWeight: theme.FONT_WEIGHT_BOLD,
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid'
   },
   addButton: {
     alignItems: 'center',
-    marginBottom: 5
+    marginBottom: '5@ms0.3'
   },
   addButtonText: {
     color: theme.PRIMARY_COLOR,
-    fontSize: 12,
+    fontSize: '12@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });

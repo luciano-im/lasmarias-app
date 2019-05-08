@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Platform, StyleSheet, View } from 'react-native';
 import { Text, TouchableRipple, Surface } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import Reactotron from 'reactotron-react-native';
 
 export default class CategoryButton extends React.Component {
@@ -64,7 +65,7 @@ export default class CategoryButton extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   button: {
     borderStyle: 'solid'
   },
@@ -76,8 +77,8 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
-    marginTop: 9,
-    marginHorizontal: 4,
-    fontSize: 14
+    marginTop: '9@ms0.3',
+    marginHorizontal: '4@ms0.3',
+    fontSize: '14@ms0.3'
   }
 });

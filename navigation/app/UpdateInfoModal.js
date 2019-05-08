@@ -1,6 +1,7 @@
 import React from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Dialog, Text } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import {
   _saveDbData,
@@ -158,7 +159,7 @@ class UpdateInfoScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   title: {
     color: theme.PRIMARY_COLOR
   },

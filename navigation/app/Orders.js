@@ -2,13 +2,13 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { List, Searchbar, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { format, parse } from 'date-fns';
 import es from 'date-fns/locale/es';
 import { theme } from '../../helpers/styles';
 import OrdersTable from './components/OrdersTable';
 
-//TODO: Add orders logic
 export default class OrdersScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -230,52 +230,52 @@ export default class OrdersScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   seller: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginTop: '5@ms0.3',
     backgroundColor: theme.ACCENT_COLOR
   },
   title: {
-    paddingVertical: 10,
-    paddingHorizontal: 4,
-    marginVertical: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '4@ms0.3',
+    marginVertical: '5@ms0.3',
     alignItems: 'center',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white',
     textAlign: 'center'
   },
   filters: {
     backgroundColor: theme.PRIMARY_COLOR,
-    paddingTop: 10,
-    paddingLeft: 10,
-    paddingRight: 10
+    paddingTop: '10@ms0.3',
+    paddingLeft: '10@ms0.3',
+    paddingRight: '10@ms0.3'
   },
   subtitle: {
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-    marginVertical: 5,
+    paddingVertical: '3@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginVertical: '5@ms0.3',
     backgroundColor: theme.PRIMARY_COLOR
   },
   subtitleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white',
     textAlign: 'left'
   },
   dataContainer: {
-    paddingHorizontal: 10,
-    paddingBottom: 20
+    paddingHorizontal: '10@ms0.3',
+    paddingBottom: '20@ms0.3'
   },
   productList: {
-    marginBottom: 25
+    marginBottom: '25@ms0.3'
   }
 });

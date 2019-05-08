@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { Divider, List, Searchbar } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import SelectCity from '../../components/SelectCity';
 import { getCustomers, getCities } from '../../helpers/api';
@@ -164,7 +165,7 @@ class SearchCustomerScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
@@ -173,10 +174,10 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     backgroundColor: theme.PRIMARY_COLOR,
-    marginTop: 10,
-    paddingTop: 10,
-    paddingLeft: 10,
-    paddingRight: 10
+    marginTop: '10@ms0.3',
+    paddingTop: '10@ms0.3',
+    paddingLeft: '10@ms0.3',
+    paddingRight: '10@ms0.3'
   }
 });
 

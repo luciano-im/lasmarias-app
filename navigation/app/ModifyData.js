@@ -7,12 +7,12 @@ import {
 } from 'react-native';
 import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 import { NavigationEvents } from 'react-navigation';
 import { getUser, updateUser } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: add logic
 export default class ModifyDataScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -222,69 +222,66 @@ export default class ModifyDataScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   keyboardAvoidContainer: {
     flex: 1
   },
   container: {
-    // flex: 1,
     justifyContent: 'center'
   },
   seller: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginTop: '5@ms0.3',
     backgroundColor: theme.ACCENT_COLOR
   },
   title: {
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-    marginVertical: 5,
+    paddingVertical: '3@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginVertical: '5@ms0.3',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white',
     textAlign: 'center'
   },
   sub: {
-    fontSize: 15,
-    width: 260,
+    fontSize: '15@ms0.3',
+    width: '260@ms0.3',
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: '20@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   inputContainer: {
-    // flex: 5,
     alignItems: 'center'
   },
   input: {
     backgroundColor: 'transparent',
-    width: 260
+    width: '260@ms0.3'
   },
   nextButtonContainer: {
-    // flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   nextButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   nextButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   },
   loading: {
-    marginVertical: 10
+    marginVertical: '10@ms0.3'
   },
   error: {
     color: 'red',
-    marginVertical: 10,
+    marginVertical: '10@ms0.3',
     textAlign: 'center',
-    width: 250
+    width: '250@ms0.3'
   }
 });
