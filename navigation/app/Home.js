@@ -8,6 +8,7 @@ import {
   Text
 } from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import {
@@ -262,10 +263,17 @@ class HomeScreen extends React.Component {
           <ActivityIndicator
             animating={this.state.loading}
             color={theme.PRIMARY_COLOR}
-            size={25}
-            style={{ marginTop: 30 }}
+            size={moderateScale(25, 0.3)}
+            style={{ marginTop: moderateScale(30, 0.3) }}
           />
-          <Text style={{ textAlign: 'center', color: '#AAA', marginTop: 15 }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: '#AAA',
+              marginTop: moderateScale(15, 0.3),
+              fontSize: moderateScale(14, 0.3)
+            }}
+          >
             Cargando datos...
           </Text>
         </View>
@@ -286,7 +294,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Snackbar
-          style={{ zIndex: 10000 }}
+          style={{ zIndex: 20000 }}
           visible={this.state.snackVisible}
           onDismiss={() => this._hideSnack()}
           duration={5000}
@@ -328,17 +336,17 @@ class HomeScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   titleBackground: {
     backgroundColor: theme.PRIMARY_COLOR,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   title: {
     color: 'white',
-    fontSize: 16,
+    fontSize: '16@ms0.3',
     textAlign: 'center'
   },
   listContainer: {

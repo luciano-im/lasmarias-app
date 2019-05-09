@@ -1,8 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { theme } from '../../../helpers/styles';
+import { ScaledSheet, moderateScale } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
+import { theme } from '../../../helpers/styles';
 
 const ordersData = [
   {
@@ -31,7 +32,6 @@ const ordersData = [
   }
 ];
 
-//TODO: Add checkout logic
 export default class OrdersTable extends React.Component {
   render() {
     return (
@@ -58,7 +58,13 @@ export default class OrdersTable extends React.Component {
               onPress={() => this.props.navigation.navigate('OrderDetail')}
             >
               <Text
-                style={[styles.centerAlign, { color: theme.PRIMARY_COLOR }]}
+                style={[
+                  styles.centerAlign,
+                  {
+                    color: theme.PRIMARY_COLOR,
+                    fontSize: moderateScale(14, 0.3)
+                  }
+                ]}
               >
                 {item.id}
               </Text>
@@ -72,7 +78,7 @@ export default class OrdersTable extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
@@ -82,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   title: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM
@@ -94,19 +100,23 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.2
+    flex: 0.2,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.2
+    flex: 0.2,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#CCC'
   },
   col3: {
-    flex: 0.25
+    flex: 0.25,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
   col4: {
-    flex: 0.35
+    flex: 0.35,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#999'
   }
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Text } from 'react-native-paper';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import { fetchAccountBalance } from '../../helpers/api';
@@ -78,15 +79,24 @@ class AccountBalanceScreen extends React.Component {
     let content;
     if (!this.props.id) {
       content = (
-        <Text style={{ textAlign: 'center', marginTop: 40 }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            marginTop: moderateScale(40, 0.3),
+            fontSize: moderateScale(14, 0.3)
+          }}
+        >
           Debe seleccionar un Cliente
         </Text>
       );
     } else {
       if (!this.state.accountData) {
         content = (
-          <View style={{ marginTop: 40 }}>
-            <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+          <View style={{ marginTop: moderateScale(40, 0.3) }}>
+            <ActivityIndicator
+              color={theme.PRIMARY_COLOR}
+              size={moderateScale(25, 0.3)}
+            />
           </View>
         );
       } else {
@@ -152,26 +162,26 @@ class AccountBalanceScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   customer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginTop: '5@ms0.3',
     backgroundColor: theme.ACCENT_COLOR
   },
   title: {
-    marginVertical: 5,
-    paddingVertical: 3,
+    marginVertical: '5@ms0.3',
+    paddingVertical: '3@ms0.3',
     alignItems: 'center',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white'
   },
   account: {
@@ -179,23 +189,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    paddingHorizontal: 5,
-    margin: 10,
-    marginTop: 20
+    paddingHorizontal: '5@ms0.3',
+    margin: '10@ms0.3',
+    marginTop: '20@ms0.3'
   },
   accountText: {
     color: 'red',
-    fontSize: 17,
+    fontSize: '17@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   accountTable: {
-    paddingHorizontal: 5,
-    margin: 10,
-    marginTop: 20
+    paddingHorizontal: '5@ms0.3',
+    margin: '10@ms0.3',
+    marginTop: '20@ms0.3'
   },
   accountTableTitle: {
     color: 'red',
-    fontSize: 16,
+    fontSize: '16@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   backButtonContainer: {
@@ -206,10 +216,10 @@ const styles = StyleSheet.create({
   backButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   backButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Dialog, Text } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import {
   _saveDbData,
@@ -108,10 +109,16 @@ class UpdateInfoScreen extends React.Component {
           backgroundColor: 'rgba(0, 0, 0, 0.3)'
         }}
       >
-        <Dialog visible={this.state.modal_one} dismissable={false}>
+        <Dialog
+          style={styles.dialog}
+          visible={this.state.modal_one}
+          dismissable={false}
+        >
           <Dialog.Title style={styles.title}>ATENCION!</Dialog.Title>
           <Dialog.Content>
-            <Text>Se actualizaron datos en la App!</Text>
+            <Text style={styles.paragraph}>
+              Se actualizaron datos en la App!
+            </Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={this._changeDialog}>
@@ -120,7 +127,11 @@ class UpdateInfoScreen extends React.Component {
           </Dialog.Actions>
         </Dialog>
 
-        <Dialog visible={this.state.modal_two} dismissable={false}>
+        <Dialog
+          style={styles.dialog}
+          visible={this.state.modal_two}
+          dismissable={false}
+        >
           <Dialog.Title style={styles.title}>ACTUALIZACIÓN</Dialog.Title>
           <Dialog.Content>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -133,7 +144,7 @@ class UpdateInfoScreen extends React.Component {
                 }}
                 animating={this.state.animating}
               />
-              <Text>{this.state.updating}</Text>
+              <Text style={styles.paragraph}>{this.state.updating}</Text>
             </View>
           </Dialog.Content>
           <Dialog.Actions>
@@ -158,17 +169,28 @@ class UpdateInfoScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   title: {
-    color: theme.PRIMARY_COLOR
+    color: theme.PRIMARY_COLOR,
+    fontSize: '16@ms0.3'
+  },
+  paragraph: {
+    fontSize: '14@ms0.3'
   },
   button: {
     color: theme.PRIMARY_COLOR,
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '14@ms0.3'
   },
   buttonDisabled: {
     color: '#AAAAAA',
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '14@ms0.3'
+  },
+  dialog: {
+    maxWidth: 400,
+    width: '300@ms',
+    alignSelf: 'center'
   }
 });
 

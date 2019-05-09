@@ -2,14 +2,15 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { List, Searchbar, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { withStore } from '@spyna/react-store';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { format, parse } from 'date-fns';
 import es from 'date-fns/locale/es';
 import { theme } from '../../helpers/styles';
 import OrdersTable from './components/OrdersTable';
 
-//TODO: Add orders logic
-export default class OrdersScreen extends React.Component {
+class OrdersScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,7 +61,6 @@ export default class OrdersScreen extends React.Component {
     this.setState({ showDateFromPicker: false });
 
   _handleSelectDateFrom = date => {
-    console.log('A date from has been picked: ', date);
     this.setState({
       selectedDateFrom: date
     });
@@ -72,7 +72,6 @@ export default class OrdersScreen extends React.Component {
   _handleHideDateToPicker = () => this.setState({ showDateToPicker: false });
 
   _handleSelectDateTo = date => {
-    console.log('A date to has been picked: ', date);
     this.setState({
       selectedDateTo: date
     });
@@ -88,12 +87,23 @@ export default class OrdersScreen extends React.Component {
     if (this.state.selectedCustomer) {
       customerComponent = (
         <List.Item
-          title={this.state.selectedCustomer}
+          title={
+            <Text style={styles.listTitle}>{this.state.selectedCustomer}</Text>
+          }
           left={props => (
-            <List.Icon {...props} style={{ padding: 0 }} icon="person" />
+            <MaterialIcons
+              name="person"
+              size={moderateScale(24, 0.3)}
+              color="white"
+              style={{ padding: 0 }}
+            />
           )}
           right={props => (
-            <List.Icon {...props} icon="close" color={theme.RED_COLOR} />
+            <MaterialIcons
+              name="close"
+              size={moderateScale(24, 0.3)}
+              color={theme.RED_COLOR}
+            />
           )}
           style={{ padding: 0 }}
           onPress={() => this._handleRemoveSelectCustomer()}
@@ -102,11 +112,22 @@ export default class OrdersScreen extends React.Component {
     } else {
       customerComponent = (
         <List.Item
-          title="Cliente"
+          title={<Text style={styles.listTitle}>Cliente</Text>}
           left={props => (
-            <List.Icon {...props} style={{ padding: 0 }} icon="person" />
+            <MaterialIcons
+              name="person"
+              size={moderateScale(24, 0.3)}
+              color="white"
+              style={{ padding: 0 }}
+            />
           )}
-          right={props => <List.Icon {...props} icon="chevron-right" />}
+          right={props => (
+            <MaterialIcons
+              name="chevron-right"
+              size={moderateScale(24, 0.3)}
+              color="white"
+            />
+          )}
           style={{ padding: 0 }}
           onPress={() => this._handleShowSelectCustomer()}
         />
@@ -116,16 +137,28 @@ export default class OrdersScreen extends React.Component {
     let dateFromTo;
     dateFromTo = (
       <List.Accordion
-        title="Fecha"
-        left={props => <List.Icon {...props} icon="date-range" />}
+        title={<Text style={styles.listTitle}>Fecha</Text>}
+        left={props => (
+          <MaterialIcons
+            name="date-range"
+            size={moderateScale(24, 0.3)}
+            color="white"
+          />
+        )}
         theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
         style={{ padding: 0 }}
       >
         <List.Item
-          title="Desde:"
+          title={<Text style={styles.listTitle}>Desde:</Text>}
           right={props =>
             this.state.selectedDateFrom ? (
-              <Text style={{ color: 'white', marginTop: 8 }}>
+              <Text
+                style={{
+                  color: 'white',
+                  marginTop: 8,
+                  fontSize: moderateScale(14, 0.3)
+                }}
+              >
                 {this._capitalize(
                   format(this.state.selectedDateFrom, 'ddd, D MMMM YYYY', {
                     locale: es
@@ -133,7 +166,11 @@ export default class OrdersScreen extends React.Component {
                 )}
               </Text>
             ) : (
-              <List.Icon {...props} icon="today" />
+              <MaterialIcons
+                name="today"
+                size={moderateScale(24, 0.3)}
+                color="white"
+              />
             )
           }
           style={{
@@ -143,10 +180,16 @@ export default class OrdersScreen extends React.Component {
           onPress={this._handleShowDateFromPicker}
         />
         <List.Item
-          title="Hasta:"
+          title={<Text style={styles.listTitle}>Hasta:</Text>}
           right={props =>
             this.state.selectedDateTo ? (
-              <Text style={{ color: 'white', marginTop: 8 }}>
+              <Text
+                style={{
+                  color: 'white',
+                  marginTop: 8,
+                  fontSize: moderateScale(14, 0.3)
+                }}
+              >
                 {this._capitalize(
                   format(this.state.selectedDateTo, 'ddd, D MMMM YYYY', {
                     locale: es
@@ -154,7 +197,11 @@ export default class OrdersScreen extends React.Component {
                 )}
               </Text>
             ) : (
-              <List.Icon {...props} icon="today" />
+              <MaterialIcons
+                name="today"
+                size={moderateScale(24, 0.3)}
+                color="white"
+              />
             )
           }
           style={{ padding: 0, paddingHorizontal: 10 }}
@@ -167,19 +214,28 @@ export default class OrdersScreen extends React.Component {
       <ScrollView style={styles.container}>
         <View style={styles.seller}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialIcons name="person" size={25} color="white" />
-            <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
-              Vendedor 01
+            <MaterialIcons
+              name="person"
+              size={moderateScale(25, 0.3)}
+              color="white"
+            />
+            <Text
+              style={{
+                color: 'white',
+                marginLeft: moderateScale(15, 0.3),
+                fontSize: moderateScale(16, 0.3)
+              }}
+            >
+              {this.props.userData.userName} {this.props.userData.userLastName}
             </Text>
           </View>
           <View>
-            <MaterialIcons name="assignment" size={25} color="white" />
+            <MaterialIcons
+              name="assignment"
+              size={moderateScale(25, 0.3)}
+              color="white"
+            />
           </View>
-        </View>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>
-            Seleccionar el Cliente para el pedido
-          </Text>
         </View>
         <View style={styles.filters}>
           <Searchbar
@@ -188,8 +244,14 @@ export default class OrdersScreen extends React.Component {
             value={this.state.searchQuery}
           />
           <List.Accordion
-            title="Filtros"
-            left={props => <List.Icon {...props} icon="filter-list" />}
+            title={<Text style={styles.listTitle}>Filtros</Text>}
+            left={props => (
+              <MaterialIcons
+                name="filter-list"
+                size={moderateScale(25, 0.3)}
+                color="white"
+              />
+            )}
             theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
             style={{ padding: 0 }}
           >
@@ -197,8 +259,8 @@ export default class OrdersScreen extends React.Component {
             {dateFromTo}
           </List.Accordion>
         </View>
-        <View style={styles.subtitle}>
-          <Text style={styles.subtitleText}>MIS PEDIDOS</Text>
+        <View style={styles.title}>
+          <Text style={styles.titleText}>MIS PEDIDOS</Text>
         </View>
         <View style={styles.dataContainer}>
           <View style={styles.productList}>
@@ -230,52 +292,46 @@ export default class OrdersScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   seller: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginTop: '5@ms0.3',
     backgroundColor: theme.ACCENT_COLOR
   },
+  listTitle: {
+    fontSize: '14@ms0.3'
+  },
   title: {
-    paddingVertical: 10,
-    paddingHorizontal: 4,
-    marginVertical: 5,
-    alignItems: 'center',
+    paddingVertical: '3@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginVertical: '5@ms0.3',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white',
     textAlign: 'center'
   },
   filters: {
     backgroundColor: theme.PRIMARY_COLOR,
-    paddingTop: 10,
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  subtitle: {
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-    marginVertical: 5,
-    backgroundColor: theme.PRIMARY_COLOR
-  },
-  subtitleText: {
-    fontSize: 19,
-    color: 'white',
-    textAlign: 'left'
+    paddingTop: '10@ms0.3',
+    paddingLeft: '10@ms0.3',
+    paddingRight: '10@ms0.3',
+    marginTop: '5@ms0.3'
   },
   dataContainer: {
-    paddingHorizontal: 10,
-    paddingBottom: 20
+    paddingHorizontal: '10@ms0.3',
+    paddingBottom: '20@ms0.3'
   },
   productList: {
-    marginBottom: 25
+    marginBottom: '25@ms0.3'
   }
 });
+
+export default withStore(OrdersScreen, ['userData']);

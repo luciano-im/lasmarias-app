@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Appbar, Badge, Searchbar } from 'react-native-paper';
 import { withStore } from '@spyna/react-store';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Reactotron from 'reactotron-react-native';
 
 class Header extends React.Component {
@@ -49,23 +50,28 @@ class Header extends React.Component {
       leftAction = (
         <Appbar.Action
           icon="menu"
+          size={moderateScale(24, 0.3)}
           onPress={() => this.props.navigation.toggleDrawer()}
         />
       );
     } else if (this.props.leftAction === 'back') {
       leftAction = (
-        <Appbar.BackAction onPress={() => this.props.navigation.goBack()} />
+        <Appbar.BackAction
+          size={moderateScale(24, 0.3)}
+          onPress={() => this.props.navigation.goBack()}
+        />
       );
     } else if (this.props.leftAction === 'pending') {
       leftAction = (
         <Appbar.BackAction
+          size={moderateScale(24, 0.3)}
           onPress={() => this.props.navigation.navigate('AppScreens')}
         />
       );
     }
 
     return (
-      <Appbar.Header>
+      <Appbar.Header style={styles.header}>
         {leftAction}
         <View style={{ flex: 1 }}>
           <Searchbar
@@ -79,14 +85,16 @@ class Header extends React.Component {
           <Appbar.Action
             color={'#FFFFFF'}
             icon="autorenew"
+            size={moderateScale(24, 0.3)}
             disabled={!pendingOrders}
             onPress={() => this._navigatePendingOrders()}
           />
           <Badge
             visible={pendingOrders > 0 ? true : false}
+            size={moderateScale(20, 0.1)}
             style={[
               styles.badge,
-              { backgroundColor: 'orange', color: 'white', fontSize: 13 }
+              { backgroundColor: 'orange', color: 'white' }
             ]}
           >
             !
@@ -96,10 +104,12 @@ class Header extends React.Component {
           <Appbar.Action
             color={'#FFFFFF'}
             icon="shopping-cart"
+            size={moderateScale(24, 0.3)}
             disabled={productsInCart > 0 ? false : true}
             onPress={() => this._navigateCheckout()}
           />
           <Badge
+            size={moderateScale(20, 0.1)}
             visible={productsInCart > 0 ? true : false}
             style={styles.badge}
           >
@@ -111,11 +121,15 @@ class Header extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   badge: {
     position: 'absolute',
     top: 4,
-    right: 0
+    right: 0,
+    fontSize: 13
+  },
+  header: {
+    height: '56@ms0.3'
   }
 });
 

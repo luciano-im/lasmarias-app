@@ -9,6 +9,7 @@ import {
   View
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import { login } from '../../helpers/api';
@@ -16,7 +17,6 @@ import Logo from '../../components/Logo';
 import InputPassword from '../../components/InputPassword';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: Detect status code 0 and skipped (show credentials error)
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -69,7 +69,7 @@ class LoginScreen extends React.Component {
           <Logo />
           <View style={styles.titleContainer}>
             <Image
-              style={{ width: 80, height: 80 }}
+              style={styles.titleImage}
               source={require('../../assets/user-128.png')}
             />
             <Text style={styles.title}>INGRESÁ</Text>
@@ -136,6 +136,7 @@ class LoginScreen extends React.Component {
               onPress={() => this._login()}
             >
               <Text
+                style={styles.loginButtonText}
                 theme={{
                   colors: {
                     text: '#FFFFFF'
@@ -152,7 +153,7 @@ class LoginScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   keyboardAvoidContainer: {
     flex: 1
   },
@@ -163,11 +164,17 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 3.5,
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    marginBottom: '10@ms0.3'
+  },
+  titleImage: {
+    maxWidth: 128,
+    height: '80@ms0.3',
+    width: '80@ms0.3'
   },
   title: {
-    fontSize: 22,
-    marginTop: 10,
+    fontSize: '22@ms0.3',
+    marginTop: '10@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
@@ -178,37 +185,42 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'transparent',
-    width: 260
+    width: '260@ms0.3',
+    fontSize: '14@ms0.3'
   },
   error: {
     color: 'red',
-    marginVertical: 10,
+    marginVertical: '10@ms0.3',
     textAlign: 'center',
-    width: 250
+    width: '250@ms0.3'
   },
   loading: {
-    marginVertical: 10
+    marginVertical: '10@ms0.3'
   },
   buttonContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 10
+    paddingTop: '10@ms0.3'
   },
   button: {
-    color: theme.PRIMARY_COLOR
+    color: theme.PRIMARY_COLOR,
+    fontSize: '14@ms0.3'
   },
   buttonFirst: {
-    marginBottom: 8
+    marginBottom: '8@ms0.3'
   },
   loginButtonContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 20,
-    marginTop: 30
+    margin: '20@ms0.3',
+    marginTop: '30@ms0.3'
   },
   loginButton: {
-    width: 280
+    width: '280@ms0.3'
+  },
+  loginButtonText: {
+    fontSize: '14@ms0.3'
   }
 });
 

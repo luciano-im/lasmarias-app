@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { theme } from '../../../helpers/styles';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
+import { theme } from '../../../helpers/styles';
 
 export default class AccountBalanceTable extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -45,17 +46,16 @@ export default class AccountBalanceTable extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     // flex: 1
   },
   row: {
-    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   title: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM
@@ -67,16 +67,19 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.45
+    flex: 0.45,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.3
+    flex: 0.3,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#CCC'
   },
   col3: {
     flex: 0.25,
-    textAlign: 'right'
+    textAlign: 'right',
+    fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
   // col4: {

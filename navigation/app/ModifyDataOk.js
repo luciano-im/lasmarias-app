@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { StackActions } from 'react-navigation';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 
@@ -55,43 +56,42 @@ export default class ModifyDataOkScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
-    // justifyContent: 'center'
   },
   titleContainer: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   title: {
-    fontSize: 18,
-    marginTop: 15,
+    fontSize: '18@ms0.3',
+    marginTop: '15@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   seller: {
-    marginTop: 25,
-    fontSize: 20
+    marginTop: '25@ms0.3',
+    fontSize: '20@ms0.3'
   },
   line: {
     borderBottomWidth: 1,
     borderBottomColor: 'grey',
-    width: 260,
-    marginVertical: 5
+    width: '260@ms0.3',
+    marginVertical: '5@ms0.3'
   },
   closeButtonContainer: {
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   closeButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   closeButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });

@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { List, RadioButton } from 'react-native-paper';
+import { List, RadioButton, Text } from 'react-native-paper';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const deliveryMethods = [
   {
@@ -34,15 +36,25 @@ export default class DeliveryMethod extends React.Component {
       <View style={styles.container}>
         <List.Accordion
           style={styles.accordion}
-          title="Forma de Entrega / Retiro"
-          description={this.state.checked}
-          left={props => <List.Icon {...props} icon="local-shipping" />}
+          title={
+            <Text style={styles.listTitle}>Forma de Entrega / Retiro</Text>
+          }
+          description={
+            <Text style={styles.listDescription}>{this.state.checked}</Text>
+          }
+          left={props => (
+            <MaterialIcons
+              name="local-shipping"
+              size={moderateScale(24, 0.3)}
+              style={styles.accordionIcon}
+            />
+          )}
         >
           {deliveryMethods.map((pay, index) => (
             <List.Item
               key={index}
               style={styles.accordionItem}
-              title={pay.name}
+              title={<Text style={styles.listTitle}>{pay.name}</Text>}
               onPress={() => {
                 this._selectMethod(pay.name);
               }}
@@ -50,6 +62,7 @@ export default class DeliveryMethod extends React.Component {
                 <RadioButton
                   value={pay.id}
                   status={checked === pay.name ? 'checked' : 'unchecked'}
+                  uncheckedColor={'grey'}
                   onPress={() => {
                     this._selectMethod(pay.name);
                   }}
@@ -63,7 +76,7 @@ export default class DeliveryMethod extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
@@ -72,5 +85,15 @@ const styles = StyleSheet.create({
   },
   accordionItem: {
     paddingVertical: 0
+  },
+  accordionIcon: {
+    padding: 4
+  },
+  listTitle: {
+    fontSize: '14@ms0.3'
+  },
+  listDescription: {
+    color: 'grey',
+    fontSize: '13@ms0.3'
   }
 });

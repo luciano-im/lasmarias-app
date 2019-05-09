@@ -7,8 +7,8 @@ import {
   Text
 } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
-import es from 'date-fns/locale/es';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import {
@@ -17,7 +17,6 @@ import {
   _removePendingOrders,
   createOrder
 } from '../../helpers/api';
-import OrdersTable from './components/OrdersTable';
 import Reactotron from 'reactotron-react-native';
 
 class PendingOrdersScreen extends React.Component {
@@ -238,34 +237,34 @@ class PendingOrdersScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   seller: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginTop: '5@ms0.3',
     backgroundColor: theme.ACCENT_COLOR
   },
   title: {
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-    marginVertical: 5,
+    paddingVertical: '3@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginVertical: '5@ms0.3',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white',
     textAlign: 'left'
   },
   dataContainer: {
-    paddingHorizontal: 10
+    paddingHorizontal: '10@ms0.3'
   },
   productList: {
-    marginBottom: 25
+    marginBottom: '25@ms0.3'
   },
   row: {
     flex: 1,
@@ -273,7 +272,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   rowTitle: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM

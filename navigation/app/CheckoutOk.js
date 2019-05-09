@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import SelectCustomer from '../../components/SelectCustomer';
@@ -59,7 +60,7 @@ export default class CheckoutOkScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center'
@@ -69,31 +70,31 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   title: {
-    fontSize: 18,
-    marginTop: 15,
+    fontSize: '18@ms0.3',
+    marginTop: '15@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   line: {
     borderBottomWidth: 1,
     borderBottomColor: 'grey',
-    width: 260,
-    marginTop: 20
+    width: '260@ms0.3',
+    marginTop: '20@ms0.3'
   },
   textContainer: {
     flex: 4,
-    paddingTop: 10,
+    paddingTop: '10@ms0.3',
     alignItems: 'center'
   },
   text: {
     color: 'grey',
-    width: 260,
-    fontSize: 13,
-    marginTop: 8,
+    width: '260@ms0.3',
+    fontSize: '13@ms0.3',
+    marginTop: '8@ms0.3',
     textAlign: 'center'
   },
   state: {
-    fontSize: 18,
+    fontSize: '18@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
@@ -101,14 +102,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   closeButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   closeButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });

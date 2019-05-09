@@ -2,12 +2,12 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
 import Reactotron from 'reactotron-react-native';
 
-// //TODO: Receive data and make to work "add" link
 export default class ProductDetailModal extends React.Component {
   constructor(props) {
     super(props);
@@ -56,7 +56,10 @@ export default class ProductDetailModal extends React.Component {
       sliderComponent = <Slider images={images} />;
     } else {
       sliderComponent = (
-        <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+        <ActivityIndicator
+          color={theme.PRIMARY_COLOR}
+          size={moderateScale(25, 0.3)}
+        />
       );
     }
 
@@ -66,7 +69,7 @@ export default class ProductDetailModal extends React.Component {
           <IconButton
             icon="close"
             color={theme.PRIMARY_COLOR}
-            size={15}
+            size={moderateScale(15, 0.3)}
             onPress={this.props.onDismiss}
             style={styles.close}
           />
@@ -89,7 +92,7 @@ export default class ProductDetailModal extends React.Component {
                 >
                   <MaterialIcons
                     name="shopping-cart"
-                    size={32}
+                    size={moderateScale(32, 0.3)}
                     color={theme.PRIMARY_COLOR}
                   />
                   <Text style={styles.addButtonText}>AGREGAR</Text>
@@ -103,67 +106,69 @@ export default class ProductDetailModal extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
-    marginHorizontal: 10,
+    marginHorizontal: '10@ms0.3',
     overflow: 'hidden'
   },
   modalInner: {
     backgroundColor: 'white',
     borderRadius: 5,
-    padding: 15
+    padding: '15@ms0.3'
   },
   close: {
     borderWidth: 1.5,
     borderColor: theme.PRIMARY_COLOR,
-    width: 25,
-    height: 25,
+    width: '25@ms0.3',
+    height: '25@ms0.3',
     position: 'absolute',
-    right: 10,
-    top: 10,
+    right: '10@ms0.3',
+    top: '10@ms0.3',
     zIndex: 2
   },
   imageContainer: {
     alignItems: 'center'
   },
   image: {
-    width: 150,
-    height: 150
+    width: '150@ms0.3',
+    height: '150@ms0.3'
   },
   infoContainer: {},
   name: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   },
   category: {
-    color: '#CCC'
+    color: '#CCC',
+    fontSize: '14@ms0.3'
   },
   unit: {
-    color: '#CCC'
+    color: '#CCC',
+    fontSize: '14@ms0.3'
   },
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 10
+    marginTop: '10@ms0.3'
   },
   price: {
-    fontSize: 28,
+    fontSize: '28@ms0.3',
     fontWeight: theme.FONT_WEIGHT_BOLD
   },
   prevPrice: {
     color: 'grey',
-    fontSize: 18,
+    fontSize: '18@ms0.3',
     fontWeight: theme.FONT_WEIGHT_BOLD,
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid'
   },
   addButton: {
     alignItems: 'center',
-    marginBottom: 5
+    marginBottom: '5@ms0.3'
   },
   addButtonText: {
     color: theme.PRIMARY_COLOR,
-    fontSize: 12,
+    fontSize: '13@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });

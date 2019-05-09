@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 
-//TODO: Add checkout logic
 export default class OrderDetailProductsTable extends React.Component {
   constructor(props) {
     super(props);
@@ -42,7 +42,7 @@ export default class OrderDetailProductsTable extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
-    paddingVertical: 5
+    paddingVertical: '5@ms0.3'
   },
   title: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM
@@ -64,16 +64,19 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.45
+    flex: 0.45,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.3
+    flex: 0.3,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#CCC'
   },
   col3: {
     flex: 0.25,
-    textAlign: 'right'
+    textAlign: 'right',
+    fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
   price: {

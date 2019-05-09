@@ -10,12 +10,12 @@ import {
   View
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import { signUp } from '../../helpers/api';
 import Logo from '../../components/Logo';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: unify sign up in a single request
 export default class SignUp2Screen extends React.Component {
   constructor(props) {
     super(props);
@@ -121,7 +121,7 @@ export default class SignUp2Screen extends React.Component {
           <Logo />
           <View style={styles.titleContainer}>
             <Image
-              style={{ width: 40, height: 40 }}
+              style={styles.titleImage}
               source={require('../../assets/user-128.png')}
             />
             <Text style={styles.title}>REGISTRATE</Text>
@@ -231,7 +231,7 @@ export default class SignUp2Screen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   keyboardAvoidContainer: {
     flex: 1
   },
@@ -244,17 +244,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
+  titleImage: {
+    maxWidth: 128,
+    height: '40@ms0.3',
+    width: '40@ms0.3'
+  },
   title: {
-    fontSize: 22,
-    marginTop: 10,
+    fontSize: '22@ms0.3',
+    marginTop: '10@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   sub: {
-    fontSize: 14,
-    width: 260,
+    fontSize: '14@ms0.3',
+    width: '260@ms0.3',
     alignSelf: 'center',
-    marginTop: 40,
+    marginTop: '40@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
   inputContainer: {
@@ -263,29 +268,30 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'transparent',
-    width: 260
+    marginBottom: '10@ms0.3',
+    width: '260@ms0.3'
   },
   error: {
     color: 'red',
-    marginVertical: 10,
+    marginVertical: '10@ms0.3',
     textAlign: 'center',
-    width: 250
+    width: '250@ms0.3'
   },
   loading: {
-    marginVertical: 10
+    marginVertical: '10@ms0.3'
   },
   nextButtonContainer: {
     // flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   nextButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   nextButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });

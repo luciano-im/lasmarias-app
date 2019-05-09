@@ -8,12 +8,12 @@ import {
   ScrollView
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import { ScaledSheet } from 'react-native-size-matters';
 import { resetPassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import Reactotron from 'reactotron-react-native';
 
-// TODO: Recovery mail is not sending
 export default class PasswordRecoveryScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -69,7 +69,7 @@ export default class PasswordRecoveryScreen extends React.Component {
           <Logo />
           <View style={styles.titleContainer}>
             <Image
-              style={{ width: 80, height: 80 }}
+              style={styles.titleImage}
               source={require('../../assets/user-128.png')}
             />
             <Text style={styles.title}>RECUPERAR CONTRASEÑA</Text>
@@ -126,7 +126,7 @@ export default class PasswordRecoveryScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   keyboardAvoidContainer: {
     flex: 1
   },
@@ -139,9 +139,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end'
   },
+  titleImage: {
+    maxWidth: 128,
+    height: '80@ms0.3',
+    width: '80@ms0.3'
+  },
   title: {
-    fontSize: 22,
-    marginTop: 10,
+    fontSize: '22@ms0.3',
+    marginTop: '10@ms0.3',
     color: theme.PRIMARY_COLOR,
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   },
@@ -149,26 +154,26 @@ const styles = StyleSheet.create({
     flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   input: {
     backgroundColor: 'transparent',
-    width: 260
+    fontSize: '14@ms0.3',
+    width: '260@ms0.3'
   },
   error: {
     color: 'red',
-    marginVertical: 10,
+    marginVertical: '10@ms0.3',
     textAlign: 'center',
-    width: 250
+    width: '250@ms0.3'
   },
   loading: {
-    marginVertical: 10
+    marginVertical: '10@ms0.3'
   },
   dataButtonContainer: {
-    //flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: 30,
+    marginTop: '30@ms0.3',
     position: 'absolute',
     bottom: 0,
     width: '100%'
@@ -176,9 +181,9 @@ const styles = StyleSheet.create({
   dataButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   dataButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });

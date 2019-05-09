@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import OrderDetailProductsTable from './components/OrderDetailProductsTable';
 
@@ -35,7 +36,6 @@ const orderData = {
   ]
 };
 
-//TODO: Add checkout logic
 export default class OrderDetailScreen extends React.Component {
   render() {
     return (
@@ -141,78 +141,78 @@ export default class OrderDetailScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   seller: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginTop: '5@ms0.3',
     backgroundColor: theme.ACCENT_COLOR
   },
   title: {
-    marginVertical: 5,
-    paddingVertical: 3,
+    marginVertical: '5@ms0.3',
+    paddingVertical: '3@ms0.3',
     alignItems: 'center',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white'
   },
   dataContainer: {
-    paddingHorizontal: 10,
-    paddingBottom: 20
+    paddingHorizontal: '10@ms0.3',
+    paddingBottom: '20@ms0.3'
   },
   header: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: '10@ms0.3',
     justifyContent: 'space-between',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1
   },
   headerText: {
-    fontSize: 16,
+    fontSize: '16@ms0.3',
     fontWeight: 'bold'
   },
   productList: {
-    marginBottom: 25
+    marginBottom: '25@ms0.3'
   },
   totalsContainer: {
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 5,
-    paddingVertical: 3,
+    paddingHorizontal: '5@ms0.3',
+    paddingVertical: '3@ms0.3',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1
   },
   totalText: {
     fontWeight: theme.FONT_WEIGHT_MEDIUM,
-    fontSize: 17
+    fontSize: '17@ms0.3'
   },
   totalRed: {
     color: 'red'
   },
   legend: {
-    marginTop: 20
+    marginTop: '20@ms0.3'
   },
   payMethod: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 30,
-    paddingHorizontal: 16
+    marginTop: '30@ms0.3',
+    paddingHorizontal: '16@ms0.3'
   },
   payIcon: {
-    marginRight: 24
+    marginRight: '24@ms0.3'
   },
   payTitle: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   },
   payText: {
     color: 'grey'
@@ -220,9 +220,9 @@ const styles = StyleSheet.create({
   deliveryMethod: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    paddingHorizontal: 16
+    marginTop: '20@ms0.3',
+    marginBottom: '20@ms0.3',
+    paddingHorizontal: '16@ms0.3'
   },
   backButtonContainer: {
     flex: 1,
@@ -232,9 +232,9 @@ const styles = StyleSheet.create({
   backButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   backButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   }
 });

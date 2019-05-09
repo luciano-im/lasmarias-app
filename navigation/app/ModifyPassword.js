@@ -3,11 +3,11 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { getUser, changePassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import InputPassword from '../../components/InputPassword';
 
-// TODO: add logic
 export default class ModifyPasswordScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -82,13 +82,27 @@ export default class ModifyPasswordScreen extends React.Component {
         <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
         <View style={styles.seller}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialIcons name="person" size={25} color="white" />
-            <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
+            <MaterialIcons
+              name="person"
+              size={moderateScale(25, 0.3)}
+              color="white"
+            />
+            <Text
+              style={{
+                color: 'white',
+                marginLeft: moderateScale(15, 0.3),
+                fontSize: moderateScale(16, 0.3)
+              }}
+            >
               {user}
             </Text>
           </View>
           <View>
-            <MaterialIcons name="account-box" size={25} color="white" />
+            <MaterialIcons
+              name="account-box"
+              size={moderateScale(25, 0.3)}
+              color="white"
+            />
           </View>
         </View>
         <View style={styles.title}>
@@ -121,7 +135,7 @@ export default class ModifyPasswordScreen extends React.Component {
           <ActivityIndicator
             animating={this.state.updating}
             color={theme.PRIMARY_COLOR}
-            size={'small'}
+            size={moderateScale(25, 0.3)}
             style={styles.loading}
           />
         </View>
@@ -156,26 +170,26 @@ export default class ModifyPasswordScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
   seller: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingVertical: '10@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginTop: '5@ms0.3',
     backgroundColor: theme.ACCENT_COLOR
   },
   title: {
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-    marginVertical: 5,
+    paddingVertical: '3@ms0.3',
+    paddingHorizontal: '10@ms0.3',
+    marginVertical: '5@ms0.3',
     backgroundColor: theme.PRIMARY_COLOR
   },
   titleText: {
-    fontSize: 19,
+    fontSize: '19@ms0.3',
     color: 'white',
     textAlign: 'center'
   },
@@ -184,44 +198,44 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#AAA',
     width: '90%',
-    marginTop: 40,
-    marginBottom: 10
+    marginTop: '40@ms0.3',
+    marginBottom: '10@ms0.3'
   },
   legend: {
     color: 'grey',
-    paddingHorizontal: 30,
-    textAlign: 'center'
+    paddingHorizontal: '30@ms0.3',
+    textAlign: 'center',
+    fontSize: '13@ms0.3'
   },
   inputContainer: {
-    // flex: 5,
     alignItems: 'center',
-    marginTop: 40
+    marginTop: '40@ms0.3'
   },
   input: {
     backgroundColor: 'transparent',
-    width: 260
+    width: '260@ms0.3'
   },
   nextButtonContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginTop: 30
+    marginTop: '30@ms0.3'
   },
   nextButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
-    height: 50
+    height: '50@ms0.3'
   },
   nextButtonText: {
-    fontSize: 16
+    fontSize: '16@ms0.3'
   },
   loading: {
-    marginTop: 10
+    marginTop: '10@ms0.3'
   },
   error: {
     color: 'red',
-    marginVertical: 10,
+    marginVertical: '10@ms0.3',
     textAlign: 'center',
-    width: 250
+    width: '250@ms0.3'
   }
 });
