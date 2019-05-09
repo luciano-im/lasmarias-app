@@ -17,7 +17,8 @@ export default class CategoryButton extends React.Component {
     const image = this.props.image;
     const category = this.props.category;
     const label = this.props.label;
-    const imageSize = size - (size * 40) / 100;
+    // const imageSize = size - (size * 40) / 100;
+    const imageSize = size;
 
     // const isIOS = Platform.OS === 'ios';
     // const fontFamily = isIOS ? 'HelveticaNeue-Medium' : 'sans-serif-medium';
@@ -73,7 +74,7 @@ const styles = ScaledSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1
+    borderWidth: 2
   },
   label: {
     textAlign: 'center',

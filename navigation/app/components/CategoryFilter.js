@@ -10,22 +10,22 @@ const categoryData = [
   {
     category: 'ofertas',
     label: 'Ofertas',
-    image: require('../../../assets/category/offer-128.png')
+    image: require('../../../assets/category/icono-ofertas.png')
   },
   {
     category: 'almacen',
     label: 'Almacen',
-    image: require('../../../assets/category/shop-128.png')
+    image: require('../../../assets/category/icono-almacen.png')
+  },
+  {
+    category: 'fiambres',
+    label: 'Fiambres y Pastas',
+    image: require('../../../assets/category/icono-fiambres-pastas.png')
   },
   {
     category: 'congelados',
     label: 'Frescos y Congelados',
-    image: require('../../../assets/category/milk-128.png')
-  },
-  {
-    category: 'fiambres',
-    label: 'Fiambres',
-    image: require('../../../assets/category/drink-128.png')
+    image: require('../../../assets/category/icono-frescos-congelados.png')
   }
 ];
 
@@ -55,7 +55,7 @@ export default class CategoryFilter extends React.Component {
               style={styles.filterNone}
               icon="filter-none"
               color={'#AAAAAA'}
-              size={22}
+              size={moderateScale(70, 0.3)}
               onPress={() => this._selectCategory()}
             />
           )}
