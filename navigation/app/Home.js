@@ -8,7 +8,7 @@ import {
   Text
 } from 'react-native-paper';
 import PubNubReact from 'pubnub-react';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import {
@@ -263,10 +263,17 @@ class HomeScreen extends React.Component {
           <ActivityIndicator
             animating={this.state.loading}
             color={theme.PRIMARY_COLOR}
-            size={25}
-            style={{ marginTop: 30 }}
+            size={moderateScale(25, 0.3)}
+            style={{ marginTop: moderateScale(30, 0.3) }}
           />
-          <Text style={{ textAlign: 'center', color: '#AAA', marginTop: 15 }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: '#AAA',
+              marginTop: moderateScale(15, 0.3),
+              fontSize: moderateScale(14, 0.3)
+            }}
+          >
             Cargando datos...
           </Text>
         </View>

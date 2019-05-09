@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { getUser, changePassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import InputPassword from '../../components/InputPassword';
@@ -82,13 +82,27 @@ export default class ModifyPasswordScreen extends React.Component {
         <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
         <View style={styles.seller}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialIcons name="person" size={25} color="white" />
-            <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
+            <MaterialIcons
+              name="person"
+              size={moderateScale(25, 0.3)}
+              color="white"
+            />
+            <Text
+              style={{
+                color: 'white',
+                marginLeft: moderateScale(15, 0.3),
+                fontSize: moderateScale(16, 0.3)
+              }}
+            >
               {user}
             </Text>
           </View>
           <View>
-            <MaterialIcons name="account-box" size={25} color="white" />
+            <MaterialIcons
+              name="account-box"
+              size={moderateScale(25, 0.3)}
+              color="white"
+            />
           </View>
         </View>
         <View style={styles.title}>
@@ -121,7 +135,7 @@ export default class ModifyPasswordScreen extends React.Component {
           <ActivityIndicator
             animating={this.state.updating}
             color={theme.PRIMARY_COLOR}
-            size={'small'}
+            size={moderateScale(25, 0.3)}
             style={styles.loading}
           />
         </View>
@@ -190,7 +204,8 @@ const styles = ScaledSheet.create({
   legend: {
     color: 'grey',
     paddingHorizontal: '30@ms0.3',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: '13@ms0.3'
   },
   inputContainer: {
     alignItems: 'center',

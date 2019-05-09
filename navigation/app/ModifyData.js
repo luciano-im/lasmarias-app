@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { NavigationEvents } from 'react-navigation';
 import { getUser, updateUser } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
@@ -85,10 +85,17 @@ export default class ModifyDataScreen extends React.Component {
           <ActivityIndicator
             animating={this.state.loading}
             color={theme.PRIMARY_COLOR}
-            size={25}
-            style={{ marginTop: 30 }}
+            size={moderateScale(25, 0.3)}
+            style={{ marginTop: moderateScale(30, 0.3) }}
           />
-          <Text style={{ textAlign: 'center', color: '#AAA', marginTop: 15 }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: '#AAA',
+              marginTop: moderateScale(15, 0.3),
+              fontSize: moderateScale(14, 0.3)
+            }}
+          >
             Cargando datos...
           </Text>
         </View>
@@ -169,26 +176,6 @@ export default class ModifyDataScreen extends React.Component {
           {this.state.errorText ? (
             <Text style={styles.error}>{this.state.errorText}</Text>
           ) : null}
-          <View style={styles.nextButtonContainer}>
-            <Button
-              mode="contained"
-              style={styles.nextButton}
-              color={theme.ACCENT_COLOR}
-              theme={{ roundness: 0 }}
-              onPress={() => this._updateUser()}
-            >
-              <Text
-                style={styles.nextButtonText}
-                theme={{
-                  colors: {
-                    text: '#FFFFFF'
-                  }
-                }}
-              >
-                GUARDAR CAMBIOS
-              </Text>
-            </Button>
-          </View>
         </View>
       );
     }
@@ -203,13 +190,27 @@ export default class ModifyDataScreen extends React.Component {
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.seller}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="person" size={25} color="white" />
-              <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
+              <MaterialIcons
+                name="person"
+                size={moderateScale(25, 0.3)}
+                color="white"
+              />
+              <Text
+                style={{
+                  color: 'white',
+                  marginLeft: moderateScale(15, 0.3),
+                  fontSize: moderateScale(16, 0.3)
+                }}
+              >
                 {nameText + ' ' + lastNameText}
               </Text>
             </View>
             <View>
-              <MaterialIcons name="account-box" size={25} color="white" />
+              <MaterialIcons
+                name="account-box"
+                size={moderateScale(25, 0.3)}
+                color="white"
+              />
             </View>
           </View>
           <View style={styles.title}>
@@ -217,6 +218,26 @@ export default class ModifyDataScreen extends React.Component {
           </View>
           {content}
         </ScrollView>
+        <View style={styles.nextButtonContainer}>
+          <Button
+            mode="contained"
+            style={styles.nextButton}
+            color={theme.ACCENT_COLOR}
+            theme={{ roundness: 0 }}
+            onPress={() => this._updateUser()}
+          >
+            <Text
+              style={styles.nextButtonText}
+              theme={{
+                colors: {
+                  text: '#FFFFFF'
+                }
+              }}
+            >
+              GUARDAR CAMBIOS
+            </Text>
+          </Button>
+        </View>
       </KeyboardAvoidingView>
     );
   }
@@ -260,12 +281,21 @@ const styles = ScaledSheet.create({
   },
   input: {
     backgroundColor: 'transparent',
+    marginBottom: '10@ms0.3',
     width: '260@ms0.3'
   },
+  // nextButtonContainer: {
+  //   alignItems: 'center',
+  //   justifyContent: 'flex-end',
+  //   marginTop: '30@ms0.3'
+  // },
   nextButtonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    // flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginTop: '30@ms0.3'
+    width: '100%'
   },
   nextButton: {
     alignSelf: 'stretch',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, Text } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import { fetchAccountBalance } from '../../helpers/api';
@@ -79,15 +79,24 @@ class AccountBalanceScreen extends React.Component {
     let content;
     if (!this.props.id) {
       content = (
-        <Text style={{ textAlign: 'center', marginTop: 40 }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            marginTop: moderateScale(40, 0.3),
+            fontSize: moderateScale(14, 0.3)
+          }}
+        >
           Debe seleccionar un Cliente
         </Text>
       );
     } else {
       if (!this.state.accountData) {
         content = (
-          <View style={{ marginTop: 40 }}>
-            <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+          <View style={{ marginTop: moderateScale(40, 0.3) }}>
+            <ActivityIndicator
+              color={theme.PRIMARY_COLOR}
+              size={moderateScale(25, 0.3)}
+            />
           </View>
         );
       } else {

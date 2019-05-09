@@ -39,12 +39,14 @@ export default class DeliveryMethod extends React.Component {
           title={
             <Text style={styles.listTitle}>Forma de Entrega / Retiro</Text>
           }
-          description={this.state.checked}
+          description={
+            <Text style={styles.listDescription}>{this.state.checked}</Text>
+          }
           left={props => (
             <MaterialIcons
               name="local-shipping"
               size={moderateScale(24, 0.3)}
-              // color="white"
+              style={styles.accordionIcon}
             />
           )}
         >
@@ -60,6 +62,7 @@ export default class DeliveryMethod extends React.Component {
                 <RadioButton
                   value={pay.id}
                   status={checked === pay.name ? 'checked' : 'unchecked'}
+                  uncheckedColor={'grey'}
                   onPress={() => {
                     this._selectMethod(pay.name);
                   }}
@@ -83,7 +86,14 @@ const styles = ScaledSheet.create({
   accordionItem: {
     paddingVertical: 0
   },
+  accordionIcon: {
+    padding: 4
+  },
   listTitle: {
     fontSize: '14@ms0.3'
+  },
+  listDescription: {
+    color: 'grey',
+    fontSize: '13@ms0.3'
   }
 });

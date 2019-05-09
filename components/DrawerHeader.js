@@ -4,12 +4,16 @@ import { withStore } from '@spyna/react-store';
 import { ScaledSheet } from 'react-native-size-matters';
 
 class DrawerHeader extends React.PureComponent {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <View>
         <View style={styles.container}>
           <Image
-            style={styles.drawerImage}
+            // style={styles.drawerImage}
+            style={{ width: 80, height: 80 }}
             source={require('../assets/user-128.png')}
           />
           <Text style={styles.name}>{this.props.userData.userName}</Text>

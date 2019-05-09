@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { ScaledSheet, moderateScale } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
 
@@ -58,7 +58,13 @@ export default class OrdersTable extends React.Component {
               onPress={() => this.props.navigation.navigate('OrderDetail')}
             >
               <Text
-                style={[styles.centerAlign, { color: theme.PRIMARY_COLOR }]}
+                style={[
+                  styles.centerAlign,
+                  {
+                    color: theme.PRIMARY_COLOR,
+                    fontSize: moderateScale(14, 0.3)
+                  }
+                ]}
               >
                 {item.id}
               </Text>
@@ -94,19 +100,23 @@ const styles = ScaledSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.2
+    flex: 0.2,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.2
+    flex: 0.2,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#CCC'
   },
   col3: {
-    flex: 0.25
+    flex: 0.25,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
   col4: {
-    flex: 0.35
+    flex: 0.35,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#999'
   }
 });

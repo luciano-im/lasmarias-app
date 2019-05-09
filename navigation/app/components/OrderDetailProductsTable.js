@@ -64,16 +64,19 @@ const styles = ScaledSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.45
+    flex: 0.45,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.3
+    flex: 0.3,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#CCC'
   },
   col3: {
     flex: 0.25,
-    textAlign: 'right'
+    textAlign: 'right',
+    fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
   price: {
