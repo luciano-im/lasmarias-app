@@ -11,7 +11,7 @@ import {
   TouchableRipple
 } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { NavigationEvents } from 'react-navigation';
 import { format, parse } from 'date-fns';
 import { withStore } from '@spyna/react-store';
@@ -375,7 +375,9 @@ class CheckoutScreen extends React.Component {
                 <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
               </View>
               <View style={styles.legend}>
-                <Text style={{ color: '#AAA' }}>
+                <Text
+                  style={{ color: '#AAA', fontSize: moderateScale(14, 0.3) }}
+                >
                   (*) Los importes quedarán sujetos al valor final de
                   facturación debido a la merma en el peso. Cuando el pedido
                   pase al estado de
@@ -582,8 +584,8 @@ const styles = ScaledSheet.create({
     marginTop: '20@ms0.3'
   },
   deliveryMethod: {
-    marginTop: '5@ms0.3',
-    marginBottom: '20@ms0.3'
+    marginTop: '15@ms0.3',
+    marginBottom: '25@ms0.3'
   },
   dialogTitle: {
     color: theme.PRIMARY_COLOR

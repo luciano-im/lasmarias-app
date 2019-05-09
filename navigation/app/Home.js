@@ -287,7 +287,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Snackbar
-          style={{ zIndex: 10000 }}
+          style={{ zIndex: 20000 }}
           visible={this.state.snackVisible}
           onDismiss={() => this._hideSnack()}
           duration={5000}

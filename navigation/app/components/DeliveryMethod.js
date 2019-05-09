@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { List, RadioButton } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { List, RadioButton, Text } from 'react-native-paper';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const deliveryMethods = [
   {
@@ -35,15 +36,23 @@ export default class DeliveryMethod extends React.Component {
       <View style={styles.container}>
         <List.Accordion
           style={styles.accordion}
-          title="Forma de Entrega / Retiro"
+          title={
+            <Text style={styles.listTitle}>Forma de Entrega / Retiro</Text>
+          }
           description={this.state.checked}
-          left={props => <List.Icon {...props} icon="local-shipping" />}
+          left={props => (
+            <MaterialIcons
+              name="local-shipping"
+              size={moderateScale(24, 0.3)}
+              // color="white"
+            />
+          )}
         >
           {deliveryMethods.map((pay, index) => (
             <List.Item
               key={index}
               style={styles.accordionItem}
-              title={pay.name}
+              title={<Text style={styles.listTitle}>{pay.name}</Text>}
               onPress={() => {
                 this._selectMethod(pay.name);
               }}
@@ -73,5 +82,8 @@ const styles = ScaledSheet.create({
   },
   accordionItem: {
     paddingVertical: 0
+  },
+  listTitle: {
+    fontSize: '14@ms0.3'
   }
 });

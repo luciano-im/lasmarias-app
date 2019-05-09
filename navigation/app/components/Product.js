@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import {
   api,
@@ -73,7 +73,10 @@ export default class Product extends React.Component {
       );
     } else {
       imageComponent = (
-        <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+        <ActivityIndicator
+          color={theme.PRIMARY_COLOR}
+          size={moderateScale(25, 0.3)}
+        />
       );
     }
 
@@ -108,7 +111,7 @@ export default class Product extends React.Component {
               >
                 <MaterialIcons
                   name="shopping-cart"
-                  size={32}
+                  size={moderateScale(32, 0.3)}
                   color={theme.PRIMARY_COLOR}
                 />
                 <Text style={styles.addButtonText}>AGREGAR</Text>
@@ -145,10 +148,12 @@ styles = ScaledSheet.create({
     fontSize: '16@ms0.3'
   },
   category: {
-    color: '#CCC'
+    color: '#CCC',
+    fontSize: '14@ms0.3'
   },
   unit: {
-    color: '#CCC'
+    color: '#CCC',
+    fontSize: '14@ms0.3'
   },
   priceContainer: {
     flexDirection: 'row',
@@ -165,7 +170,8 @@ styles = ScaledSheet.create({
     width: '100@ms0.3'
   },
   buttonText: {
-    color: '#FFF'
+    color: '#FFF',
+    fontSize: '14@ms0.3'
   },
   price: {
     fontSize: '28@ms0.3',
@@ -186,7 +192,7 @@ styles = ScaledSheet.create({
   },
   addButtonText: {
     color: theme.PRIMARY_COLOR,
-    fontSize: '12@ms0.3',
+    fontSize: '13@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });

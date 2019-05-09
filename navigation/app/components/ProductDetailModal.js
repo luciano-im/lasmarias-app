@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, IconButton, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
@@ -56,7 +56,10 @@ export default class ProductDetailModal extends React.Component {
       sliderComponent = <Slider images={images} />;
     } else {
       sliderComponent = (
-        <ActivityIndicator color={theme.PRIMARY_COLOR} size={25} />
+        <ActivityIndicator
+          color={theme.PRIMARY_COLOR}
+          size={moderateScale(25, 0.3)}
+        />
       );
     }
 
@@ -66,7 +69,7 @@ export default class ProductDetailModal extends React.Component {
           <IconButton
             icon="close"
             color={theme.PRIMARY_COLOR}
-            size={15}
+            size={moderateScale(15, 0.3)}
             onPress={this.props.onDismiss}
             style={styles.close}
           />
@@ -89,7 +92,7 @@ export default class ProductDetailModal extends React.Component {
                 >
                   <MaterialIcons
                     name="shopping-cart"
-                    size={32}
+                    size={moderateScale(32, 0.3)}
                     color={theme.PRIMARY_COLOR}
                   />
                   <Text style={styles.addButtonText}>AGREGAR</Text>
@@ -135,10 +138,12 @@ const styles = ScaledSheet.create({
     fontSize: '16@ms0.3'
   },
   category: {
-    color: '#CCC'
+    color: '#CCC',
+    fontSize: '14@ms0.3'
   },
   unit: {
-    color: '#CCC'
+    color: '#CCC',
+    fontSize: '14@ms0.3'
   },
   priceContainer: {
     flexDirection: 'row',
@@ -163,7 +168,7 @@ const styles = ScaledSheet.create({
   },
   addButtonText: {
     color: theme.PRIMARY_COLOR,
-    fontSize: '12@ms0.3',
+    fontSize: '13@ms0.3',
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });

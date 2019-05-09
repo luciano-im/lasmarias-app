@@ -9,7 +9,8 @@ import {
   Portal,
   Text
 } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { MaterialIcons } from '@expo/vector-icons';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../helpers/styles';
 import { _removeOrder } from '../helpers/api';
@@ -59,19 +60,19 @@ class SelectCustomer extends React.Component {
     if (!this.props.id) {
       content = (
         <List.Item
-          title="Buscar Cliente"
+          title={<Text style={styles.listTitle}>Buscar Cliente</Text>}
           left={props => (
-            <List.Icon
-              {...props}
-              icon="search"
+            <MaterialIcons
+              name="search"
+              size={moderateScale(24, 0.3)}
               color="white"
               style={styles.listIcon}
             />
           )}
           right={props => (
-            <List.Icon
-              {...props}
-              icon="chevron-right"
+            <MaterialIcons
+              name="chevron-right"
+              size={moderateScale(24, 0.3)}
               color="white"
               style={styles.listIcon}
             />
@@ -84,11 +85,11 @@ class SelectCustomer extends React.Component {
     } else {
       content = (
         <List.Item
-          title={this.props.name}
+          title={<Text style={styles.listTitle}>{this.props.name}</Text>}
           left={props => (
-            <List.Icon
-              {...props}
-              icon="person"
+            <MaterialIcons
+              name="person"
+              size={moderateScale(24, 0.3)}
               color="white"
               style={styles.listIcon}
             />
@@ -97,6 +98,7 @@ class SelectCustomer extends React.Component {
             <IconButton
               {...props}
               icon="close"
+              size={moderateScale(24, 0.3)}
               color={theme.RED_COLOR}
               onPress={() => this._showDialog()}
             />
@@ -112,13 +114,14 @@ class SelectCustomer extends React.Component {
         <View>{content}</View>
         <Portal>
           <Dialog
+            style={styles.dialog}
             visible={this.state.visible}
             dismissable={false}
             onDismiss={this._cancelDialog}
           >
             <Dialog.Title style={styles.title}>ATENCION!</Dialog.Title>
             <Dialog.Content>
-              <Paragraph>
+              <Paragraph style={styles.paragraph}>
                 Se perderán todos los productos que haya agregado al carrito.
                 ¿Está seguro?
               </Paragraph>
@@ -144,14 +147,28 @@ const styles = ScaledSheet.create({
     marginVertical: '5@ms0.3'
   },
   listIcon: {
-    margin: '4@ms0.3'
+    margin: '4@ms0.3',
+    paddingVertical: 5
+  },
+  listTitle: {
+    fontSize: '14@ms0.3'
   },
   title: {
-    color: theme.PRIMARY_COLOR
+    color: theme.PRIMARY_COLOR,
+    fontSize: '16@ms0.3'
+  },
+  paragraph: {
+    fontSize: '14@ms0.3'
   },
   button: {
     color: theme.PRIMARY_COLOR,
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '14@ms0.3'
+  },
+  dialog: {
+    maxWidth: 400,
+    width: '300@ms',
+    alignSelf: 'center'
   }
 });
 

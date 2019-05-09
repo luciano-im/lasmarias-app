@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
 
@@ -33,7 +33,7 @@ export default class CheckoutProductsTable extends React.Component {
                 style={styles.quantityButton}
                 icon="remove-circle-outline"
                 color={theme.PRIMARY_COLOR}
-                size={20}
+                size={moderateScale(20, 0.3)}
                 onPress={() =>
                   this.props.onUpdateInput(
                     'input' + item.item.product_id.toString().trim(),
@@ -60,7 +60,7 @@ export default class CheckoutProductsTable extends React.Component {
                 style={styles.quantityButton}
                 icon="add-circle-outline"
                 color={theme.PRIMARY_COLOR}
-                size={20}
+                size={moderateScale(20, 0.3)}
                 onPress={() =>
                   this.props.onUpdateInput(
                     'input' + item.item.product_id.toString().trim(),
@@ -77,7 +77,7 @@ export default class CheckoutProductsTable extends React.Component {
               style={[styles.quantityButton, { marginLeft: 3 }]}
               icon="delete-forever"
               color={'red'}
-              size={20}
+              size={moderateScale(20, 0.3)}
               onPress={() => this.props.onRemoveProduct(item)}
             />
           </View>
@@ -124,16 +124,19 @@ const styles = ScaledSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.45
+    flex: 0.45,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.3
+    flex: 0.3,
+    fontSize: '14@ms0.3'
     // backgroundColor: '#CCC'
   },
   col3: {
     flex: 0.25,
-    textAlign: 'right'
+    textAlign: 'right',
+    fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
   controls: {

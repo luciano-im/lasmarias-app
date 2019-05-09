@@ -10,7 +10,7 @@ class DrawerHeader extends React.PureComponent {
         <View style={styles.container}>
           <Image
             style={styles.drawerImage}
-            source={require('../../assets/user-128.png')}
+            source={require('../assets/user-128.png')}
           />
           <Text style={styles.name}>{this.props.userData.userName}</Text>
           <Text style={styles.email}>{this.props.userData.userEmail}</Text>

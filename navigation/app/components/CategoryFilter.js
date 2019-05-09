@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import CategoryButton from './CategoryButton';
 import Reactotron from 'reactotron-react-native';
@@ -66,7 +66,8 @@ export default class CategoryFilter extends React.Component {
               backgroundColor={'#FFF'}
               borderColor={'#AAA'}
               elevation={2}
-              size={70}
+              // size={70}
+              size={moderateScale(70, 0.7)}
               image={category.image}
               label={category.label}
               category={category.category}

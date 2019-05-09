@@ -1,7 +1,8 @@
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { Divider, List, Searchbar } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { Divider, List, Searchbar, Text } from 'react-native-paper';
+import { MaterialIcons } from '@expo/vector-icons';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import SelectCity from '../../components/SelectCity';
 import { getCustomers, getCities } from '../../helpers/api';
@@ -72,7 +73,7 @@ class SearchCustomerScreen extends React.Component {
 
   _renderItem = ({ item }) => (
     <List.Item
-      title={item.name}
+      title={<Text style={styles.listTitle}>{item.name}</Text>}
       onPress={() => this._handleSelectCustomer(item)}
     />
   );
@@ -104,12 +105,23 @@ class SearchCustomerScreen extends React.Component {
     if (this.state.selectedCity) {
       cityComponent = (
         <List.Item
-          title={this.state.selectedCity}
+          title={
+            <Text style={styles.listTitle}>{this.state.selectedCity}</Text>
+          }
           left={props => (
-            <List.Icon {...props} style={styles.item} icon="location-city" />
+            <MaterialIcons
+              name="location-city"
+              size={moderateScale(24, 0.3)}
+              color="white"
+              style={styles.item}
+            />
           )}
           right={props => (
-            <List.Icon {...props} icon="close" color={theme.RED_COLOR} />
+            <MaterialIcons
+              name="close"
+              size={moderateScale(24, 0.3)}
+              color={theme.RED_COLOR}
+            />
           )}
           style={styles.item}
           onPress={() => this._handleRemoveSelectCity()}
@@ -118,11 +130,22 @@ class SearchCustomerScreen extends React.Component {
     } else {
       cityComponent = (
         <List.Item
-          title="Localidad"
+          title={<Text style={styles.listTitle}>Localidad</Text>}
           left={props => (
-            <List.Icon {...props} style={styles.item} icon="location-city" />
+            <MaterialIcons
+              name="location-city"
+              size={moderateScale(24, 0.3)}
+              color="white"
+              style={styles.item}
+            />
           )}
-          right={props => <List.Icon {...props} icon="chevron-right" />}
+          right={props => (
+            <MaterialIcons
+              name="chevron-right"
+              size={moderateScale(24, 0.3)}
+              color="white"
+            />
+          )}
           style={styles.item}
           onPress={() => this._handleShowSelectCity(true)}
         />
@@ -138,8 +161,15 @@ class SearchCustomerScreen extends React.Component {
             value={this.state.searchQuery}
           />
           <List.Accordion
-            title="Filtros"
-            left={props => <List.Icon {...props} icon="filter-list" />}
+            title={<Text style={styles.listTitle}>Filtros</Text>}
+            left={props => (
+              <MaterialIcons
+                name="filter-list"
+                size={moderateScale(24, 0.3)}
+                color="white"
+                style={styles.item}
+              />
+            )}
             theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
             style={styles.item}
           >
@@ -170,7 +200,11 @@ const styles = ScaledSheet.create({
     flex: 1
   },
   item: {
-    padding: 0
+    padding: 0,
+    paddingVertical: 5
+  },
+  listTitle: {
+    fontSize: '14@ms0.3'
   },
   filterContainer: {
     backgroundColor: theme.PRIMARY_COLOR,

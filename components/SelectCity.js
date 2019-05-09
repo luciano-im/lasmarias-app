@@ -17,7 +17,7 @@ export default class SelectCity extends React.Component {
   _renderItem = ({ item }) => {
     return (
       <List.Item
-        title={item.city}
+        title={<Text style={styles.listTitle}>{item.city}</Text>}
         onPress={() => this._handleSelectCity(item)}
       />
     );
@@ -59,9 +59,15 @@ const styles = ScaledSheet.create({
   container: {
     flex: 1
   },
+  listTitle: {
+    fontSize: '14@ms0.3'
+  },
   modalContainer: {
     justifyContent: 'center',
-    padding: '5%'
+    // padding: '5%',
+    maxWidth: 400,
+    width: '300@ms',
+    alignSelf: 'center'
   },
   modalInner: {
     backgroundColor: 'white',
