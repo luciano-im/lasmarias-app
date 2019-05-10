@@ -1,14 +1,23 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { List, Searchbar, Text } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  IconButton,
+  List,
+  Searchbar,
+  Text
+} from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { withStore } from '@spyna/react-store';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { format, parse } from 'date-fns';
 import es from 'date-fns/locale/es';
-import { theme } from '../../helpers/styles';
+import SelectCustomer from '../../components/SelectCustomer';
 import OrdersTable from './components/OrdersTable';
+import { theme } from '../../helpers/styles';
+import { fetchInvoices } from '../../helpers/api';
+import Reactotron from 'reactotron-react-native';
 
 class OrdersScreen extends React.Component {
   constructor(props) {
@@ -20,7 +29,8 @@ class OrdersScreen extends React.Component {
       showDateFromPicker: false,
       showDateToPicker: false,
       selectedDateFrom: null,
-      selectedDateTo: null
+      selectedDateTo: null,
+      loading: false
     };
   }
 
@@ -40,21 +50,6 @@ class OrdersScreen extends React.Component {
     });
   };
 
-  _handleShowSelectCustomer = () => {
-    this.props.navigation.navigate('SearchCustomer');
-  };
-
-  _handleRemoveSelectCustomer = async () => {
-    // const customers = await getCustomers(null, this.state.address);
-    // this.setState({
-    //   customers: customers,
-    //   selectedCity: null
-    // });
-    // // Call _handleSearch to made the filter by search query over the new customers state
-    // this._handleSearch(this.state.searchQuery);
-    console.log('Borrar cliente');
-  };
-
   _handleShowDateFromPicker = () => this.setState({ showDateFromPicker: true });
 
   _handleHideDateFromPicker = () =>
@@ -65,6 +60,13 @@ class OrdersScreen extends React.Component {
       selectedDateFrom: date
     });
     this._handleHideDateFromPicker();
+    if (this.state.selectedDateTo) {
+      this._fetchData(
+        this.props.id,
+        this.state.selectedDateFrom,
+        this.state.selectedDateTo
+      );
+    }
   };
 
   _handleShowDateToPicker = () => this.setState({ showDateToPicker: true });
@@ -76,167 +78,113 @@ class OrdersScreen extends React.Component {
       selectedDateTo: date
     });
     this._handleHideDateToPicker();
+    if (this.state.selectedDateFrom) {
+      this._fetchData(
+        this.props.id,
+        this.state.selectedDateFrom,
+        this.state.selectedDateTo
+      );
+    }
+  };
+
+  _removeDateFrom = () => {
+    this.setState({
+      selectedDateFrom: null
+    });
+    if (!this.state.selectedDateTo && this.props.id) {
+      this._fetchData(
+        this.props.id,
+        this.state.selectedDateFrom,
+        this.state.selectedDateTo
+      );
+    }
+  };
+
+  _removeDateTo = () => {
+    this.setState({
+      selectedDateTo: null
+    });
+    if (!this.state.selectedDateFrom && this.props.id) {
+      this._fetchData(
+        this.props.id,
+        this.state.selectedDateFrom,
+        this.state.selectedDateTo
+      );
+    }
+  };
+
+  _fetchData = async (customer = null, dateFrom = null, dateTo = null) => {
+    Reactotron.log('Fetch data');
+    this.setState({
+      loading: true
+    });
+    const invoices = await fetchInvoices(customer, dateFrom, dateTo);
+    if (invoices.error === false) {
+      this.setState({
+        loading: false,
+        orders: invoices.data,
+        filteredOrders: invoices.data
+      });
+    } else {
+      this.setState({
+        loading: false,
+        errorText: invoices.error.msg
+      });
+      Reactotron.log(invoices);
+    }
   };
 
   _capitalize = text => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };
 
+  async componentDidUpdate(prevProps, prevState) {
+    if (this.props.id !== prevProps.id) {
+      await this._fetchData(
+        this.props.id,
+        this.state.selectedDateFrom,
+        this.state.selectedDateTo
+      );
+    }
+  }
+
   render() {
-    let customerComponent;
-    if (this.state.selectedCustomer) {
-      customerComponent = (
-        <List.Item
-          title={
-            <Text style={styles.listTitle}>{this.state.selectedCustomer}</Text>
-          }
-          left={props => (
-            <MaterialIcons
-              name="person"
-              size={moderateScale(24, 0.3)}
-              color="white"
-              style={{ padding: 0 }}
-            />
-          )}
-          right={props => (
-            <MaterialIcons
-              name="close"
-              size={moderateScale(24, 0.3)}
-              color={theme.RED_COLOR}
-            />
-          )}
-          style={{ padding: 0 }}
-          onPress={() => this._handleRemoveSelectCustomer()}
-        />
+    let content;
+    if (this.state.loading) {
+      content = (
+        <View>
+          <ActivityIndicator
+            animating={this.state.loading}
+            color={theme.PRIMARY_COLOR}
+            size={moderateScale(25, 0.3)}
+            style={{ marginTop: moderateScale(30, 0.3) }}
+          />
+          <Text
+            style={{
+              textAlign: 'center',
+              color: '#AAA',
+              marginTop: moderateScale(15, 0.3),
+              fontSize: moderateScale(14, 0.3)
+            }}
+          >
+            Cargando datos...
+          </Text>
+        </View>
       );
     } else {
-      customerComponent = (
-        <List.Item
-          title={<Text style={styles.listTitle}>Cliente</Text>}
-          left={props => (
-            <MaterialIcons
-              name="person"
-              size={moderateScale(24, 0.3)}
-              color="white"
-              style={{ padding: 0 }}
-            />
-          )}
-          right={props => (
-            <MaterialIcons
-              name="chevron-right"
-              size={moderateScale(24, 0.3)}
-              color="white"
-            />
-          )}
-          style={{ padding: 0 }}
-          onPress={() => this._handleShowSelectCustomer()}
-        />
+      content = (
+        <View style={styles.productList}>
+          <OrdersTable
+            navigation={this.props.navigation}
+            orders={this.state.filteredOrders}
+          />
+        </View>
       );
     }
 
-    let dateFromTo;
-    dateFromTo = (
-      <List.Accordion
-        title={<Text style={styles.listTitle}>Fecha</Text>}
-        left={props => (
-          <MaterialIcons
-            name="date-range"
-            size={moderateScale(24, 0.3)}
-            color="white"
-          />
-        )}
-        theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
-        style={{ padding: 0 }}
-      >
-        <List.Item
-          title={<Text style={styles.listTitle}>Desde:</Text>}
-          right={props =>
-            this.state.selectedDateFrom ? (
-              <Text
-                style={{
-                  color: 'white',
-                  marginTop: 8,
-                  fontSize: moderateScale(14, 0.3)
-                }}
-              >
-                {this._capitalize(
-                  format(this.state.selectedDateFrom, 'ddd, D MMMM YYYY', {
-                    locale: es
-                  }).toString()
-                )}
-              </Text>
-            ) : (
-              <MaterialIcons
-                name="today"
-                size={moderateScale(24, 0.3)}
-                color="white"
-              />
-            )
-          }
-          style={{
-            padding: 0,
-            paddingHorizontal: 10
-          }}
-          onPress={this._handleShowDateFromPicker}
-        />
-        <List.Item
-          title={<Text style={styles.listTitle}>Hasta:</Text>}
-          right={props =>
-            this.state.selectedDateTo ? (
-              <Text
-                style={{
-                  color: 'white',
-                  marginTop: 8,
-                  fontSize: moderateScale(14, 0.3)
-                }}
-              >
-                {this._capitalize(
-                  format(this.state.selectedDateTo, 'ddd, D MMMM YYYY', {
-                    locale: es
-                  }).toString()
-                )}
-              </Text>
-            ) : (
-              <MaterialIcons
-                name="today"
-                size={moderateScale(24, 0.3)}
-                color="white"
-              />
-            )
-          }
-          style={{ padding: 0, paddingHorizontal: 10 }}
-          onPress={this._handleShowDateToPicker}
-        />
-      </List.Accordion>
-    );
-
     return (
       <ScrollView style={styles.container}>
-        <View style={styles.seller}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialIcons
-              name="person"
-              size={moderateScale(25, 0.3)}
-              color="white"
-            />
-            <Text
-              style={{
-                color: 'white',
-                marginLeft: moderateScale(15, 0.3),
-                fontSize: moderateScale(16, 0.3)
-              }}
-            >
-              {this.props.userData.userName} {this.props.userData.userLastName}
-            </Text>
-          </View>
-          <View>
-            <MaterialIcons
-              name="assignment"
-              size={moderateScale(25, 0.3)}
-              color="white"
-            />
-          </View>
-        </View>
+        <SelectCustomer navigation={this.props.navigation} />
         <View style={styles.filters}>
           <Searchbar
             placeholder="Buscar Pedido"
@@ -255,18 +203,100 @@ class OrdersScreen extends React.Component {
             theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
             style={{ padding: 0 }}
           >
-            {customerComponent}
-            {dateFromTo}
+            <List.Item
+              title={<Text style={styles.listTitle}>Desde:</Text>}
+              left={props =>
+                this.state.selectedDateFrom && (
+                  <IconButton
+                    icon="close"
+                    color={theme.RED_COLOR}
+                    size={moderateScale(20, 0.3)}
+                    style={{ margin: 0, marginTop: 5 }}
+                    onPress={() => this._removeDateFrom()}
+                  />
+                )
+              }
+              right={props =>
+                this.state.selectedDateFrom ? (
+                  <Text
+                    style={{
+                      color: 'white',
+                      marginTop: 8,
+                      fontSize: moderateScale(14, 0.3)
+                    }}
+                  >
+                    {this._capitalize(
+                      format(this.state.selectedDateFrom, 'ddd, D MMMM YYYY', {
+                        locale: es
+                      }).toString()
+                    )}
+                  </Text>
+                ) : (
+                  <MaterialIcons
+                    name="today"
+                    size={moderateScale(20, 0.3)}
+                    color="white"
+                    style={{ margin: 5 }}
+                  />
+                )
+              }
+              style={{
+                padding: 0,
+                paddingHorizontal: moderateScale(10, 0.3),
+                paddingVertical: moderateScale(4, 0.3)
+              }}
+              onPress={this._handleShowDateFromPicker}
+            />
+            <List.Item
+              title={<Text style={styles.listTitle}>Hasta:</Text>}
+              left={props =>
+                this.state.selectedDateTo && (
+                  <IconButton
+                    icon="close"
+                    color={theme.RED_COLOR}
+                    size={moderateScale(20, 0.3)}
+                    style={{ margin: 0, marginTop: 5 }}
+                    onPress={() => this._removeDateTo()}
+                  />
+                )
+              }
+              right={props =>
+                this.state.selectedDateTo ? (
+                  <Text
+                    style={{
+                      color: 'white',
+                      marginTop: 8,
+                      fontSize: moderateScale(14, 0.3)
+                    }}
+                  >
+                    {this._capitalize(
+                      format(this.state.selectedDateTo, 'ddd, D MMMM YYYY', {
+                        locale: es
+                      }).toString()
+                    )}
+                  </Text>
+                ) : (
+                  <MaterialIcons
+                    name="today"
+                    size={moderateScale(20, 0.3)}
+                    color="white"
+                    style={{ margin: 5 }}
+                  />
+                )
+              }
+              style={{
+                padding: 0,
+                paddingHorizontal: moderateScale(10, 0.3),
+                paddingVertical: moderateScale(4, 0.3)
+              }}
+              onPress={this._handleShowDateToPicker}
+            />
           </List.Accordion>
         </View>
         <View style={styles.title}>
-          <Text style={styles.titleText}>MIS PEDIDOS</Text>
+          <Text style={styles.titleText}>FACTURAS</Text>
         </View>
-        <View style={styles.dataContainer}>
-          <View style={styles.productList}>
-            <OrdersTable navigation={this.props.navigation} />
-          </View>
-        </View>
+        <View style={styles.dataContainer}>{content}</View>
         <DateTimePicker
           date={
             this.state.selectedDateFrom
@@ -322,8 +352,7 @@ const styles = ScaledSheet.create({
     backgroundColor: theme.PRIMARY_COLOR,
     paddingTop: '10@ms0.3',
     paddingLeft: '10@ms0.3',
-    paddingRight: '10@ms0.3',
-    marginTop: '5@ms0.3'
+    paddingRight: '10@ms0.3'
   },
   dataContainer: {
     paddingHorizontal: '10@ms0.3',
@@ -334,4 +363,4 @@ const styles = ScaledSheet.create({
   }
 });
 
-export default withStore(OrdersScreen, ['userData']);
+export default withStore(OrdersScreen, ['id', 'userData']);

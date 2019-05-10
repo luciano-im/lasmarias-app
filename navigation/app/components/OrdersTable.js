@@ -5,35 +5,9 @@ import { ScaledSheet, moderateScale } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
 
-const ordersData = [
-  {
-    id: 180,
-    date: '2018-10-17',
-    customer: 'La Biela',
-    seller: 'La Biela'
-  },
-  {
-    id: 179,
-    date: '2018-10-17',
-    customer: 'Parrilla Fernandez',
-    seller: 'Vendedor 01'
-  },
-  {
-    id: 178,
-    date: '2018-10-17',
-    customer: 'El Sol',
-    seller: 'El Sol'
-  },
-  {
-    id: 177,
-    date: '2018-10-17',
-    customer: 'La Biela',
-    seller: 'Vendedor 05'
-  }
-];
-
 export default class OrdersTable extends React.Component {
   render() {
+    const { orders } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -44,18 +18,26 @@ export default class OrdersTable extends React.Component {
             Nº
           </Text>
           <Text style={[styles.col3, styles.title]}>CLIENTE</Text>
-          <Text style={[styles.col4, styles.centerAlign, styles.title]}>
+          {/* <Text style={[styles.col4, styles.centerAlign, styles.title]}>
             SOLICITANTE
+          </Text> */}
+          <Text style={[styles.col4, styles.centerAlign, styles.title]}>
+            IMPORTE
           </Text>
         </View>
-        {ordersData.map((item, index) => (
-          <View style={styles.row}>
+        {orders.map((item, index) => (
+          <View style={styles.row} key={item.invoice_id}>
             <Text style={[styles.col1, styles.centerAlign]}>
               {format(parse(item.date), 'DD/MM/YY')}
             </Text>
             <TouchableOpacity
               style={styles.col2}
-              onPress={() => this.props.navigation.navigate('OrderDetail')}
+              onPress={() =>
+                this.props.navigation.navigate('OrderDetail', {
+                  type: 'F',
+                  data: item
+                })
+              }
             >
               <Text
                 style={[
@@ -66,11 +48,13 @@ export default class OrdersTable extends React.Component {
                   }
                 ]}
               >
-                {item.id}
+                {item.invoice_id}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.col3}>{item.customer}</Text>
-            <Text style={[styles.col4, styles.rightAlign]}>{item.seller}</Text>
+            <Text style={styles.col3}>{item.customer_name}</Text>
+            <Text style={[styles.col4, styles.rightAlign]}>
+              $ {item.get_total.toFixed(2)}
+            </Text>
           </View>
         ))}
       </View>
@@ -110,12 +94,12 @@ const styles = ScaledSheet.create({
     // backgroundColor: '#CCC'
   },
   col3: {
-    flex: 0.25,
+    flex: 0.35,
     fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
   col4: {
-    flex: 0.35,
+    flex: 0.25,
     fontSize: '14@ms0.3'
     // backgroundColor: '#999'
   }

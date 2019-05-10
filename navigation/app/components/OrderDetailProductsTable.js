@@ -1,40 +1,47 @@
 import React from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
-import { ScaledSheet } from 'react-native-size-matters';
+import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { ScaledSheet, moderateScale } from 'react-native-size-matters';
+import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
 
 export default class OrderDetailProductsTable extends React.Component {
-  constructor(props) {
-    super(props);
-
-    let myState = {};
-    this.props.data.map(item => {
-      const key = 'input' + item.id;
-      myState[key] = 1;
-    });
-    this.state = myState;
-  }
-
   render() {
+    const { products } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.row}>
-          <Text style={[styles.col1, styles.title]}>Producto</Text>
+          <Text style={[styles.col1, styles.centerAlign, styles.title]}>
+            PRODUCTO
+          </Text>
           <Text style={[styles.col2, styles.centerAlign, styles.title]}>
-            Cantidad
+            CANT.
           </Text>
           <Text style={[styles.col3, styles.centerAlign, styles.title]}>
-            Importe
+            PRECIO
+          </Text>
+          <Text style={[styles.col4, styles.centerAlign, styles.title]}>
+            TOTAL
           </Text>
         </View>
-        {this.props.data.map((item, index) => (
-          <View style={styles.row}>
-            <Text style={styles.col1}>{item.name}</Text>
-            <Text style={[styles.col2, styles.centerAlign]}>
+        {products.map((item, index) => (
+          <View style={styles.row} key={item.product_id}>
+            <Text style={[styles.col1, styles.centerAlign]}>
+              {item.product_description}
+            </Text>
+            <Text
+              style={[
+                styles.centerAlign,
+                styles.col2,
+                { fontSize: moderateScale(14, 0.3) }
+              ]}
+            >
               {item.quantity}
             </Text>
-            <Text style={[styles.col3, styles.price]}>$ 110.262,50</Text>
+            <Text style={styles.col3}>$ {item.price.toFixed(2)}</Text>
+            <Text style={[styles.col4, styles.rightAlign]}>
+              $ {item.amount.toFixed(2)}
+            </Text>
           </View>
         ))}
       </View>
@@ -64,22 +71,23 @@ const styles = ScaledSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.45,
+    flex: 0.4,
     fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.3,
+    flex: 0.2,
     fontSize: '14@ms0.3'
     // backgroundColor: '#CCC'
   },
   col3: {
-    flex: 0.25,
-    textAlign: 'right',
+    flex: 0.2,
     fontSize: '14@ms0.3'
     // backgroundColor: '#AAA'
   },
-  price: {
-    color: theme.PRIMARY_COLOR
+  col4: {
+    flex: 0.2,
+    fontSize: '14@ms0.3'
+    // backgroundColor: '#999'
   }
 });
