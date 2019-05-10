@@ -40,20 +40,20 @@ export default class OrdersTable extends React.Component {
         headerContent = (
           <View style={styles.row}>
             <Text style={[styles.col1, styles.centerAlign, styles.title]}>
-              FECHA
+              Fecha
             </Text>
             <Text style={[styles.col2, styles.centerAlign, styles.title]}>
               Nº
             </Text>
-            <Text style={[styles.col3, styles.title]}>CLIENTE</Text>
+            <Text style={[styles.col3, styles.title]}>Cliente</Text>
             <Text style={[styles.col4, styles.centerAlign, styles.title]}>
-              IMPORTE
+              Importe
             </Text>
           </View>
         );
         itemsContent = data.map((item, index) => (
           <View style={styles.row} key={item.invoice_id}>
-            <Text style={[styles.col1, styles.centerAlign]}>
+            <Text style={[styles.col1, styles.dataText, styles.centerAlign]}>
               {format(parse(item.date), 'DD/MM/YY')}
             </Text>
             <TouchableOpacity
@@ -68,6 +68,7 @@ export default class OrdersTable extends React.Component {
               <Text
                 style={[
                   styles.centerAlign,
+                  styles.dataText,
                   {
                     color: theme.PRIMARY_COLOR,
                     fontSize: moderateScale(14, 0.3)
@@ -77,8 +78,10 @@ export default class OrdersTable extends React.Component {
                 {item.invoice_id}
               </Text>
             </TouchableOpacity>
-            <Text style={[styles.col3]}>{item.customer_name}</Text>
-            <Text style={[styles.col4, styles.rightAlign]}>
+            <Text style={[styles.col3, styles.dataText]}>
+              {item.customer_name}
+            </Text>
+            <Text style={[styles.col4, styles.dataText, styles.rightAlign]}>
               $ {item.get_total.toFixed(2)}
             </Text>
           </View>
@@ -87,20 +90,20 @@ export default class OrdersTable extends React.Component {
         headerContent = (
           <View style={styles.row}>
             <Text style={[styles.col1, styles.centerAlign, styles.title]}>
-              FECHA
+              Fecha
             </Text>
             <Text style={[styles.col2, styles.centerAlign, styles.title]}>
               Nº
             </Text>
-            <Text style={[styles.col3, styles.title]}>CLIENTE</Text>
+            <Text style={[styles.col3, styles.title]}>Cliente</Text>
             <Text style={[styles.col4, styles.centerAlign, styles.title]}>
-              SOLICITANTE
+              Solicitante
             </Text>
           </View>
         );
         itemsContent = data.map((item, index) => (
           <View style={styles.row} key={item.order_id}>
-            <Text style={[styles.col1, styles.centerAlign]}>
+            <Text style={[styles.col1, styles.dataText, styles.centerAlign]}>
               {format(parse(item.date), 'DD/MM/YY')}
             </Text>
             <TouchableOpacity
@@ -115,6 +118,7 @@ export default class OrdersTable extends React.Component {
               <Text
                 style={[
                   styles.centerAlign,
+                  styles.dataText,
                   {
                     color: theme.PRIMARY_COLOR,
                     fontSize: moderateScale(14, 0.3)
@@ -124,8 +128,12 @@ export default class OrdersTable extends React.Component {
                 {item.order_id}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.col3}>{item.customer_name}</Text>
-            <Text style={styles.col4}>{item.user_customer_name}</Text>
+            <Text style={[styles.col3, styles.dataText]}>
+              {item.customer_name}
+            </Text>
+            <Text style={[styles.col4, styles.dataText]}>
+              {item.user_customer_name}
+            </Text>
           </View>
         ));
       }
@@ -153,7 +161,11 @@ const styles = ScaledSheet.create({
     paddingVertical: '5@ms0.3'
   },
   title: {
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '15@ms0.3'
+  },
+  dataText: {
+    fontSize: '14@ms0.3'
   },
   centerAlign: {
     textAlign: 'center'
@@ -162,23 +174,19 @@ const styles = ScaledSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.18,
-    fontSize: '14@ms0.3'
+    flex: 0.18
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.2,
-    fontSize: '14@ms0.3'
+    flex: 0.2
     // backgroundColor: '#CCC'
   },
   col3: {
-    flex: 0.35,
-    fontSize: '14@ms0.3'
+    flex: 0.35
     // backgroundColor: '#AAA'
   },
   col4: {
-    flex: 0.27,
-    fontSize: '14@ms0.3'
+    flex: 0.27
     // backgroundColor: '#999'
   }
 });

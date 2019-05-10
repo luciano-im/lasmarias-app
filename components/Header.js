@@ -19,7 +19,7 @@ class Header extends React.Component {
     }
     return true;
   };
-  º;
+
   _navigateCheckout = () => {
     const customer = this.props.id;
     if (customer !== null) {
@@ -39,7 +39,6 @@ class Header extends React.Component {
       searchQuery: query
     });
     this.props.store.set('searchProductsQuery', query.match(/\S+/g));
-    Reactotron.debug(query.match(/\S+/g));
   };
 
   render() {

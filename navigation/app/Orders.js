@@ -44,19 +44,43 @@ class OrdersScreen extends React.Component {
   };
 
   _handleSearch = query => {
-    let searchText = query.trim().toLowerCase();
-    let data = this.state.orders;
-
-    data = data.filter(item => {
-      return item.name.toLowerCase().match(searchText);
-    });
-
-    // Update search query state
-    // Update filteredCustomers with a list of customers of customer state that match with the searched query
     this.setState({
-      searchQuery: query,
-      filteredOrders: data
+      searchQuery: query
     });
+
+    if (query === null) {
+      const searchTerms = query.match(/\S+/g);
+      const invoices = this.state.invoices;
+      const orders = this.state.orders;
+
+      const filteredInvoices = invoices.filter(p => {
+        return searchTerms.every(q => {
+          return (
+            p.customer_name.toUpperCase().indexOf(q.toUpperCase()) >= 0 ||
+            p.invoice_id.toUpperCase().indexOf(q.toUpperCase()) >= 0
+          );
+        });
+      });
+
+      const filteredOrders = orders.filter(p => {
+        return searchTerms.every(q => {
+          return (
+            p.customer_name.toUpperCase().indexOf(q.toUpperCase()) >= 0 ||
+            p.order_id.toUpperCase().indexOf(q.toUpperCase()) >= 0
+          );
+        });
+      });
+
+      this.setState({
+        filteredInvoices: filteredInvoices,
+        filteredOrders: filteredOrders
+      });
+    } else {
+      this.setState({
+        filteredInvoices: this.state.invoices,
+        filteredOrders: this.state.orders
+      });
+    }
   };
 
   _handleShowDateFromPicker = () => this.setState({ showDateFromPicker: true });

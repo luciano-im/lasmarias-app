@@ -308,7 +308,9 @@ class HomeScreen extends React.Component {
             }
           }}
         >
-          {this.state.snackText}
+          <Text style={{ fontSize: moderateScale(14, 0.3), color: 'white' }}>
+            {this.state.snackText}
+          </Text>
         </Snackbar>
         <ScrollView style={styles.container}>
           <SelectCustomer navigation={this.props.navigation} />

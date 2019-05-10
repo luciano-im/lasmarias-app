@@ -13,18 +13,23 @@ export default class OrderDetailProductsTable extends React.Component {
     if (type === 'Invoice') {
       itemsContent = products.map((item, index) => (
         <View style={styles.row} key={item.product_id}>
-          <Text style={styles.col1}>{item.product_description}</Text>
+          <Text style={[styles.col1, styles.dataText]}>
+            {item.product_description}
+          </Text>
           <Text
             style={[
               styles.centerAlign,
+              styles.dataText,
               styles.col2,
               { fontSize: moderateScale(14, 0.3) }
             ]}
           >
             {item.quantity}
           </Text>
-          <Text style={styles.col3}>$ {item.price.toFixed(2)}</Text>
-          <Text style={[styles.col4, styles.rightAlign]}>
+          <Text style={[styles.col3, styles.dataText]}>
+            $ {item.price.toFixed(2)}
+          </Text>
+          <Text style={[styles.col4, styles.dataText, styles.rightAlign]}>
             $ {item.amount.toFixed(2)}
           </Text>
         </View>
@@ -34,7 +39,7 @@ export default class OrderDetailProductsTable extends React.Component {
         const amount = item.price * item.quantity;
         return (
           <View style={styles.row} key={item.product_id}>
-            <Text style={styles.col1}>
+            <Text style={[styles.col1, styles.dataText]}>
               {item.product_name} {item.product_brand.toUpperCase()}{' '}
               {item.product_package}
             </Text>
@@ -42,13 +47,16 @@ export default class OrderDetailProductsTable extends React.Component {
               style={[
                 styles.centerAlign,
                 styles.col2,
+                styles.dataText,
                 { fontSize: moderateScale(14, 0.3) }
               ]}
             >
               {item.quantity}
             </Text>
-            <Text style={styles.col3}>$ {item.price.toFixed(2)}</Text>
-            <Text style={[styles.col4, styles.rightAlign]}>
+            <Text style={[styles.col3, styles.dataText]}>
+              $ {item.price.toFixed(2)}
+            </Text>
+            <Text style={[styles.col4, styles.dataText, styles.rightAlign]}>
               $ {amount.toFixed(2)}
             </Text>
           </View>
@@ -60,16 +68,16 @@ export default class OrderDetailProductsTable extends React.Component {
       <View style={styles.container}>
         <View style={styles.row}>
           <Text style={[styles.col1, styles.centerAlign, styles.title]}>
-            PRODUCTO
+            Producto
           </Text>
           <Text style={[styles.col2, styles.centerAlign, styles.title]}>
-            CANT.
+            Cant.
           </Text>
           <Text style={[styles.col3, styles.centerAlign, styles.title]}>
-            PRECIO
+            Precio
           </Text>
           <Text style={[styles.col4, styles.centerAlign, styles.title]}>
-            TOTAL
+            Total
           </Text>
         </View>
         {itemsContent}
@@ -91,7 +99,11 @@ const styles = ScaledSheet.create({
     paddingVertical: '5@ms0.3'
   },
   title: {
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '15@ms0.3'
+  },
+  dataText: {
+    fontSize: '14@ms0.3'
   },
   centerAlign: {
     textAlign: 'center'
