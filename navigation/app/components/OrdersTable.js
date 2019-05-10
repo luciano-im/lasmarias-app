@@ -6,103 +6,129 @@ import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
 
 export default class OrdersTable extends React.Component {
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
+
   render() {
     const { type } = this.props;
     const { data } = this.props;
     let headerContent;
     let itemsContent;
-    if (type === 'Invoice') {
+
+    if (this._isEmpty(data)) {
       headerContent = (
-        <View style={styles.row}>
-          <Text style={[styles.col1, styles.centerAlign, styles.title]}>
-            FECHA
-          </Text>
-          <Text style={[styles.col2, styles.centerAlign, styles.title]}>
-            Nº
-          </Text>
-          <Text style={[styles.col3, styles.title]}>CLIENTE</Text>
-          <Text style={[styles.col4, styles.centerAlign, styles.title]}>
-            IMPORTE
+        <View style={{ borderBottomColor: '#CCC', borderBottomWidth: 1 }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              paddingVertical: moderateScale(10, 0.3),
+              paddingTop: moderateScale(15, 0.3),
+              color: 'grey'
+            }}
+          >
+            SIN DATOS
           </Text>
         </View>
       );
-      itemsContent = data.map((item, index) => (
-        <View style={styles.row} key={item.invoice_id}>
-          <Text style={[styles.col1, styles.centerAlign]}>
-            {format(parse(item.date), 'DD/MM/YY')}
-          </Text>
-          <TouchableOpacity
-            style={styles.col2}
-            onPress={() =>
-              this.props.navigation.navigate('OrderDetail', {
-                type: 'Invoice',
-                data: item
-              })
-            }
-          >
-            <Text
-              style={[
-                styles.centerAlign,
-                {
-                  color: theme.PRIMARY_COLOR,
-                  fontSize: moderateScale(14, 0.3)
-                }
-              ]}
-            >
-              {item.invoice_id}
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.col3}>{item.customer_name}</Text>
-          <Text style={[styles.col4, styles.rightAlign]}>
-            $ {item.get_total.toFixed(2)}
-          </Text>
-        </View>
-      ));
+      itemsContent = null;
     } else {
-      headerContent = (
-        <View style={styles.row}>
-          <Text style={[styles.col1, styles.centerAlign, styles.title]}>
-            FECHA
-          </Text>
-          <Text style={[styles.col2, styles.centerAlign, styles.title]}>
-            Nº
-          </Text>
-          <Text style={[styles.col3, styles.title]}>CLIENTE</Text>
-          <Text style={[styles.col4, styles.centerAlign, styles.title]}>
-            SOLICITANTE
-          </Text>
-        </View>
-      );
-      itemsContent = data.map((item, index) => (
-        <View style={styles.row} key={item.invoice_id}>
-          <Text style={[styles.col1, styles.centerAlign]}>
-            {format(parse(item.date), 'DD/MM/YY')}
-          </Text>
-          <TouchableOpacity
-            style={styles.col2}
-            onPress={() =>
-              this.props.navigation.navigate('OrderDetail', {
-                type: 'Order',
-                data: item
-              })
-            }
-          >
-            <Text
-              style={[
-                styles.centerAlign,
-                {
-                  color: theme.PRIMARY_COLOR,
-                  fontSize: moderateScale(14, 0.3)
-                }
-              ]}
-            >
-              {item.order_id}
+      if (type === 'Invoice') {
+        headerContent = (
+          <View style={styles.row}>
+            <Text style={[styles.col1, styles.centerAlign, styles.title]}>
+              FECHA
             </Text>
-          </TouchableOpacity>
-          <Text style={styles.col3}>{item.customer_name}</Text>
-          <Text style={styles.col4}>{item.user_customer_name}</Text>
-        </View>
-      ));
+            <Text style={[styles.col2, styles.centerAlign, styles.title]}>
+              Nº
+            </Text>
+            <Text style={[styles.col3, styles.title]}>CLIENTE</Text>
+            <Text style={[styles.col4, styles.centerAlign, styles.title]}>
+              IMPORTE
+            </Text>
+          </View>
+        );
+        itemsContent = data.map((item, index) => (
+          <View style={styles.row} key={item.invoice_id}>
+            <Text style={[styles.col1, styles.centerAlign]}>
+              {format(parse(item.date), 'DD/MM/YY')}
+            </Text>
+            <TouchableOpacity
+              style={styles.col2}
+              onPress={() =>
+                this.props.navigation.navigate('OrderDetail', {
+                  type: 'Invoice',
+                  data: item
+                })
+              }
+            >
+              <Text
+                style={[
+                  styles.centerAlign,
+                  {
+                    color: theme.PRIMARY_COLOR,
+                    fontSize: moderateScale(14, 0.3)
+                  }
+                ]}
+              >
+                {item.invoice_id}
+              </Text>
+            </TouchableOpacity>
+            <Text style={[styles.col3]}>{item.customer_name}</Text>
+            <Text style={[styles.col4, styles.rightAlign]}>
+              $ {item.get_total.toFixed(2)}
+            </Text>
+          </View>
+        ));
+      } else {
+        headerContent = (
+          <View style={styles.row}>
+            <Text style={[styles.col1, styles.centerAlign, styles.title]}>
+              FECHA
+            </Text>
+            <Text style={[styles.col2, styles.centerAlign, styles.title]}>
+              Nº
+            </Text>
+            <Text style={[styles.col3, styles.title]}>CLIENTE</Text>
+            <Text style={[styles.col4, styles.centerAlign, styles.title]}>
+              SOLICITANTE
+            </Text>
+          </View>
+        );
+        itemsContent = data.map((item, index) => (
+          <View style={styles.row} key={item.order_id}>
+            <Text style={[styles.col1, styles.centerAlign]}>
+              {format(parse(item.date), 'DD/MM/YY')}
+            </Text>
+            <TouchableOpacity
+              style={styles.col2}
+              onPress={() =>
+                this.props.navigation.navigate('OrderDetail', {
+                  type: 'Order',
+                  data: item
+                })
+              }
+            >
+              <Text
+                style={[
+                  styles.centerAlign,
+                  {
+                    color: theme.PRIMARY_COLOR,
+                    fontSize: moderateScale(14, 0.3)
+                  }
+                ]}
+              >
+                {item.order_id}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.col3}>{item.customer_name}</Text>
+            <Text style={styles.col4}>{item.user_customer_name}</Text>
+          </View>
+        ));
+      }
     }
 
     return (
@@ -136,7 +162,7 @@ const styles = ScaledSheet.create({
     textAlign: 'right'
   },
   col1: {
-    flex: 0.2,
+    flex: 0.18,
     fontSize: '14@ms0.3'
     // backgroundColor: '#EEE'
   },
@@ -151,7 +177,7 @@ const styles = ScaledSheet.create({
     // backgroundColor: '#AAA'
   },
   col4: {
-    flex: 0.25,
+    flex: 0.27,
     fontSize: '14@ms0.3'
     // backgroundColor: '#999'
   }

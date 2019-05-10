@@ -36,6 +36,13 @@ class OrdersScreen extends React.Component {
     };
   }
 
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
+
   _handleSearch = query => {
     let searchText = query.trim().toLowerCase();
     let data = this.state.orders;
@@ -116,14 +123,11 @@ class OrdersScreen extends React.Component {
   };
 
   _fetchData = async (customer = null, dateFrom = null, dateTo = null) => {
-    Reactotron.log('Fetch data');
     this.setState({
       loading: true
     });
     const invoices = await fetchInvoices(customer, dateFrom, dateTo);
-    Reactotron.log(invoices);
     const orders = await fetchOrders(customer, dateFrom, dateTo);
-    Reactotron.log(orders);
     let dataInvoices;
     let dataOrders;
     if (invoices.error === false) {
@@ -162,42 +166,72 @@ class OrdersScreen extends React.Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    if (this.props.id !== prevProps.id) {
-      await this._fetchData(
-        this.props.id,
-        this.state.selectedDateFrom,
-        this.state.selectedDateTo
-      );
+    if (
+      this.props.id !== prevProps.id ||
+      this.state.selectedDateFrom !== prevState.selectedDateFrom ||
+      this.state.selectedDateTo !== prevState.selectedDateTo
+    ) {
+      if (
+        !this.props.id &&
+        !this.state.selectedDateFrom &&
+        !this.state.selectedDateTo
+      ) {
+        this.setState({
+          invoices: [],
+          orders: [],
+          filteredInvoices: [],
+          filteredOrders: []
+        });
+      } else {
+        if (
+          (!this.state.selectedDateFrom && !this.state.selectedDateTo) ||
+          (this.state.selectedDateFrom && this.state.selectedDateTo)
+        ) {
+          await this._fetchData(
+            this.props.id,
+            this.state.selectedDateFrom,
+            this.state.selectedDateTo
+          );
+        }
+      }
     }
   }
 
   render() {
     let content;
-    if (this.state.loading) {
+    if (
+      !this.state.loading &&
+      this._isEmpty(this.state.orders) &&
+      this._isEmpty(this.state.invoices) &&
+      !this.state.selectedDateFrom &&
+      !this.state.selectedDateTo &&
+      !this.props.id
+    ) {
       content = (
         <View>
-          <ActivityIndicator
-            animating={this.state.loading}
-            color={theme.PRIMARY_COLOR}
-            size={moderateScale(25, 0.3)}
-            style={{ marginTop: moderateScale(30, 0.3) }}
-          />
           <Text
             style={{
               textAlign: 'center',
               color: '#AAA',
-              marginTop: moderateScale(15, 0.3),
-              fontSize: moderateScale(14, 0.3)
+              margin: moderateScale(15, 0.3),
+              fontSize: moderateScale(15, 0.3)
             }}
           >
-            Cargando datos...
+            Seleccione un Cliente o realice un filtro de fechas para ver los
+            Pedidos Pendientes y Facturados
           </Text>
         </View>
       );
     } else {
-      if (this.state.invoices === [] && this.state.orders === []) {
+      if (this.state.loading) {
         content = (
           <View>
+            <ActivityIndicator
+              animating={this.state.loading}
+              color={theme.PRIMARY_COLOR}
+              size={moderateScale(25, 0.3)}
+              style={{ marginTop: moderateScale(30, 0.3) }}
+            />
             <Text
               style={{
                 textAlign: 'center',
@@ -206,40 +240,42 @@ class OrdersScreen extends React.Component {
                 fontSize: moderateScale(14, 0.3)
               }}
             >
-              Seleccione un Cliente o realice un filtro de fechas para ver los
-              Pedidos Pendientes y Facturados
+              Cargando datos...
             </Text>
           </View>
         );
       } else {
-        content = (
-          <View>
-            <View style={styles.title}>
-              <Text style={styles.titleText}>PEDIDOS PENDIENTES</Text>
-            </View>
-            <View style={styles.dataContainer}>
-              <View style={styles.productList}>
-                <OrdersTable
-                  navigation={this.props.navigation}
-                  data={this.state.filteredOrders}
-                  type={'Order'}
-                />
+        if (this.state.invoices === [] && this.state.orders === []) {
+        } else {
+          content = (
+            <View>
+              <View style={styles.title}>
+                <Text style={styles.titleText}>PEDIDOS PENDIENTES</Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <View style={styles.productList}>
+                  <OrdersTable
+                    navigation={this.props.navigation}
+                    data={this.state.filteredOrders}
+                    type={'Order'}
+                  />
+                </View>
+              </View>
+              <View style={styles.title}>
+                <Text style={styles.titleText}>FACTURAS</Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <View style={styles.productList}>
+                  <OrdersTable
+                    navigation={this.props.navigation}
+                    data={this.state.filteredInvoices}
+                    type={'Invoice'}
+                  />
+                </View>
               </View>
             </View>
-            <View style={styles.title}>
-              <Text style={styles.titleText}>FACTURAS</Text>
-            </View>
-            <View style={styles.dataContainer}>
-              <View style={styles.productList}>
-                <OrdersTable
-                  navigation={this.props.navigation}
-                  data={this.state.filteredInvoices}
-                  type={'Invoice'}
-                />
-              </View>
-            </View>
-          </View>
-        );
+          );
+        }
       }
     }
 
@@ -262,7 +298,7 @@ class OrdersScreen extends React.Component {
               />
             )}
             theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
-            style={{ padding: 0 }}
+            style={{ padding: 0, paddingVertical: 5 }}
           >
             <List.Item
               title={<Text style={styles.listTitle}>Desde:</Text>}

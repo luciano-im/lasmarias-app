@@ -2,6 +2,7 @@
 import { SQLite } from 'expo';
 import axios from 'axios';
 import qs from 'qs';
+import { format, parse } from 'date-fns';
 import NavigationService from '../navigation/NavigationService';
 import { API_URL } from 'react-native-dotenv';
 import Reactotron from 'reactotron-react-native';
@@ -717,16 +718,21 @@ export let fetchInvoices = async (
 
   let urlPath;
   if (user !== null && dateFrom !== null && dateTo !== null) {
-    urlPath = `${user}/${dateFrom}/${dateTo}`;
+    const dFrom = format(parse(dateFrom), 'YYYY-MM-DD');
+    const dTo = format(parse(dateTo), 'YYYY-MM-DD');
+    urlPath = `${user}/${dFrom}/${dTo}`;
   } else {
     if (user !== null && (dateFrom === null || dateTo === null)) {
       urlPath = `${user}`;
     } else {
       if (user === null && dateFrom !== null && dateTo !== null) {
-        urlPath = `${dateFrom}/${dateTo}`;
+        const dFrom = format(parse(dateFrom), 'YYYY-MM-DD');
+        const dTo = format(parse(dateTo), 'YYYY-MM-DD');
+        urlPath = `${dFrom}/${dTo}`;
       }
     }
   }
+  Reactotron.log(urlPath);
 
   const url = urlPath ? `/api/invoice/${urlPath}/` : `/api/invoice/`;
 
@@ -776,13 +782,17 @@ export let fetchOrders = async (
 
   let urlPath;
   if (user !== null && dateFrom !== null && dateTo !== null) {
-    urlPath = `${user}/${dateFrom}/${dateTo}`;
+    const dFrom = format(parse(dateFrom), 'YYYY-MM-DD');
+    const dTo = format(parse(dateTo), 'YYYY-MM-DD');
+    urlPath = `${user}/${dFrom}/${dTo}`;
   } else {
     if (user !== null && (dateFrom === null || dateTo === null)) {
       urlPath = `${user}`;
     } else {
       if (user === null && dateFrom !== null && dateTo !== null) {
-        urlPath = `${dateFrom}/${dateTo}`;
+        const dFrom = format(parse(dateFrom), 'YYYY-MM-DD');
+        const dTo = format(parse(dateTo), 'YYYY-MM-DD');
+        urlPath = `${dFrom}/${dTo}`;
       }
     }
   }
