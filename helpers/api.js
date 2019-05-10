@@ -761,6 +761,65 @@ export let fetchInvoices = async (
     });
 };
 
+export let fetchOrders = async (
+  user = null,
+  dateFrom = null,
+  dateTo = null
+) => {
+  const token = await _getToken();
+
+  const config = {
+    timeout: timeout,
+    responseType: 'json',
+    headers: { Authorization: 'Token ' + token.key }
+  };
+
+  let urlPath;
+  if (user !== null && dateFrom !== null && dateTo !== null) {
+    urlPath = `${user}/${dateFrom}/${dateTo}`;
+  } else {
+    if (user !== null && (dateFrom === null || dateTo === null)) {
+      urlPath = `${user}`;
+    } else {
+      if (user === null && dateFrom !== null && dateTo !== null) {
+        urlPath = `${dateFrom}/${dateTo}`;
+      }
+    }
+  }
+
+  const url = urlPath ? `/api/order/${urlPath}/` : `/api/order/`;
+
+  return await axios
+    .get(API_URL + url, config)
+    .then(response => {
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
+      if (response.status === 200) {
+        return {
+          error: false,
+          data: response.data
+        };
+      }
+    })
+    .catch(error => {
+      Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
+          data: error
+        };
+      }
+    });
+};
+
 export let createOrder = async (data, customer) => {
   const token = await _getToken();
 

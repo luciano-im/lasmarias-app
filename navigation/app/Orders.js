@@ -16,7 +16,7 @@ import es from 'date-fns/locale/es';
 import SelectCustomer from '../../components/SelectCustomer';
 import OrdersTable from './components/OrdersTable';
 import { theme } from '../../helpers/styles';
-import { fetchInvoices } from '../../helpers/api';
+import { fetchInvoices, fetchOrders } from '../../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
 class OrdersScreen extends React.Component {
@@ -24,7 +24,9 @@ class OrdersScreen extends React.Component {
     super(props);
     this.state = {
       searchQuery: '',
+      invoices: [],
       orders: [],
+      filteredInvoices: [],
       filteredOrders: [],
       showDateFromPicker: false,
       showDateToPicker: false,
@@ -119,19 +121,40 @@ class OrdersScreen extends React.Component {
       loading: true
     });
     const invoices = await fetchInvoices(customer, dateFrom, dateTo);
+    Reactotron.log(invoices);
+    const orders = await fetchOrders(customer, dateFrom, dateTo);
+    Reactotron.log(orders);
+    let dataInvoices;
+    let dataOrders;
     if (invoices.error === false) {
-      this.setState({
-        loading: false,
-        orders: invoices.data,
-        filteredOrders: invoices.data
-      });
+      dataInvoices = invoices.data;
     } else {
-      this.setState({
-        loading: false,
-        errorText: invoices.error.msg
-      });
-      Reactotron.log(invoices);
+      dataInvoices = [];
     }
+    if (orders.error === false) {
+      dataOrders = orders.data;
+    } else {
+      dataOrders = [];
+    }
+    let errorText;
+    if (invoices.error === true) {
+      errorText = invoices.error.msg;
+    } else {
+      if (orders.error === true) {
+        errorText = orders.error.msg;
+      } else {
+        errorText = null;
+      }
+    }
+
+    this.setState({
+      loading: false,
+      invoices: dataInvoices,
+      orders: dataOrders,
+      filteredInvoices: dataInvoices,
+      filteredOrders: dataOrders,
+      errorText: errorText
+    });
   };
 
   _capitalize = text => {
@@ -172,14 +195,52 @@ class OrdersScreen extends React.Component {
         </View>
       );
     } else {
-      content = (
-        <View style={styles.productList}>
-          <OrdersTable
-            navigation={this.props.navigation}
-            orders={this.state.filteredOrders}
-          />
-        </View>
-      );
+      if (this.state.invoices === [] && this.state.orders === []) {
+        content = (
+          <View>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: '#AAA',
+                marginTop: moderateScale(15, 0.3),
+                fontSize: moderateScale(14, 0.3)
+              }}
+            >
+              Seleccione un Cliente o realice un filtro de fechas para ver los
+              Pedidos Pendientes y Facturados
+            </Text>
+          </View>
+        );
+      } else {
+        content = (
+          <View>
+            <View style={styles.title}>
+              <Text style={styles.titleText}>PEDIDOS PENDIENTES</Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <View style={styles.productList}>
+                <OrdersTable
+                  navigation={this.props.navigation}
+                  data={this.state.filteredOrders}
+                  type={'Order'}
+                />
+              </View>
+            </View>
+            <View style={styles.title}>
+              <Text style={styles.titleText}>FACTURAS</Text>
+            </View>
+            <View style={styles.dataContainer}>
+              <View style={styles.productList}>
+                <OrdersTable
+                  navigation={this.props.navigation}
+                  data={this.state.filteredInvoices}
+                  type={'Invoice'}
+                />
+              </View>
+            </View>
+          </View>
+        );
+      }
     }
 
     return (
@@ -293,10 +354,8 @@ class OrdersScreen extends React.Component {
             />
           </List.Accordion>
         </View>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>FACTURAS</Text>
-        </View>
-        <View style={styles.dataContainer}>{content}</View>
+        {content}
+
         <DateTimePicker
           date={
             this.state.selectedDateFrom
