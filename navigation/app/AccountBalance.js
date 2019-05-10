@@ -153,7 +153,7 @@ class AccountBalanceScreen extends React.Component {
                 }
               }}
             >
-              VOLVER
+              SALIR
             </Text>
           </Button>
         </View>
@@ -206,7 +206,8 @@ const styles = ScaledSheet.create({
   accountTableTitle: {
     color: 'red',
     fontSize: '16@ms0.3',
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    textAlign: 'center'
   },
   backButtonContainer: {
     flex: 1,

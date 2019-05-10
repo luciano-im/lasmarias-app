@@ -27,8 +27,8 @@ export default class CheckoutProductsTable extends React.Component {
             style={styles.row}
             key={'input' + item.item.product_id.toString().trim()}
           >
-            <Text style={styles.col1}>{item.item.name}</Text>
-            <View style={[styles.col2, styles.controls]}>
+            <Text style={[styles.col1, styles.dataText]}>{item.item.name}</Text>
+            <View style={[styles.col2, styles.dataText, styles.controls]}>
               <IconButton
                 style={styles.quantityButton}
                 icon="remove-circle-outline"
@@ -70,11 +70,15 @@ export default class CheckoutProductsTable extends React.Component {
                 }
               />
             </View>
-            <Text style={[styles.col3, styles.price]}>
+            <Text style={[styles.col3, styles.dataText, styles.price]}>
               $ {item.item.price.toFixed(2)}
             </Text>
             <IconButton
-              style={[styles.quantityButton, { marginLeft: 3 }]}
+              style={[
+                styles.col4,
+                styles.quantityButton,
+                { justifyContent: 'flex-end' }
+              ]}
               icon="delete-forever"
               color={'red'}
               size={moderateScale(20, 0.3)}
@@ -92,9 +96,10 @@ export default class CheckoutProductsTable extends React.Component {
           <Text style={[styles.col2, styles.centerAlign, styles.title]}>
             Cantidad
           </Text>
-          <Text style={[styles.col3, styles.centerAlign, styles.title]}>
+          <Text style={[styles.col3, styles.rightAlign, styles.title]}>
             Importe
           </Text>
+          <Text style={[styles.col4, styles.title]} />
         </View>
         {content}
       </View>
@@ -115,7 +120,8 @@ const styles = ScaledSheet.create({
     paddingVertical: '5@ms0.3'
   },
   title: {
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '15@ms0.3'
   },
   centerAlign: {
     textAlign: 'center'
@@ -123,21 +129,24 @@ const styles = ScaledSheet.create({
   rightAlign: {
     textAlign: 'right'
   },
-  col1: {
-    flex: 0.45,
+  dataText: {
     fontSize: '14@ms0.3'
+  },
+  col1: {
+    flex: 0.4
     // backgroundColor: '#EEE'
   },
   col2: {
-    flex: 0.3,
-    fontSize: '14@ms0.3'
+    flex: 0.29
     // backgroundColor: '#CCC'
   },
   col3: {
     flex: 0.25,
-    textAlign: 'right',
-    fontSize: '14@ms0.3'
+    textAlign: 'right'
     // backgroundColor: '#AAA'
+  },
+  col4: {
+    flex: 0.06
   },
   controls: {
     flexDirection: 'row',

@@ -53,9 +53,9 @@ export default class CategoryFilter extends React.Component {
           {this.state.category && (
             <IconButton
               style={styles.filterNone}
-              icon="filter-none"
+              icon="close"
               color={'#AAAAAA'}
-              size={moderateScale(70, 0.3)}
+              size={moderateScale(22, 0.7)}
               onPress={() => this._selectCategory()}
             />
           )}

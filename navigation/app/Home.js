@@ -346,7 +346,7 @@ const styles = ScaledSheet.create({
   },
   title: {
     color: 'white',
-    fontSize: '16@ms0.3',
+    fontSize: '17@ms0.3',
     textAlign: 'center'
   },
   listContainer: {

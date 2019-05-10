@@ -46,7 +46,8 @@ class CheckoutScreen extends React.Component {
       secondStep: false,
       errorStep: false,
       errorText: null,
-      buttonDisabled: true
+      buttonDisabled: true,
+      cancelCheckout: false
     };
   }
 
@@ -224,6 +225,16 @@ class CheckoutScreen extends React.Component {
     }
   };
 
+  _cancelCheckout = async () => {
+    await _removeOrder();
+    this.setState({
+      cancelCheckout: true
+    });
+    // Set products in cart to 0
+    this.props.store.set('productsInCart', 0);
+    this.props.navigation.navigate('Home');
+  };
+
   _onCheckout = () => {
     // Show confirm modal
     this.setState({
@@ -236,16 +247,18 @@ class CheckoutScreen extends React.Component {
   };
 
   _onBlurScreen = async () => {
-    // Update products in cart if leaving screen without errors
-    if (this.state.errorText === null) {
-      const customer = this.props.id;
-      // If customer is null = Remove customer button pressed
-      if (customer !== null) {
-        let { products } = this.state;
-        const updatedProducts = products.map(item => {
-          return { ...item, qty: this.state.inputs['input' + item.id] };
-        });
-        await _setOrder(updatedProducts);
+    if (this.state.cancelCheckout !== true) {
+      // Update products in cart if leaving screen without errors
+      if (this.state.errorText === null) {
+        const customer = this.props.id;
+        // If customer is null = Remove customer button pressed
+        if (customer !== null) {
+          let { products } = this.state;
+          const updatedProducts = products.map(item => {
+            return { ...item, qty: this.state.inputs['input' + item.id] };
+          });
+          await _setOrder(updatedProducts);
+        }
       }
     }
   };
@@ -314,7 +327,7 @@ class CheckoutScreen extends React.Component {
           </View>
           <View style={styles.dataContainer}>
             <View style={styles.header}>
-              <Text style={styles.headerText}>Pedido Nº: XXXXXX</Text>
+              {/* <Text style={styles.headerText}>Pedido Nº: XXXXXX</Text> */}
               <Text style={styles.headerText}>
                 Fecha: {format(parse(new Date()), 'DD/MM/YY')}
               </Text>
@@ -434,6 +447,26 @@ class CheckoutScreen extends React.Component {
                       style={styles.addProductsButtonText}
                     >
                       AGREGAR PRODUCTOS
+                    </Text>
+                  </View>
+                </TouchableRipple>
+              </View>
+              <View style={styles.addProductsButtonContainer}>
+                <TouchableRipple
+                  borderless
+                  onPress={() => this._cancelCheckout()}
+                  style={styles.addProductsButton}
+                >
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text
+                      theme={{
+                        colors: {
+                          text: '#FFFFFF'
+                        }
+                      }}
+                      style={styles.addProductsButtonText}
+                    >
+                      CANCELAR PEDIDO
                     </Text>
                   </View>
                 </TouchableRipple>
