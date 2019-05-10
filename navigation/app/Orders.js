@@ -197,6 +197,16 @@ class OrdersScreen extends React.Component {
     }
   }
 
+  async componentDidMount() {
+    if (this.props.id !== null) {
+      await this._fetchData(
+        this.props.id,
+        this.state.selectedDateFrom,
+        this.state.selectedDateTo
+      );
+    }
+  }
+
   render() {
     let content;
     if (

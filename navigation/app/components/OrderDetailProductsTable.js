@@ -1,13 +1,61 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { ScaledSheet, moderateScale } from 'react-native-size-matters';
-import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
 
 export default class OrderDetailProductsTable extends React.Component {
   render() {
     const { products } = this.props;
+    const { type } = this.props;
+    let itemsContent;
+
+    if (type === 'Invoice') {
+      itemsContent = products.map((item, index) => (
+        <View style={styles.row} key={item.product_id}>
+          <Text style={styles.col1}>{item.product_description}</Text>
+          <Text
+            style={[
+              styles.centerAlign,
+              styles.col2,
+              { fontSize: moderateScale(14, 0.3) }
+            ]}
+          >
+            {item.quantity}
+          </Text>
+          <Text style={styles.col3}>$ {item.price.toFixed(2)}</Text>
+          <Text style={[styles.col4, styles.rightAlign]}>
+            $ {item.amount.toFixed(2)}
+          </Text>
+        </View>
+      ));
+    } else {
+      itemsContent = products.map((item, index) => {
+        const amount = item.price * item.quantity;
+        return (
+          <View style={styles.row} key={item.product_id}>
+            <Text style={styles.col1}>
+              {item.product_name} {item.product_brand.toUpperCase()}{' '}
+              {item.product_package}
+            </Text>
+            <Text
+              style={[
+                styles.centerAlign,
+                styles.col2,
+                { fontSize: moderateScale(14, 0.3) }
+              ]}
+            >
+              {item.quantity}
+            </Text>
+            <Text style={styles.col3}>$ {item.price.toFixed(2)}</Text>
+            <Text style={[styles.col4, styles.rightAlign]}>
+              $ {amount.toFixed(2)}
+            </Text>
+          </View>
+        );
+      });
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -24,26 +72,7 @@ export default class OrderDetailProductsTable extends React.Component {
             TOTAL
           </Text>
         </View>
-        {products.map((item, index) => (
-          <View style={styles.row} key={item.product_id}>
-            <Text style={[styles.col1, styles.centerAlign]}>
-              {item.product_description}
-            </Text>
-            <Text
-              style={[
-                styles.centerAlign,
-                styles.col2,
-                { fontSize: moderateScale(14, 0.3) }
-              ]}
-            >
-              {item.quantity}
-            </Text>
-            <Text style={styles.col3}>$ {item.price.toFixed(2)}</Text>
-            <Text style={[styles.col4, styles.rightAlign]}>
-              $ {item.amount.toFixed(2)}
-            </Text>
-          </View>
-        ))}
+        {itemsContent}
       </View>
     );
   }
