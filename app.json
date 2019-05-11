@@ -26,7 +26,8 @@
       "bundleIdentifier": "com.lb.lasmarias"
     },
     "android": {
-      "package": "com.lb.lasmarias"
+      "package": "com.lb.lasmarias",
+      "versionCode": 1
     }
   }
 }
