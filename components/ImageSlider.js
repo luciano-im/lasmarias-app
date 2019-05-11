@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { ScaledSheet } from 'react-native-size-matters';
-import { api } from '../helpers/api';
+import { API_URL } from 'react-native-dotenv';
 import Reactotron from 'reactotron-react-native';
 
 export default class Slider extends Component {
@@ -10,27 +10,42 @@ export default class Slider extends Component {
     super(props);
   }
 
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
+
   render() {
     const { images } = this.props;
-
-    Reactotron.log(images);
-
     let imageArray = [];
-
-    images.map((uri, i) => {
-      const imgURL = api + uri.image;
+    if (this._isEmpty(images)) {
       imageArray.push(
-        <View style={styles.container} key={i}>
+        <View style={styles.container} key={1}>
           <Image
-            source={{
-              uri: imgURL
-            }}
             style={styles.image}
+            source={require('../assets/no-photo.jpg')}
             resizeMode="contain"
           />
         </View>
       );
-    });
+    } else {
+      images.map((uri, i) => {
+        const imgURL = API_URL + uri.image;
+        imageArray.push(
+          <View style={styles.container} key={i}>
+            <Image
+              source={{
+                uri: imgURL
+              }}
+              style={styles.image}
+              resizeMode="contain"
+            />
+          </View>
+        );
+      });
+    }
 
     return (
       <View style={styles.sliderContainer}>

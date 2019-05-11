@@ -3,12 +3,9 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+import { API_URL } from 'react-native-dotenv';
 import { theme } from '../../../helpers/styles';
-import {
-  api,
-  _addProductToOrder,
-  getProductImages
-} from '../../../helpers/api';
+import { _addProductToOrder, getProductImages } from '../../../helpers/api';
 import Reactotron from 'reactotron-react-native';
 
 export default class Product extends React.Component {
@@ -63,7 +60,7 @@ export default class Product extends React.Component {
 
     let imageComponent;
     if (!imagesEmpty) {
-      const imgURL = api + Array.from(this.state.images)[0].image;
+      const imgURL = API_URL + Array.from(this.state.images)[0].image;
       imageComponent = (
         <Image
           style={styles.image}
@@ -73,9 +70,10 @@ export default class Product extends React.Component {
       );
     } else {
       imageComponent = (
-        <ActivityIndicator
-          color={theme.PRIMARY_COLOR}
-          size={moderateScale(25, 0.3)}
+        <Image
+          style={styles.image}
+          source={require('../../../assets/no-photo.jpg')}
+          resizeMode="contain"
         />
       );
     }

@@ -16,13 +16,6 @@ export default class ProductDetailModal extends React.Component {
     };
   }
 
-  _isEmpty = obj => {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) return false;
-    }
-    return true;
-  };
-
   _addToCart = product => {
     this.props.addToCart(product);
   };
@@ -49,19 +42,6 @@ export default class ProductDetailModal extends React.Component {
     const offerPrice = data.offer_price.toFixed(2);
 
     const images = Array.from(this.state.images);
-    const imagesEmpty = this._isEmpty(images);
-
-    let sliderComponent;
-    if (!imagesEmpty) {
-      sliderComponent = <Slider images={images} />;
-    } else {
-      sliderComponent = (
-        <ActivityIndicator
-          color={theme.PRIMARY_COLOR}
-          size={moderateScale(25, 0.3)}
-        />
-      );
-    }
 
     return (
       <View style={styles.container}>
@@ -73,7 +53,9 @@ export default class ProductDetailModal extends React.Component {
             onPress={this.props.onDismiss}
             style={styles.close}
           />
-          <View style={styles.imageContainer}>{sliderComponent}</View>
+          <View style={styles.imageContainer}>
+            <Slider images={images} />
+          </View>
           <View style={styles.infoContainer}>
             <Text style={styles.name}>
               {data.name.toUpperCase()} {data.brand.toUpperCase()}
