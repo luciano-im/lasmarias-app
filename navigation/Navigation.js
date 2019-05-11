@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import {
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView
+} from 'react-native';
 import {
   createAppContainer,
   createDrawerNavigator,
@@ -8,6 +14,7 @@ import {
 } from 'react-navigation';
 import { DrawerItems } from 'react-navigation';
 import { List } from 'react-native-paper';
+import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { logout } from '../helpers/api';
 import { theme } from '../helpers/styles';
 import Header from '../components/Header';
@@ -271,8 +278,31 @@ const AppDrawer = createDrawerNavigator(
           style={{ flex: 1 }}
           forceInset={{ top: 'always', horizontal: 'never' }}
         >
-          <DrawerHeader />
-          <DrawerItems {...props} />
+          <View
+            style={{
+              alignItems: 'center',
+              paddingTop: moderateScale(15, 0.3)
+            }}
+          >
+            <Image
+              style={{
+                width: moderateScale(80, 0.3),
+                height: moderateScale(80, 0.3),
+                maxWidth: 128
+              }}
+              source={require('../assets/user-128.png')}
+            />
+            <View style={{ paddingVertical: 10 }}>
+              <DrawerHeader />
+            </View>
+            <View
+              style={{ borderColor: '#CCC', borderTopWidth: 1, width: '100%' }}
+            />
+          </View>
+          <DrawerItems
+            {...props}
+            labelStyle={{ fontSize: moderateScale(13, 0.3) }}
+          />
           <TouchableOpacity
             style={{
               position: 'absolute',
@@ -290,7 +320,13 @@ const AppDrawer = createDrawerNavigator(
             }}
           >
             <List.Icon style={{ opacity: 0.62 }} icon="exit-to-app" />
-            <Text style={{ margin: 16, fontWeight: 'bold' }}>
+            <Text
+              style={{
+                margin: 16,
+                fontWeight: 'bold',
+                fontSize: moderateScale(13, 0.3)
+              }}
+            >
               Cerrar Sesión
             </Text>
           </TouchableOpacity>
