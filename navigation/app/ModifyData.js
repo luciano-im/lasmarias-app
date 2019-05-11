@@ -102,7 +102,7 @@ export default class ModifyDataScreen extends React.Component {
       );
     } else {
       content = (
-        <View>
+        <View style={{ paddingBottom: moderateScale(50, 0.3) }}>
           <Text style={styles.sub}>Modificá tus Datos Personales:</Text>
           <View style={styles.inputContainer}>
             <TextInput

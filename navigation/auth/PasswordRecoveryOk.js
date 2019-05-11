@@ -38,7 +38,7 @@ export default class PasswordRecoveryOkScreen extends React.Component {
                 }
               }}
             >
-              CERRAR
+              CONTINUAR
             </Text>
           </Button>
         </View>

@@ -51,7 +51,7 @@ export default class SignUpOkScreen extends React.Component {
                 }
               }}
             >
-              CERRAR
+              CONTINUAR
             </Text>
           </Button>
         </View>

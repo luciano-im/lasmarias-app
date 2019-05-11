@@ -103,7 +103,6 @@ class HomeScreen extends React.Component {
 
   _filterCategory = (category = null, label = null) => {
     this._fetchData(category);
-    Reactotron.log(label);
     const newLabel =
       label === null || label === 'ofertas'
         ? 'OFERTAS / DESTACADOS'

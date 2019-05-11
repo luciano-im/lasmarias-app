@@ -47,7 +47,7 @@ export default class ModifyDataOkScreen extends React.Component {
                 }
               }}
             >
-              CERRAR
+              CONTINUAR
             </Text>
           </Button>
         </View>

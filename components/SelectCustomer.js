@@ -151,7 +151,7 @@ const styles = ScaledSheet.create({
     paddingVertical: 5
   },
   listTitle: {
-    fontSize: '14@ms0.3'
+    fontSize: '15@ms0.3'
   },
   title: {
     color: theme.PRIMARY_COLOR,

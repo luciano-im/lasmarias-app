@@ -41,6 +41,7 @@ class CheckoutScreen extends React.Component {
       snackVisible: false,
       snackText: '',
       confirmVisible: false,
+      confirmDeleteVisible: false,
       animating: false,
       firstStep: true,
       secondStep: false,
@@ -228,11 +229,18 @@ class CheckoutScreen extends React.Component {
   _cancelCheckout = async () => {
     await _removeOrder();
     this.setState({
-      cancelCheckout: true
+      cancelCheckout: true,
+      confirmDeleteVisible: false
     });
     // Set products in cart to 0
     this.props.store.set('productsInCart', 0);
     this.props.navigation.navigate('Home');
+  };
+
+  _cancelDeleteCheckout = () => {
+    this.setState({
+      confirmDeleteVisible: false
+    });
   };
 
   _onCheckout = () => {
@@ -286,6 +294,7 @@ class CheckoutScreen extends React.Component {
       nextState.products !== this.state.products ||
       nextState.inputs !== this.state.inputs ||
       nextState.snackVisible !== this.state.snackVisible ||
+      nextState.confirmDeleteVisible !== this.state.confirmDeleteVisible ||
       nextState.confirmVisible !== this.state.confirmVisible ||
       nextState.firstStep !== this.state.firstStep ||
       nextState.secondStep !== this.state.secondStep ||
@@ -456,7 +465,11 @@ class CheckoutScreen extends React.Component {
               <View style={styles.addProductsButtonContainer}>
                 <TouchableRipple
                   borderless
-                  onPress={() => this._cancelCheckout()}
+                  onPress={() =>
+                    this.setState({
+                      confirmDeleteVisible: true
+                    })
+                  }
                   style={styles.addProductsButton}
                 >
                   <View style={{ flexDirection: 'row' }}>
@@ -481,11 +494,14 @@ class CheckoutScreen extends React.Component {
             visible={this.state.confirmVisible}
             dismissable={false}
             onDismiss={this._cancelConfirm}
+            style={styles.dialog}
           >
             <Dialog.Title style={styles.dialogTitle}>ATENCION!</Dialog.Title>
             {firstStep && (
               <Dialog.Content>
-                <Paragraph>¿Desea confirmar el pedido?</Paragraph>
+                <Paragraph style={styles.paragraph}>
+                  ¿Desea confirmar el pedido?
+                </Paragraph>
               </Dialog.Content>
             )}
             {secondStep && (
@@ -500,13 +516,15 @@ class CheckoutScreen extends React.Component {
                     }}
                     animating={this.state.animating}
                   />
-                  <Text>Confirmando pedido...</Text>
+                  <Text style={styles.paragraph}>Confirmando pedido...</Text>
                 </View>
               </Dialog.Content>
             )}
             {errorStep && (
               <Dialog.Content>
-                <Paragraph>{this.state.errorText}</Paragraph>
+                <Paragraph style={styles.paragraph}>
+                  {this.state.errorText}
+                </Paragraph>
               </Dialog.Content>
             )}
             {firstStep && (
@@ -537,6 +555,27 @@ class CheckoutScreen extends React.Component {
                 </Button>
               </Dialog.Actions>
             )}
+          </Dialog>
+          <Dialog
+            visible={this.state.confirmDeleteVisible}
+            dismissable={false}
+            onDismiss={this._cancelDeleteCheckout}
+            style={styles.dialog}
+          >
+            <Dialog.Title style={styles.dialogTitle}>ATENCION!</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph style={styles.paragraph}>
+                Esta por cancelar el pedido. ¿Está seguro?
+              </Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={this._cancelDeleteCheckout}>
+                <Text style={styles.dialogButton}>CANCELAR</Text>
+              </Button>
+              <Button onPress={this._cancelCheckout}>
+                <Text style={styles.dialogButton}>ACEPTAR</Text>
+              </Button>
+            </Dialog.Actions>
           </Dialog>
         </Portal>
       </View>
@@ -622,16 +661,26 @@ const styles = ScaledSheet.create({
     marginTop: '15@ms0.3',
     marginBottom: '25@ms0.3'
   },
+  dialog: {
+    maxWidth: 400,
+    width: '300@ms',
+    alignSelf: 'center'
+  },
   dialogTitle: {
     color: theme.PRIMARY_COLOR
   },
   dialogButton: {
     color: theme.PRIMARY_COLOR,
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '14@ms0.3'
   },
   buttonDisabled: {
     color: '#AAAAAA',
-    fontWeight: theme.FONT_WEIGHT_MEDIUM
+    fontWeight: theme.FONT_WEIGHT_MEDIUM,
+    fontSize: '14@ms0.3'
+  },
+  paragraph: {
+    fontSize: '14@ms0.3'
   }
 });
 
