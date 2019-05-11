@@ -10,22 +10,26 @@ const categoryData = [
   {
     category: 'ofertas',
     label: 'Ofertas',
-    image: require('../../../assets/category/icono-ofertas.png')
+    image: require('../../../assets/category/icono-ofertas.png'),
+    imageActive: require('../../../assets/category/icono-ofertas-hover.png')
   },
   {
     category: 'almacen',
     label: 'Almacen',
-    image: require('../../../assets/category/icono-almacen.png')
+    image: require('../../../assets/category/icono-almacen.png'),
+    imageActive: require('../../../assets/category/icono-almacen-hover.png')
   },
   {
     category: 'fiambres',
     label: 'Fiambres y Pastas',
-    image: require('../../../assets/category/icono-fiambres-pastas.png')
+    image: require('../../../assets/category/icono-fiambres-pastas.png'),
+    imageActive: require('../../../assets/category/icono-fiambres-pastas-hover.png')
   },
   {
     category: 'congelados',
     label: 'Frescos y Congelados',
-    image: require('../../../assets/category/icono-frescos-congelados.png')
+    image: require('../../../assets/category/icono-frescos-congelados.png'),
+    imageActive: require('../../../assets/category/icono-frescos-congelados-hover.png')
   }
 ];
 
@@ -46,6 +50,7 @@ export default class CategoryFilter extends React.Component {
   };
 
   render() {
+    const selectedCategory = this.state.category;
     return (
       <View style={styles.container}>
         <View style={styles.containerTitle}>
@@ -61,20 +66,25 @@ export default class CategoryFilter extends React.Component {
           )}
         </View>
         <View style={styles.categoryContainer}>
-          {categoryData.map((category, index) => (
-            <CategoryButton
-              backgroundColor={'#FFF'}
-              borderColor={'#AAA'}
-              elevation={2}
-              // size={70}
-              size={moderateScale(70, 0.7)}
-              image={category.image}
-              label={category.label}
-              category={category.category}
-              onPress={this._selectCategory}
-              key={index}
-            />
-          ))}
+          {categoryData.map((category, index) => {
+            return (
+              <CategoryButton
+                backgroundColor={'#FFF'}
+                borderColor={'#AAA'}
+                elevation={2}
+                size={moderateScale(70, 0.7)}
+                image={
+                  selectedCategory === category.category
+                    ? category.imageActive
+                    : category.image
+                }
+                label={category.label}
+                category={category.category}
+                onPress={this._selectCategory}
+                key={index}
+              />
+            );
+          })}
         </View>
       </View>
     );
