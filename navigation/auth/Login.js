@@ -11,6 +11,7 @@ import {
 import { Button, Text, TextInput } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
+import Sentry from 'sentry-expo';
 import { theme } from '../../helpers/styles';
 import { login } from '../../helpers/api';
 import Logo from '../../components/Logo';
@@ -46,6 +47,16 @@ class LoginScreen extends React.Component {
           userName: response.userName,
           userLastName: response.userLastName,
           userEmail: response.userEmail
+        });
+
+        // Set Sentry scope
+        Sentry.setUserContext({
+          email: response.userEmail,
+          extra: {
+            userType: response.userType,
+            name: response.userName,
+            lastName: response.userLastName
+          }
         });
 
         this.props.navigation.navigate('App');

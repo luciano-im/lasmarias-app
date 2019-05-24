@@ -68,6 +68,13 @@ class SearchCustomerScreen extends React.Component {
   _handleSelectCustomer = item => {
     this.props.store.set('id', item.customer_id);
     this.props.store.set('name', item.name);
+
+    // Set Sentry context
+    Sentry.setExtraContext({
+      customerId: item.customer_id,
+      customerName: item.name
+    });
+
     this.props.navigation.goBack();
   };
 

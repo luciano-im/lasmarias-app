@@ -29,6 +29,18 @@
       "package": "com.lb.lasmarias",
       "versionCode": 2,
       "permissions": []
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "luciano-munoz",
+            "project": "lasmarias-app",
+            "authToken": "53339769fbf44f42bd0fd7b574104457efd6db7fb0d547d3b8dbaed83a4acd4b"
+          }
+        }
+      ]
     }
   }
 }

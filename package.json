@@ -23,7 +23,8 @@
     "react-native-paper": "^2.12.0",
     "react-native-size-matters": "^0.2.1",
     "react-native-swiper": "^1.5.14",
-    "react-navigation": "^3.4.1"
+    "react-navigation": "^3.4.1",
+    "sentry-expo": "^1.12.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
