@@ -7,6 +7,7 @@ import { API_URL } from 'react-native-dotenv';
 import { theme } from '../../../helpers/styles';
 import { _addProductToOrder, getProductImages } from '../../../helpers/api';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 export default class Product extends React.Component {
   _isMounted = false;
@@ -194,3 +195,15 @@ styles = ScaledSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
+
+Product.propTypes = {
+  name: PropTypes.string.isRequired,
+  brand: PropTypes.string.isRequired,
+  productLine: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  unit: PropTypes.string.isRequired,
+  packaging: PropTypes.string.isRequired,
+  item: PropTypes.object.isRequired,
+  showModal: PropTypes.func.isRequired,
+  addToCart: PropTypes.func.isRequired
+};

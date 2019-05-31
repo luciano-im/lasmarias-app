@@ -4,6 +4,7 @@ import { Appbar, Badge, Searchbar } from 'react-native-paper';
 import { withStore } from '@spyna/react-store';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class Header extends React.Component {
   constructor(props) {
@@ -138,3 +139,12 @@ export default withStore(Header, [
   'pendingOrders',
   'searchProductsQuery'
 ]);
+
+Header.propTypes = {
+  leftAction: PropTypes.string.isRequired,
+  navigation: PropTypes.object.isRequired,
+  id: PropTypes.number,
+  productsInCart: PropTypes.number,
+  pendingOrders: PropTypes.bool,
+  searchProductsQuery: PropTypes.array
+};

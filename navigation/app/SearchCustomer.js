@@ -8,6 +8,7 @@ import SelectCity from '../../components/SelectCity';
 import { getCustomers, getCities } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class SearchCustomerScreen extends React.Component {
   constructor(props) {
@@ -223,3 +224,8 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(SearchCustomerScreen, ['id', 'name']);
+
+SearchCustomerScreen.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string
+};

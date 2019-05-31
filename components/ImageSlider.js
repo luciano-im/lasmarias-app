@@ -4,6 +4,7 @@ import Swiper from 'react-native-swiper';
 import { ScaledSheet } from 'react-native-size-matters';
 import { API_URL } from 'react-native-dotenv';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 export default class Slider extends Component {
   constructor(props) {
@@ -71,3 +72,7 @@ const styles = ScaledSheet.create({
     alignSelf: 'center'
   }
 });
+
+Slider.propTypes = {
+  images: PropTypes.array.isRequired
+};

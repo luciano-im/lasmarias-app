@@ -11,6 +11,7 @@ import {
 } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 // TODO: Review action to take when update fails
 class UpdateInfoScreen extends React.Component {
@@ -195,3 +196,7 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(UpdateInfoScreen, ['updated']);
+
+UpdateInfoScreen.propTypes = {
+  updated: PropTypes.string
+};

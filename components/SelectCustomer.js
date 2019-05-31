@@ -15,6 +15,7 @@ import { withStore } from '@spyna/react-store';
 import { theme } from '../helpers/styles';
 import { _removeOrder } from '../helpers/api';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class SelectCustomer extends React.Component {
   constructor(props) {
@@ -173,3 +174,10 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(SelectCustomer, ['id', 'name', 'productsInCart']);
+
+SelectCustomer.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  id: PropTypes.number,
+  name: PropTypes.string,
+  productsInCart: PropTypes.number
+};

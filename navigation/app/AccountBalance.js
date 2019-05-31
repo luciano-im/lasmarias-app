@@ -8,6 +8,7 @@ import { fetchAccountBalance } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import AccountBalanceTable from './components/AccountBalanceTable';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class AccountBalanceScreen extends React.Component {
   constructor(props) {
@@ -225,3 +226,8 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(AccountBalanceScreen, ['id', 'name']);
+
+AccountBalanceScreen.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string
+};

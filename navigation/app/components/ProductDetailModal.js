@@ -7,6 +7,7 @@ import { theme } from '../../../helpers/styles';
 import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 export default class ProductDetailModal extends React.Component {
   constructor(props) {
@@ -154,3 +155,9 @@ const styles = ScaledSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
+
+ProductDetailModal.propTypes = {
+  data: PropTypes.object.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  addToCart: PropTypes.func.isRequired
+};

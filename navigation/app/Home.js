@@ -26,6 +26,7 @@ import Product from './components/Product';
 import ProductDetailModal from './components/ProductDetailModal';
 import { pubnubConfig } from '../../PubnubConfig';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -366,3 +367,11 @@ export default withStore(HomeScreen, [
   'userData',
   'updated'
 ]);
+
+HomeScreen.propTypes = {
+  id: PropTypes.number,
+  productsInCart: PropTypes.number,
+  searchProductsQuery: PropTypes.array,
+  userData: PropTypes.object,
+  updated: PropTypes.string
+};

@@ -17,6 +17,7 @@ import { login } from '../../helpers/api';
 import Logo from '../../components/Logo';
 import InputPassword from '../../components/InputPassword';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -236,3 +237,7 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(LoginScreen, ['userData']);
+
+LoginScreen.propTypes = {
+  userData: PropTypes.object
+};

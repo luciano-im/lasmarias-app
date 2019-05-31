@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { ScaledSheet, moderateScale } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
+import PropTypes from 'prop-types';
 
 export default class OrderDetailProductsTable extends React.Component {
   render() {
@@ -132,3 +133,8 @@ const styles = ScaledSheet.create({
     // backgroundColor: '#999'
   }
 });
+
+OrderDetailProductsTable.propTypes = {
+  products: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired
+};

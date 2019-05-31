@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { withStore } from '@spyna/react-store';
 import { ScaledSheet } from 'react-native-size-matters';
+import PropTypes from 'prop-types';
 
 class DrawerHeader extends React.PureComponent {
   constructor(props) {
@@ -50,3 +51,7 @@ styles = ScaledSheet.create({
 });
 
 export default withStore(DrawerHeader, ['userData']);
+
+DrawerHeader.propTypes = {
+  userData: PropTypes.object
+};

@@ -18,6 +18,7 @@ import {
   createOrder
 } from '../../helpers/api';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class PendingOrdersScreen extends React.Component {
   constructor(props) {
@@ -302,3 +303,7 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(PendingOrdersScreen, ['userData']);
+
+PendingOrdersScreen.propTypes = {
+  userData: PropTypes.object
+};

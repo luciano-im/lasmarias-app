@@ -29,6 +29,7 @@ import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
 import DeliveryMethod from './components/DeliveryMethod';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class CheckoutScreen extends React.Component {
   constructor(props) {
@@ -690,3 +691,10 @@ export default withStore(CheckoutScreen, [
   'productsInCart',
   'pendingOrders'
 ]);
+
+CheckoutScreen.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string,
+  productsInCart: PropTypes.number,
+  pendingOrders: PropTypes.bool
+};

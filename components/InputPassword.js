@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { ScaledSheet } from 'react-native-size-matters';
+import PropTypes from 'prop-types';
 
 export default class InputPassword extends React.Component {
   constructor(props) {
@@ -60,3 +61,10 @@ const styles = ScaledSheet.create({
     top: 30
   }
 });
+
+InputPassword.propTypes = {
+  label: PropTypes.string.isRequired,
+  styles: PropTypes.object,
+  value: PropTypes.string,
+  onChangeText: PropTypes.func.isRequired
+};

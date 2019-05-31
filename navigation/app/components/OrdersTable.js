@@ -4,6 +4,7 @@ import { Text } from 'react-native-paper';
 import { ScaledSheet, moderateScale } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
+import PropTypes from 'prop-types';
 
 export default class OrdersTable extends React.Component {
   _isEmpty = obj => {
@@ -190,3 +191,9 @@ const styles = ScaledSheet.create({
     // backgroundColor: '#999'
   }
 });
+
+OrdersTable.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired
+};

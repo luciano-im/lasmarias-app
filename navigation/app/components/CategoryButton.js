@@ -3,6 +3,7 @@ import { Image, Platform, StyleSheet, View } from 'react-native';
 import { Text, TouchableRipple, Surface } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
 import Reactotron from 'reactotron-react-native';
+import { PropTypes, ImageSourcePropType } from 'prop-types';
 
 export default class CategoryButton extends React.Component {
   _onPress = (category, label) => {
@@ -83,3 +84,14 @@ const styles = ScaledSheet.create({
     fontSize: '14@ms0.3'
   }
 });
+
+CategoryButton.propTypes = {
+  backgroundColor: PropTypes.string.isRequired,
+  borderColor: PropTypes.string.isRequired,
+  elevation: PropTypes.number.isRequired,
+  size: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  onPress: PropTypes.func.isRequired,
+  image: ImageSourcePropType
+};
