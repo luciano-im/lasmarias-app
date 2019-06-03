@@ -157,7 +157,7 @@ const styles = ScaledSheet.create({
 });
 
 ProductDetailModal.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.object,
   onDismiss: PropTypes.func.isRequired,
   addToCart: PropTypes.func.isRequired
 };

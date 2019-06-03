@@ -2,8 +2,9 @@ import React from 'react';
 import { Image, Platform, StyleSheet, View } from 'react-native';
 import { Text, TouchableRipple, Surface } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
+import { PropTypes } from 'prop-types';
+import { Image as ImageNative } from 'react-native';
 import Reactotron from 'reactotron-react-native';
-import { PropTypes, ImageSourcePropType } from 'prop-types';
 
 export default class CategoryButton extends React.Component {
   _onPress = (category, label) => {
@@ -93,5 +94,5 @@ CategoryButton.propTypes = {
   label: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
-  image: ImageSourcePropType
+  image: ImageNative.propTypes.source.isRequired
 };
