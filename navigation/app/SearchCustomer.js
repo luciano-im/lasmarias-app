@@ -4,6 +4,7 @@ import { Divider, List, Searchbar, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
+import Sentry from 'sentry-expo';
 import SelectCity from '../../components/SelectCity';
 import { getCustomers, getCities } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
