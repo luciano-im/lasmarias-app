@@ -302,7 +302,8 @@ export let signUp = async (email, password, password2, relatedData) => {
     related_telephone: relatedData.telText,
     related_cel_phone: relatedData.celText,
     related_city: relatedData.cityText,
-    related_zip_code: relatedData.zipText
+    related_zip_code: relatedData.zipText,
+    related_cuit: relatedData.cuitText
   };
 
   return await axios
@@ -463,7 +464,8 @@ export let updateUser = async relatedData => {
     related_telephone: relatedData.telText,
     related_cel_phone: relatedData.celText,
     related_city: relatedData.cityText,
-    related_zip_code: relatedData.zipText
+    related_zip_code: relatedData.zipText,
+    related_cuit: relatedData.cuitText
   };
 
   return await axios

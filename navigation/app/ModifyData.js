@@ -5,7 +5,13 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  Divider,
+  Text,
+  TextInput
+} from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { NavigationEvents } from 'react-navigation';
@@ -25,6 +31,7 @@ export default class ModifyDataScreen extends React.Component {
       addressText: '',
       cityText: '',
       zipText: '',
+      cuitText: '',
       loading: true,
       updating: false,
       errorText: null
@@ -69,6 +76,7 @@ export default class ModifyDataScreen extends React.Component {
         addressText: data.related_customer_address,
         cityText: data.related_city,
         zipText: data.related_zip_code,
+        cuitText: data.related_cuit,
         loading: false
       });
     }
@@ -119,12 +127,20 @@ export default class ModifyDataScreen extends React.Component {
               value={this.state.lastNameText}
               onChangeText={text => this.setState({ lastNameText: text })}
             />
+            <Divider />
             <TextInput
               label="Nombre del Comercio"
               placeholder="Nombre del Comercio"
               style={styles.input}
               value={this.state.businessText}
               onChangeText={text => this.setState({ businessText: text })}
+            />
+            <TextInput
+              label="CUIT"
+              placeholder="CUIT"
+              style={styles.input}
+              value={this.state.cuitText}
+              onChangeText={text => this.setState({ cuitText: text })}
             />
             <TextInput
               label="Teléfono"
