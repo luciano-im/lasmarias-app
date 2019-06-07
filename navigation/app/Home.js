@@ -90,6 +90,7 @@ class HomeScreen extends React.Component {
 
   _renderItem = ({ item }) => (
     <Product
+      productId={item.product_id.toString()}
       name={item.name.toUpperCase()}
       brand={item.brand.toUpperCase()}
       productLine={item.product_line}
@@ -228,7 +229,8 @@ class HomeScreen extends React.Component {
           return querys.every(q => {
             return (
               p.name.toUpperCase().indexOf(q.toUpperCase()) >= 0 ||
-              p.brand.toUpperCase().indexOf(q.toUpperCase()) >= 0
+              p.brand.toUpperCase().indexOf(q.toUpperCase()) >= 0 ||
+              p.product_id.toUpperCase().indexOf(q.toUpperCase()) >= 0
             );
           });
         });
