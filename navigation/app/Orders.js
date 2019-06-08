@@ -1,5 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  View,
+  TouchableOpacity
+} from 'react-native';
 import {
   ActivityIndicator,
   IconButton,
@@ -32,7 +38,8 @@ class OrdersScreen extends React.Component {
       showDateToPicker: false,
       selectedDateFrom: null,
       selectedDateTo: null,
-      loading: false
+      loading: false,
+      errorText: null
     };
   }
 
@@ -48,7 +55,7 @@ class OrdersScreen extends React.Component {
       searchQuery: query
     });
 
-    if (query === null) {
+    if (query !== '') {
       const searchTerms = query.match(/\S+/g);
       const invoices = this.state.invoices;
       const orders = this.state.orders;
@@ -66,7 +73,10 @@ class OrdersScreen extends React.Component {
         return searchTerms.every(q => {
           return (
             p.customer_name.toUpperCase().indexOf(q.toUpperCase()) >= 0 ||
-            p.order_id.toUpperCase().indexOf(q.toUpperCase()) >= 0
+            p.order_id
+              .toString()
+              .toUpperCase()
+              .indexOf(q.toUpperCase()) >= 0
           );
         });
       });
@@ -148,10 +158,15 @@ class OrdersScreen extends React.Component {
 
   _fetchData = async (customer = null, dateFrom = null, dateTo = null) => {
     this.setState({
-      loading: true
+      loading: true,
+      errorText: null
     });
     const invoices = await fetchInvoices(customer, dateFrom, dateTo);
     const orders = await fetchOrders(customer, dateFrom, dateTo);
+
+    Reactotron.log('Invoices', invoices);
+    Reactotron.log('Orders', orders);
+
     let dataInvoices;
     let dataOrders;
     if (invoices.error === false) {
@@ -166,10 +181,10 @@ class OrdersScreen extends React.Component {
     }
     let errorText;
     if (invoices.error === true) {
-      errorText = invoices.error.msg;
+      errorText = invoices.msg;
     } else {
       if (orders.error === true) {
-        errorText = orders.error.msg;
+        errorText = orders.msg;
       } else {
         errorText = null;
       }
@@ -232,6 +247,7 @@ class OrdersScreen extends React.Component {
   }
 
   render() {
+    const errorText = this.state.errorText;
     let content;
     if (
       !this.state.loading &&
@@ -239,7 +255,7 @@ class OrdersScreen extends React.Component {
       this._isEmpty(this.state.invoices) &&
       !this.state.selectedDateFrom &&
       !this.state.selectedDateTo &&
-      !this.props.id
+      !this.props.id & !this.state.errorText
     ) {
       content = (
         <View>
@@ -314,144 +330,159 @@ class OrdersScreen extends React.Component {
     }
 
     return (
-      <ScrollView style={styles.container}>
-        <SelectCustomer navigation={this.props.navigation} />
-        <View style={styles.filters}>
-          <Searchbar
-            placeholder="Buscar Pedido"
-            onChangeText={query => this._handleSearch(query)}
-            value={this.state.searchQuery}
-          />
-          <List.Accordion
-            title={<Text style={styles.listTitle}>Filtros</Text>}
-            left={props => (
-              <MaterialIcons
-                name="filter-list"
-                size={moderateScale(25, 0.3)}
-                color="white"
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidContainer}
+        behavior="padding"
+        keyboardVerticalOffset={100}
+      >
+        <ScrollView style={styles.container}>
+          <SelectCustomer navigation={this.props.navigation} />
+          <View style={styles.filters}>
+            <Searchbar
+              placeholder="Buscar Pedido"
+              onChangeText={query => this._handleSearch(query)}
+              value={this.state.searchQuery}
+            />
+            <List.Accordion
+              title={<Text style={styles.listTitle}>Filtros</Text>}
+              left={props => (
+                <MaterialIcons
+                  name="filter-list"
+                  size={moderateScale(25, 0.3)}
+                  color="white"
+                />
+              )}
+              theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
+              style={{ padding: 0, paddingVertical: 5 }}
+            >
+              <List.Item
+                title={<Text style={styles.listTitle}>Desde:</Text>}
+                left={props =>
+                  this.state.selectedDateFrom && (
+                    <IconButton
+                      icon="close"
+                      color={theme.RED_COLOR}
+                      size={moderateScale(20, 0.3)}
+                      style={{ margin: 0, marginTop: 5 }}
+                      onPress={() => this._removeDateFrom()}
+                    />
+                  )
+                }
+                right={props =>
+                  this.state.selectedDateFrom ? (
+                    <Text
+                      style={{
+                        color: 'white',
+                        marginTop: 8,
+                        fontSize: moderateScale(14, 0.3)
+                      }}
+                    >
+                      {this._capitalize(
+                        format(
+                          this.state.selectedDateFrom,
+                          'ddd, D MMMM YYYY',
+                          {
+                            locale: es
+                          }
+                        ).toString()
+                      )}
+                    </Text>
+                  ) : (
+                    <MaterialIcons
+                      name="today"
+                      size={moderateScale(20, 0.3)}
+                      color="white"
+                      style={{ margin: 5 }}
+                    />
+                  )
+                }
+                style={{
+                  padding: 0,
+                  paddingHorizontal: moderateScale(10, 0.3),
+                  paddingVertical: moderateScale(4, 0.3)
+                }}
+                onPress={this._handleShowDateFromPicker}
               />
-            )}
-            theme={{ colors: { primary: '#FFFFFF', text: '#FFFFFF' } }}
-            style={{ padding: 0, paddingVertical: 5 }}
-          >
-            <List.Item
-              title={<Text style={styles.listTitle}>Desde:</Text>}
-              left={props =>
-                this.state.selectedDateFrom && (
-                  <IconButton
-                    icon="close"
-                    color={theme.RED_COLOR}
-                    size={moderateScale(20, 0.3)}
-                    style={{ margin: 0, marginTop: 5 }}
-                    onPress={() => this._removeDateFrom()}
-                  />
-                )
-              }
-              right={props =>
-                this.state.selectedDateFrom ? (
-                  <Text
-                    style={{
-                      color: 'white',
-                      marginTop: 8,
-                      fontSize: moderateScale(14, 0.3)
-                    }}
-                  >
-                    {this._capitalize(
-                      format(this.state.selectedDateFrom, 'ddd, D MMMM YYYY', {
-                        locale: es
-                      }).toString()
-                    )}
-                  </Text>
-                ) : (
-                  <MaterialIcons
-                    name="today"
-                    size={moderateScale(20, 0.3)}
-                    color="white"
-                    style={{ margin: 5 }}
-                  />
-                )
-              }
-              style={{
-                padding: 0,
-                paddingHorizontal: moderateScale(10, 0.3),
-                paddingVertical: moderateScale(4, 0.3)
-              }}
-              onPress={this._handleShowDateFromPicker}
-            />
-            <List.Item
-              title={<Text style={styles.listTitle}>Hasta:</Text>}
-              left={props =>
-                this.state.selectedDateTo && (
-                  <IconButton
-                    icon="close"
-                    color={theme.RED_COLOR}
-                    size={moderateScale(20, 0.3)}
-                    style={{ margin: 0, marginTop: 5 }}
-                    onPress={() => this._removeDateTo()}
-                  />
-                )
-              }
-              right={props =>
-                this.state.selectedDateTo ? (
-                  <Text
-                    style={{
-                      color: 'white',
-                      marginTop: 8,
-                      fontSize: moderateScale(14, 0.3)
-                    }}
-                  >
-                    {this._capitalize(
-                      format(this.state.selectedDateTo, 'ddd, D MMMM YYYY', {
-                        locale: es
-                      }).toString()
-                    )}
-                  </Text>
-                ) : (
-                  <MaterialIcons
-                    name="today"
-                    size={moderateScale(20, 0.3)}
-                    color="white"
-                    style={{ margin: 5 }}
-                  />
-                )
-              }
-              style={{
-                padding: 0,
-                paddingHorizontal: moderateScale(10, 0.3),
-                paddingVertical: moderateScale(4, 0.3)
-              }}
-              onPress={this._handleShowDateToPicker}
-            />
-          </List.Accordion>
-        </View>
-        {content}
-
-        <DateTimePicker
-          date={
-            this.state.selectedDateFrom
-              ? this.state.selectedDateFrom
-              : new Date()
-          }
-          mode="date"
-          isVisible={this.state.showDateFromPicker}
-          onConfirm={this._handleSelectDateFrom}
-          onCancel={this._handleHideDateFromPicker}
-        />
-        <DateTimePicker
-          date={
-            this.state.selectedDateTo ? this.state.selectedDateTo : new Date()
-          }
-          mode="date"
-          isVisible={this.state.showDateToPicker}
-          onConfirm={this._handleSelectDateTo}
-          onCancel={this._handleHideDateToPicker}
-        />
-      </ScrollView>
+              <List.Item
+                title={<Text style={styles.listTitle}>Hasta:</Text>}
+                left={props =>
+                  this.state.selectedDateTo && (
+                    <IconButton
+                      icon="close"
+                      color={theme.RED_COLOR}
+                      size={moderateScale(20, 0.3)}
+                      style={{ margin: 0, marginTop: 5 }}
+                      onPress={() => this._removeDateTo()}
+                    />
+                  )
+                }
+                right={props =>
+                  this.state.selectedDateTo ? (
+                    <Text
+                      style={{
+                        color: 'white',
+                        marginTop: 8,
+                        fontSize: moderateScale(14, 0.3)
+                      }}
+                    >
+                      {this._capitalize(
+                        format(this.state.selectedDateTo, 'ddd, D MMMM YYYY', {
+                          locale: es
+                        }).toString()
+                      )}
+                    </Text>
+                  ) : (
+                    <MaterialIcons
+                      name="today"
+                      size={moderateScale(20, 0.3)}
+                      color="white"
+                      style={{ margin: 5 }}
+                    />
+                  )
+                }
+                style={{
+                  padding: 0,
+                  paddingHorizontal: moderateScale(10, 0.3),
+                  paddingVertical: moderateScale(4, 0.3)
+                }}
+                onPress={this._handleShowDateToPicker}
+              />
+            </List.Accordion>
+          </View>
+          {content}
+          {errorText && (
+            <Text style={styles.error}>{this.state.errorText}</Text>
+          )}
+          <DateTimePicker
+            date={
+              this.state.selectedDateFrom
+                ? this.state.selectedDateFrom
+                : new Date()
+            }
+            mode="date"
+            isVisible={this.state.showDateFromPicker}
+            onConfirm={this._handleSelectDateFrom}
+            onCancel={this._handleHideDateFromPicker}
+          />
+          <DateTimePicker
+            date={
+              this.state.selectedDateTo ? this.state.selectedDateTo : new Date()
+            }
+            mode="date"
+            isVisible={this.state.showDateToPicker}
+            onConfirm={this._handleSelectDateTo}
+            onCancel={this._handleHideDateToPicker}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = ScaledSheet.create({
+  keyboardAvoidContainer: {
+    flex: 1
+  },
   container: {
     flex: 1
   },
@@ -489,6 +520,12 @@ const styles = ScaledSheet.create({
   },
   productList: {
     marginBottom: '25@ms0.3'
+  },
+  error: {
+    color: 'red',
+    fontSize: '14@ms0.3',
+    marginTop: 20,
+    textAlign: 'center'
   }
 });
 
