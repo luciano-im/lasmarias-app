@@ -1,5 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native';
 import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
@@ -78,101 +83,130 @@ export default class ModifyPasswordScreen extends React.Component {
     const { user } = this.state;
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
-        <View style={styles.seller}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <MaterialIcons
-              name="person"
-              size={moderateScale(25, 0.3)}
-              color="white"
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidContainer}
+        behavior="padding"
+        keyboardVerticalOffset={50}
+      >
+        <ScrollView contentContainerStyle={styles.container}>
+          <NavigationEvents onDidFocus={payload => this._onFocusScreen()} />
+          <View style={styles.seller}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialIcons
+                name="person"
+                size={moderateScale(25, 0.3)}
+                color="white"
+              />
+              <Text
+                style={{
+                  color: 'white',
+                  marginLeft: moderateScale(15, 0.3),
+                  fontSize: moderateScale(16, 0.3)
+                }}
+              >
+                {user}
+              </Text>
+            </View>
+            <View>
+              <MaterialIcons
+                name="account-box"
+                size={moderateScale(25, 0.3)}
+                color="white"
+              />
+            </View>
+          </View>
+          <View style={styles.title}>
+            <Text style={styles.titleText}>CAMBIAR CONTRASEÑA</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <InputPassword
+              label="Ingresá la Contraseña actual"
+              value={this.state.passText}
+              onChangeText={this._onChangeCurrentPassword}
+              styles={styles.input}
             />
-            <Text
-              style={{
-                color: 'white',
-                marginLeft: moderateScale(15, 0.3),
-                fontSize: moderateScale(16, 0.3)
-              }}
-            >
-              {user}
-            </Text>
+            <InputPassword
+              label="Nueva Contraseña"
+              value={this.state.newPass1}
+              onChangeText={this._onChangeNewPassword1}
+              styles={styles.input}
+            />
+            <InputPassword
+              label="Repetir Nueva Contraseña"
+              value={this.state.newPass2}
+              onChangeText={this._onChangeNewPassword2}
+              styles={styles.input}
+            />
+            {this.state.errorText ? (
+              <Text style={styles.error}>{this.state.errorText}</Text>
+            ) : null}
           </View>
           <View>
-            <MaterialIcons
-              name="account-box"
+            <ActivityIndicator
+              animating={this.state.updating}
+              color={theme.PRIMARY_COLOR}
               size={moderateScale(25, 0.3)}
-              color="white"
+              style={styles.loading}
             />
           </View>
-        </View>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>CAMBIAR CONTRASEÑA</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <InputPassword
-            label="Ingresá la Contraseña actual"
-            value={this.state.passText}
-            onChangeText={this._onChangeCurrentPassword}
-            styles={styles.input}
-          />
-          <InputPassword
-            label="Nueva Contraseña"
-            value={this.state.newPass1}
-            onChangeText={this._onChangeNewPassword1}
-            styles={styles.input}
-          />
-          <InputPassword
-            label="Repetir Nueva Contraseña"
-            value={this.state.newPass2}
-            onChangeText={this._onChangeNewPassword2}
-            styles={styles.input}
-          />
-          {this.state.errorText ? (
-            <Text style={styles.error}>{this.state.errorText}</Text>
-          ) : null}
-        </View>
-        <View>
-          <ActivityIndicator
-            animating={this.state.updating}
-            color={theme.PRIMARY_COLOR}
-            size={moderateScale(25, 0.3)}
-            style={styles.loading}
-          />
-        </View>
-        <Text style={styles.line} />
-        <Text style={styles.legend}>
-          Al guardar la nueva Contraseña serás deslogueado y redirigido a la
-          pantalla de Login para que ingreses con tu Correo Usuario y la nueva
-          Contraseña.
-        </Text>
-        <View style={styles.nextButtonContainer}>
+          <Text style={styles.line} />
+          <Text style={styles.legend}>
+            Al guardar la nueva Contraseña serás deslogueado y redirigido a la
+            pantalla de Login para que ingreses con tu Correo Usuario y la nueva
+            Contraseña.
+          </Text>
+          <View style={styles.saveButtonContainer}>
+            <Button
+              mode="contained"
+              style={styles.saveButton}
+              color={theme.ACCENT_COLOR}
+              theme={{ roundness: 0 }}
+              onPress={() => this._changePassword()}
+            >
+              <Text
+                style={styles.saveButtonText}
+                theme={{
+                  colors: {
+                    text: '#FFFFFF'
+                  }
+                }}
+              >
+                CAMBIAR CONTRASEÑA
+              </Text>
+            </Button>
+          </View>
+        </ScrollView>
+        <View style={styles.backButtonContainer}>
           <Button
             mode="contained"
-            style={styles.nextButton}
+            style={styles.backButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this._changePassword()}
+            onPress={() => this.props.navigation.navigate('Home')}
           >
             <Text
-              style={styles.nextButtonText}
+              style={styles.backButtonText}
               theme={{
                 colors: {
                   text: '#FFFFFF'
                 }
               }}
             >
-              CAMBIAR CONTRASEÑA
+              SALIR
             </Text>
           </Button>
         </View>
-      </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = ScaledSheet.create({
-  container: {
+  keyboardAvoidContainer: {
     flex: 1
+  },
+  container: {
+    // flex: 1
   },
   seller: {
     flexDirection: 'row',
@@ -198,7 +232,7 @@ const styles = ScaledSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#AAA',
     width: '90%',
-    marginTop: '40@ms0.3',
+    marginTop: '20@ms0.3',
     marginBottom: '10@ms0.3'
   },
   legend: {
@@ -209,24 +243,38 @@ const styles = ScaledSheet.create({
   },
   inputContainer: {
     alignItems: 'center',
-    marginTop: '40@ms0.3'
+    marginTop: '20@ms0.3'
   },
   input: {
     backgroundColor: 'transparent',
     width: '260@ms0.3'
   },
-  nextButtonContainer: {
+  saveButtonContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: '20@ms0.3',
+    marginVertical: '25@ms0.3',
+    marginBottom: '80@ms0.3'
+  },
+  saveButton: {
+    width: '280@ms0.3'
+  },
+  saveButtonText: {
+    fontSize: '14@ms0.3'
+  },
+  backButtonContainer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
     marginTop: '30@ms0.3'
   },
-  nextButton: {
+  backButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
     height: '50@ms0.3'
   },
-  nextButtonText: {
+  backButtonText: {
     fontSize: '16@ms0.3'
   },
   loading: {

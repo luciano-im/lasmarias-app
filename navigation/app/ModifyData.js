@@ -64,7 +64,6 @@ export default class ModifyDataScreen extends React.Component {
   async _onFocusScreen() {
     const user = await getUser();
 
-    Reactotron.log(user);
     if (user.error === false) {
       const data = user.data;
       this.setState({
@@ -233,24 +232,46 @@ export default class ModifyDataScreen extends React.Component {
             <Text style={styles.titleText}>MODIFICAR MIS DATOS</Text>
           </View>
           {content}
+          {!loading && (
+            <View style={styles.saveButtonContainer}>
+              <Button
+                mode="contained"
+                style={styles.saveButton}
+                color={theme.ACCENT_COLOR}
+                theme={{ roundness: 0 }}
+                onPress={() => this._updateUser()}
+              >
+                <Text
+                  style={styles.saveButtonText}
+                  theme={{
+                    colors: {
+                      text: '#FFFFFF'
+                    }
+                  }}
+                >
+                  GUARDAR CAMBIOS
+                </Text>
+              </Button>
+            </View>
+          )}
         </ScrollView>
-        <View style={styles.nextButtonContainer}>
+        <View style={styles.backButtonContainer}>
           <Button
             mode="contained"
-            style={styles.nextButton}
+            style={styles.backButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this._updateUser()}
+            onPress={() => this.props.navigation.navigate('Home')}
           >
             <Text
-              style={styles.nextButtonText}
+              style={styles.backButtonText}
               theme={{
                 colors: {
                   text: '#FFFFFF'
                 }
               }}
             >
-              GUARDAR CAMBIOS
+              SALIR
             </Text>
           </Button>
         </View>
@@ -300,12 +321,20 @@ const styles = ScaledSheet.create({
     marginBottom: '10@ms0.3',
     width: '260@ms0.3'
   },
-  // nextButtonContainer: {
-  //   alignItems: 'center',
-  //   justifyContent: 'flex-end',
-  //   marginTop: '30@ms0.3'
-  // },
-  nextButtonContainer: {
+  saveButtonContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: '20@ms0.3',
+    marginBottom: '80@ms0.3'
+  },
+  saveButton: {
+    width: '280@ms0.3'
+  },
+  saveButtonText: {
+    fontSize: '14@ms0.3'
+  },
+  backButtonContainer: {
     position: 'absolute',
     bottom: 0,
     // flex: 1,
@@ -313,12 +342,12 @@ const styles = ScaledSheet.create({
     justifyContent: 'flex-end',
     width: '100%'
   },
-  nextButton: {
+  backButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
     height: '50@ms0.3'
   },
-  nextButtonText: {
+  backButtonText: {
     fontSize: '16@ms0.3'
   },
   loading: {
