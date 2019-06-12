@@ -48,7 +48,8 @@ class HomeScreen extends React.Component {
       // Init PubNub object
       this.pubnub = new PubNubReact({
         publishKey: pubnubConfig.PUBNUB_PUBLISH_KEY,
-        subscribeKey: pubnubConfig.PUBNUB_SUBSCRIBE_KEY
+        subscribeKey: pubnubConfig.PUBNUB_SUBSCRIBE_KEY,
+        secretKey: pubnubConfig.PUBNUB_SECRET_KEY
       });
       this.pubnub.init(this);
     }
@@ -114,9 +115,12 @@ class HomeScreen extends React.Component {
   };
 
   _updateData = async dbData => {
-    // Save new data, later call updateDbData to compare new data vs existing/current data
-    // Finally set new state
-    await updateDbData(dbData);
+    // If there are new data
+    // Call updateDbData to compare with existing/current data
+    if (dbData !== null) {
+      await updateDbData(dbData);
+    }
+    // Fetch SQLite data
     this._fetchData();
   };
 
@@ -174,6 +178,17 @@ class HomeScreen extends React.Component {
         this._updateData(msg.message);
       });
 
+      // this.pubnub.deleteMessages(
+      //   {
+      //     channel: 'lasmarias',
+      //     start: '14598598643233272',
+      //     end: '16598598643233272'
+      //   },
+      //   result => {
+      //     Reactotron.log(result);
+      //   }
+      // );
+
       //Get last message from history
       this.pubnub.history(
         {
@@ -184,9 +199,11 @@ class HomeScreen extends React.Component {
         (status, response) => {
           if (status.error === false) {
             const msgs = response.messages;
-            // Check for messages
-            if (msgs !== 'undefined' && msgs.length > 0) {
+            // If there are messages
+            if (!this._isEmpty(msgs) && msgs.length > 0) {
               this._updateData(msgs[0].entry);
+            } else {
+              this._updateData(null);
             }
           }
         }
