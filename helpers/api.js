@@ -196,6 +196,7 @@ export let updateDbData = async newDbData => {
   try {
     const currentDbData = await _getDbData('currentDbData');
     if (currentDbData === null || currentDbData !== newData) {
+      _saveDbData('newDbData', newDbData);
       NavigationService.navigate('UpdateModalScreen', { newDbData: newDbData });
     }
   } catch (error) {

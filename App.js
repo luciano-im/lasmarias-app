@@ -34,6 +34,7 @@ const initialValue = {
   name: null,
   productsInCart: null,
   updated: null,
+  updateError: false,
   userData: {
     userType: null,
     userName: null,
