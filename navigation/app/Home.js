@@ -238,24 +238,6 @@ class HomeScreen extends React.Component {
       // );
 
       //Get last message from history
-      // this.pubnub.history(
-      //   {
-      //     channel: 'lasmarias',
-      //     reverse: false,
-      //     count: 1 // how many items to fetch
-      //   },
-      //   (status, response) => {
-      //     if (status.error === false) {
-      //       const msgs = response.messages;
-      //       // If there are messages
-      //       if (!this._isEmpty(msgs) && msgs.length > 0) {
-      //         this._updateData(msgs[0].entry);
-      //       } else {
-      //         this._updateData(null);
-      //       }
-      //     }
-      //   }
-      // );
       this._fetchPubNubHistory();
 
       const pendingOrders = await _getPendingOrders();

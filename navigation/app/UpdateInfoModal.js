@@ -21,75 +21,17 @@ class UpdateInfoScreen extends React.Component {
       stepOne: true,
       stepTwo: false,
       updatingText: '',
-      animating: true,
+      animating: false,
       buttonDisabled: false,
       updateError: false
     };
   }
 
-  // _changeDialog = async () => {
-  //   // animating is false when finish update with or without errors
-  //   if (!this.state.animating) {
-  //     this.props.navigation.goBack();
-  //   } else {
-  //     this.setState({
-  //       modal_one: false,
-  //       modal_two: true,
-  //       updating: 'Actualizando Clientes...'
-  //     });
-
-  //     const customers = await fetchCustomers();
-
-  //     this.setState({
-  //       updating: 'Actualizando Productos...'
-  //     });
-
-  //     const products = await fetchProducts();
-
-  //     //Check for errors
-  //     if (customers.error === false) {
-  //       if (products.error === false) {
-  //         this.setState({
-  //           updating: 'Actualización terminada.',
-  //           animating: false,
-  //           buttonDisabled: false
-  //         });
-  //         //Set updated true
-  //         this.props.store.set('updated', new Date().toString());
-  //         //Once updated save the new DbData to AsyncStorage
-  //         const newDbData = this.props.navigation.getParam('newDbData');
-  //         _saveDbData('currentDbData', newDbData);
-  //       } else {
-  //         this.setState({
-  //           updating:
-  //             'Hubo un problema actualizando la base de Productos. Los Clientes se actualizaron correctamente.',
-  //           animating: false,
-  //           buttonDisabled: false
-  //         });
-  //       }
-  //     } else {
-  //       if (products.error === false) {
-  //         this.setState({
-  //           updating:
-  //             'Hubo un problema actualizando la base de Clientes. Los Productos se actualizaron correctamente.',
-  //           animating: false,
-  //           buttonDisabled: false
-  //         });
-  //       } else {
-  //         this.setState({
-  //           updating: 'No se pudo actualizar la App.',
-  //           animating: false,
-  //           buttonDisabled: false
-  //         });
-  //       }
-  //     }
-  //   }
-  // };
-
   _fetchData = async () => {
     this.setState({
       updatingText: 'Actualizando Clientes...',
-      buttonDisabled: true
+      buttonDisabled: true,
+      animating: true
     });
     const customers = await fetchCustomers();
     this.setState({
@@ -103,7 +45,8 @@ class UpdateInfoScreen extends React.Component {
         this.setState({
           updatingText: 'Actualización terminada.',
           animating: false,
-          buttonDisabled: false
+          buttonDisabled: false,
+          updateError: false
         });
         //Set updated true
         this.props.store.set('updated', new Date().toString());
@@ -241,7 +184,7 @@ class UpdateInfoScreen extends React.Component {
               </Button>
             )}
             {updateError && (
-              <View>
+              <View style={{ flexDirection: 'row' }}>
                 <Button
                   onPress={this._closeWithErrors}
                   disabled={this.state.buttonDisabled}
