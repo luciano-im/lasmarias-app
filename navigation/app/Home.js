@@ -12,13 +12,16 @@ import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import { theme } from '../../helpers/styles';
 import {
+  _getDbData,
   _saveDbData,
   _addProductToOrder,
   _removeOrder,
   _getOrder,
   _getPendingOrders,
   updateDbData,
-  getProducts
+  getProducts,
+  fetchCustomers,
+  fetchProducts
 } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import CategoryFilter from './components/CategoryFilter';
@@ -170,7 +173,6 @@ class HomeScreen extends React.Component {
   };
 
   _fetchPubNubHistory = () => {
-    Reactotron.log('1 - manualUpdate', this.state.manualUpdate);
     if (this.state.manualUpdate === true) {
       this.setState({
         fetchingManualUpdate: true
@@ -212,6 +214,32 @@ class HomeScreen extends React.Component {
         }
       }
     );
+  };
+
+  _fetchManualUpdate = async () => {
+    this.setState({
+      fetchingManualUpdate: true
+    });
+
+    const customers = await fetchCustomers();
+    const products = await fetchProducts();
+    //Check for errors
+    if (customers.error === false && products.error === false) {
+      // Fetch OK
+      this.setState({
+        fetchingManualUpdate: false
+      });
+      this.props.store.set('updateError', false);
+      //Set updated to fetch SQLite
+      this.props.store.set('updated', new Date().toString());
+      //Once updated save the new DbData to AsyncStorage
+      const newDbData = await _getDbData('newDbData');
+      _saveDbData('currentDbData', newDbData);
+    } else {
+      this.setState({
+        fetchingManualUpdate: false
+      });
+    }
   };
 
   async componentDidMount() {
@@ -299,12 +327,14 @@ class HomeScreen extends React.Component {
       nextState.isModalVisible !== this.state.isModalVisible ||
       nextState.snackVisible !== this.state.snackVisible ||
       nextState.manualUpdate !== this.state.manualUpdate ||
-      nextState.fetchingManualUpdate !== this.state.fetchingManualUpdate
+      nextState.fetchingManualUpdate !== this.state.fetchingManualUpdate ||
+      nextProps.updateError !== this.props.updateError
     );
   }
 
   render() {
     const { loading, manualUpdate } = this.state;
+    const { updateError } = this.props;
 
     let content;
     if (loading) {
@@ -341,6 +371,27 @@ class HomeScreen extends React.Component {
       );
     }
 
+    let update;
+    if (manualUpdate) {
+      update = (
+        <ManualUpdate
+          loading={this.state.fetchingManualUpdate}
+          onPress={this._fetchPubNubHistory}
+          type="check"
+        />
+      );
+    } else {
+      if (updateError) {
+        update = (
+          <ManualUpdate
+            loading={this.state.fetchingManualUpdate}
+            onPress={this._fetchManualUpdate}
+            type="fetch"
+          />
+        );
+      }
+    }
+
     return (
       <View style={styles.container}>
         <Snackbar
@@ -362,12 +413,7 @@ class HomeScreen extends React.Component {
             {this.state.snackText}
           </Text>
         </Snackbar>
-        {manualUpdate && (
-          <ManualUpdate
-            loading={this.state.fetchingManualUpdate}
-            onPress={this._fetchPubNubHistory}
-          />
-        )}
+        {update}
         <ScrollView style={styles.container}>
           <SelectCustomer navigation={this.props.navigation} />
           <CategoryFilter onPress={this._filterCategory} />
@@ -421,7 +467,8 @@ export default withStore(HomeScreen, [
   'productsInCart',
   'searchProductsQuery',
   'userData',
-  'updated'
+  'updated',
+  'updateError'
 ]);
 
 HomeScreen.propTypes = {
@@ -429,5 +476,6 @@ HomeScreen.propTypes = {
   productsInCart: PropTypes.number,
   searchProductsQuery: PropTypes.array,
   userData: PropTypes.object,
-  updated: PropTypes.string
+  updated: PropTypes.string,
+  updateError: PropTypes.bool
 };

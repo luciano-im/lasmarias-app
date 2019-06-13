@@ -48,7 +48,7 @@ class UpdateInfoScreen extends React.Component {
           buttonDisabled: false,
           updateError: false
         });
-        //Set updated true
+        //Set updated to fetch SQLite in Home
         this.props.store.set('updated', new Date().toString());
         //Once updated save the new DbData to AsyncStorage
         const newDbData = this.props.navigation.getParam('newDbData');

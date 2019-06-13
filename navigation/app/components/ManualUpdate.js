@@ -8,7 +8,11 @@ import PropTypes from 'prop-types';
 
 export default class ManualUpdate extends React.Component {
   render() {
-    const { loading } = this.props;
+    const { loading, type } = this.props;
+    const typeText =
+      type === 'check'
+        ? 'la verificación de contenido nuevo'
+        : 'la conexión al servidor';
 
     return (
       <View style={styles.container}>
@@ -16,7 +20,7 @@ export default class ManualUpdate extends React.Component {
           <Text style={styles.textButton} onPress={() => this.props.onPress()}>
             Reintentar
           </Text>{' '}
-          la verificación de contenido nuevo
+          {typeText}
         </Text>
         {loading && (
           <ActivityIndicator
@@ -55,5 +59,6 @@ const styles = ScaledSheet.create({
 
 ManualUpdate.propTypes = {
   loading: PropTypes.bool,
-  onPress: PropTypes.func
+  onPress: PropTypes.func,
+  type: PropTypes.string
 };
