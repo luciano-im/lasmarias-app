@@ -24,6 +24,7 @@ import SelectCustomer from '../../components/SelectCustomer';
 import CategoryFilter from './components/CategoryFilter';
 import Product from './components/Product';
 import ProductDetailModal from './components/ProductDetailModal';
+import ManualUpdate from './components/ManualUpdate';
 import { pubnubConfig } from '../../PubnubConfig';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
@@ -39,7 +40,9 @@ class HomeScreen extends React.Component {
       loading: true,
       snackVisible: false,
       snackText: '',
-      categoryTitle: 'OFERTAS / DESTACADOS'
+      categoryTitle: 'OFERTAS / DESTACADOS',
+      manualUpdate: false,
+      fetchingManualUpdate: false
     };
 
     this.userType = this.props.userData.userType;
@@ -166,6 +169,51 @@ class HomeScreen extends React.Component {
     }
   };
 
+  _fetchPubNubHistory = () => {
+    Reactotron.log('1 - manualUpdate', this.state.manualUpdate);
+    if (this.state.manualUpdate === true) {
+      this.setState({
+        fetchingManualUpdate: true
+      });
+    }
+    this.pubnub.history(
+      {
+        channel: 'lasmarias',
+        reverse: false,
+        count: 1 // how many items to fetch
+      },
+      (status, response) => {
+        if (this.state.manualUpdate === true) {
+          this.setState({
+            fetchingManualUpdate: false
+          });
+        }
+        if (status.error === false) {
+          if (this.state.manualUpdate === true) {
+            this.setState({
+              manualUpdate: false
+            });
+          }
+          const msgs = response.messages;
+          // If there are messages
+          if (!this._isEmpty(msgs) && msgs.length > 0) {
+            this._updateData(msgs[0].entry);
+          } else {
+            this._updateData(null);
+          }
+        } else {
+          this._showSnack('Falló la verificación de contenido nuevo');
+          if (this.state.manualUpdate === false) {
+            this.setState({
+              manualUpdate: true
+            });
+          }
+          this._updateData(null);
+        }
+      }
+    );
+  };
+
   async componentDidMount() {
     if (this.userType === 'VEN') {
       // Subscribe to channel
@@ -190,24 +238,25 @@ class HomeScreen extends React.Component {
       // );
 
       //Get last message from history
-      this.pubnub.history(
-        {
-          channel: 'lasmarias',
-          reverse: false,
-          count: 1 // how many items to fetch
-        },
-        (status, response) => {
-          if (status.error === false) {
-            const msgs = response.messages;
-            // If there are messages
-            if (!this._isEmpty(msgs) && msgs.length > 0) {
-              this._updateData(msgs[0].entry);
-            } else {
-              this._updateData(null);
-            }
-          }
-        }
-      );
+      // this.pubnub.history(
+      //   {
+      //     channel: 'lasmarias',
+      //     reverse: false,
+      //     count: 1 // how many items to fetch
+      //   },
+      //   (status, response) => {
+      //     if (status.error === false) {
+      //       const msgs = response.messages;
+      //       // If there are messages
+      //       if (!this._isEmpty(msgs) && msgs.length > 0) {
+      //         this._updateData(msgs[0].entry);
+      //       } else {
+      //         this._updateData(null);
+      //       }
+      //     }
+      //   }
+      // );
+      this._fetchPubNubHistory();
 
       const pendingOrders = await _getPendingOrders();
       this.props.store.set(
@@ -266,12 +315,14 @@ class HomeScreen extends React.Component {
       nextProps.searchProductsQuery !== this.props.searchProductsQuery ||
       nextState.filteredProducts !== this.state.filteredProducts ||
       nextState.isModalVisible !== this.state.isModalVisible ||
-      nextState.snackVisible !== this.state.snackVisible
+      nextState.snackVisible !== this.state.snackVisible ||
+      nextState.manualUpdate !== this.state.manualUpdate ||
+      nextState.fetchingManualUpdate !== this.state.fetchingManualUpdate
     );
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, manualUpdate } = this.state;
 
     let content;
     if (loading) {
@@ -329,6 +380,16 @@ class HomeScreen extends React.Component {
             {this.state.snackText}
           </Text>
         </Snackbar>
+        {/* {manualUpdate && (
+          <ManualUpdate
+            loading={this.state.fetchingManualUpdate}
+            onPress={this._fetchPubNubHistory}
+          />
+        )} */}
+        <ManualUpdate
+          loading={this.state.fetchingManualUpdate}
+          onPress={this._fetchPubNubHistory}
+        />
         <ScrollView style={styles.container}>
           <SelectCustomer navigation={this.props.navigation} />
           <CategoryFilter onPress={this._filterCategory} />
