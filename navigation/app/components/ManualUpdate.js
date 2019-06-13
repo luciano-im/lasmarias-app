@@ -4,36 +4,56 @@ import { ActivityIndicator } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 export default class ManualUpdate extends React.Component {
   render() {
     const { loading } = this.props;
 
     return (
-      <View
-        style={{
-          borderBottomWidth: 2,
-          borderBottomColor: 'red',
-          flexDirection: 'row',
-          backgroundColor: '#FF5555'
-        }}
-      >
-        <Text style={{ color: 'white' }}>
-          <Text onPress={this.props.onPress}>Reintentar</Text> la verificación
-          de contenido nuevo.
+      <View style={styles.container}>
+        <Text style={styles.textStyles}>
+          <Text style={styles.textButton} onPress={() => this.props.onPress()}>
+            Reintentar
+          </Text>{' '}
+          la verificación de contenido nuevo
         </Text>
         {loading && (
-          <ActivityIndicator animating={true} size={moderateScale(22, 0.3)} />
+          <ActivityIndicator
+            animating={true}
+            color={'white'}
+            size={moderateScale(22, 0.3)}
+          />
         )}
         {!loading && (
           <MaterialIcons
             name="warning"
             color={'white'}
-            size={22}
-            style={{ alignSelf: 'flex-end' }}
+            size={moderateScale(22, 0.3)}
           />
         )}
       </View>
     );
   }
 }
+
+const styles = ScaledSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#FF5555',
+    paddingVertical: 4,
+    paddingHorizontal: 8
+  },
+  textStyles: {
+    color: 'white'
+  },
+  textButton: {
+    textDecorationLine: 'underline'
+  }
+});
+
+ManualUpdate.propTypes = {
+  loading: PropTypes.bool,
+  onPress: PropTypes.func
+};

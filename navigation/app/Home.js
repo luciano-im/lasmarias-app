@@ -380,16 +380,12 @@ class HomeScreen extends React.Component {
             {this.state.snackText}
           </Text>
         </Snackbar>
-        {/* {manualUpdate && (
+        {manualUpdate && (
           <ManualUpdate
             loading={this.state.fetchingManualUpdate}
             onPress={this._fetchPubNubHistory}
           />
-        )} */}
-        <ManualUpdate
-          loading={this.state.fetchingManualUpdate}
-          onPress={this._fetchPubNubHistory}
-        />
+        )}
         <ScrollView style={styles.container}>
           <SelectCustomer navigation={this.props.navigation} />
           <CategoryFilter onPress={this._filterCategory} />
