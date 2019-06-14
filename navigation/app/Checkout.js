@@ -35,14 +35,16 @@ class CheckoutScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: null,
+      products: [],
       delivery: null,
-      inputs: null,
+      inputs: {},
       subtotal: 0.0,
       snackVisible: false,
       snackText: '',
       confirmVisible: false,
       confirmDeleteVisible: false,
+      confirmRemoveProductVisible: false,
+      productToRemove: null,
       animating: false,
       firstStep: true,
       secondStep: false,
@@ -113,7 +115,13 @@ class CheckoutScreen extends React.Component {
     });
   };
 
-  _removeProduct = async product => {
+  _removeProduct = async () => {
+    this.setState({
+      confirmRemoveProductVisible: false
+    });
+
+    let product = this.state.productToRemove;
+
     const removeProduct = await _removeProductFromOrder(product.id);
     // Set productsinCart badge
     if (removeProduct.error === false) {
@@ -136,13 +144,27 @@ class CheckoutScreen extends React.Component {
       products = removeProduct.products;
     } else {
       subtotal = 0;
-      products = null;
+      products = [];
     }
 
     this.setState({
       products: products,
       inputs: { ...inputs },
-      subtotal: subtotal
+      subtotal: subtotal,
+      productToRemove: null
+    });
+  };
+
+  _cancelRemoveProduct = () => {
+    this.setState({
+      confirmRemoveProductVisible: false
+    });
+  };
+
+  _onRemoveProduct = product => {
+    this.setState({
+      confirmRemoveProductVisible: true,
+      productToRemove: product
     });
   };
 
@@ -297,6 +319,8 @@ class CheckoutScreen extends React.Component {
       nextState.snackVisible !== this.state.snackVisible ||
       nextState.confirmDeleteVisible !== this.state.confirmDeleteVisible ||
       nextState.confirmVisible !== this.state.confirmVisible ||
+      nextState.confirmRemoveProductVisible !==
+        this.state.confirmRemoveProductVisible ||
       nextState.firstStep !== this.state.firstStep ||
       nextState.secondStep !== this.state.secondStep ||
       nextState.errorStep !== this.state.errorStep
@@ -349,7 +373,7 @@ class CheckoutScreen extends React.Component {
                 products={this.state.products}
                 inputs={this.state.inputs}
                 onUpdateInput={this._updateInputText}
-                onRemoveProduct={this._removeProduct}
+                onRemoveProduct={this._onRemoveProduct}
               />
             </View>
             <View style={styles.addProductsButtonContainer}>
@@ -574,6 +598,27 @@ class CheckoutScreen extends React.Component {
                 <Text style={styles.dialogButton}>CANCELAR</Text>
               </Button>
               <Button onPress={this._cancelCheckout}>
+                <Text style={styles.dialogButton}>ACEPTAR</Text>
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+          <Dialog
+            visible={this.state.confirmRemoveProductVisible}
+            dismissable={false}
+            onDismiss={this._cancelRemoveProduct}
+            style={styles.dialog}
+          >
+            <Dialog.Title style={styles.dialogTitle}>ATENCION!</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph style={styles.paragraph}>
+                Esta por borrar un producto del pedido. ¿Está seguro?
+              </Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={this._cancelRemoveProduct}>
+                <Text style={styles.dialogButton}>CANCELAR</Text>
+              </Button>
+              <Button onPress={this._removeProduct}>
                 <Text style={styles.dialogButton}>ACEPTAR</Text>
               </Button>
             </Dialog.Actions>

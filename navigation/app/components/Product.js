@@ -33,8 +33,7 @@ export default class Product extends React.Component {
   async componentDidMount() {
     this._isMounted = true;
 
-    const { product_id } = this.props.item;
-    const images = await getProductImages(product_id);
+    const images = await getProductImages(this.props.productId);
     if (this._isMounted) {
       this.setState({
         images: images
@@ -47,6 +46,7 @@ export default class Product extends React.Component {
   }
 
   render() {
+    const productId = this.props.productId;
     const name = this.props.name;
     const brand = this.props.brand;
     const productLine = this.props.productLine;
@@ -90,6 +90,7 @@ export default class Product extends React.Component {
             {/* <Text style={styles.unit}>{unit}</Text> */}
             <Text style={styles.unit}>{packaging}</Text>
             <Text style={styles.category}>{productLine}</Text>
+            <Text style={styles.productId}>{productId}</Text>
           </View>
           <View style={styles.priceContainer}>
             <View style={styles.priceDetail}>
@@ -147,11 +148,15 @@ styles = ScaledSheet.create({
     fontSize: '16@ms0.3'
   },
   category: {
-    color: '#CCC',
+    color: '#AAA',
     fontSize: '14@ms0.3'
   },
   unit: {
-    color: '#CCC',
+    color: '#AAA',
+    fontSize: '14@ms0.3'
+  },
+  productId: {
+    color: '#AAA',
     fontSize: '14@ms0.3'
   },
   priceContainer: {
@@ -197,6 +202,7 @@ styles = ScaledSheet.create({
 });
 
 Product.propTypes = {
+  productId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   brand: PropTypes.string.isRequired,
   productLine: PropTypes.string.isRequired,

@@ -174,8 +174,8 @@ const styles = ScaledSheet.create({
 });
 
 CheckoutProductsTable.propTypes = {
-  products: PropTypes.array.isRequired,
-  inputs: PropTypes.array.isRequired,
+  products: PropTypes.array,
+  inputs: PropTypes.object.isRequired,
   onUpdateInput: PropTypes.func.isRequired,
   onRemoveProduct: PropTypes.func.isRequired
 };

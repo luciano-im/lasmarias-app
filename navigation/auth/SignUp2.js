@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Divider, Text, TextInput } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../helpers/styles';
 import { signUp } from '../../helpers/api';
@@ -28,6 +28,7 @@ export default class SignUp2Screen extends React.Component {
       addressText: '',
       cityText: '',
       zipText: '',
+      cuitText: '',
       errorText: null,
       loading: false
     };
@@ -72,7 +73,6 @@ export default class SignUp2Screen extends React.Component {
 
     await signUp(email, password, password2, this.state)
       .then(response => {
-        Reactotron.log(response);
         if (response.error === false) {
           this.setState({
             loading: false
@@ -142,12 +142,20 @@ export default class SignUp2Screen extends React.Component {
               value={this.state.lastNameText}
               onChangeText={text => this.setState({ lastNameText: text })}
             />
+            <Divider />
             <TextInput
               label="Nombre del Comercio"
               placeholder="Nombre del Comercio"
               style={styles.input}
               value={this.state.businessText}
               onChangeText={text => this.setState({ businessText: text })}
+            />
+            <TextInput
+              label="CUIT"
+              placeholder="CUIT"
+              style={styles.input}
+              value={this.state.cuitText}
+              onChangeText={text => this.setState({ cuitText: text })}
             />
             <TextInput
               label="Teléfono"

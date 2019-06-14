@@ -303,7 +303,8 @@ export let signUp = async (email, password, password2, relatedData) => {
     related_telephone: relatedData.telText,
     related_cel_phone: relatedData.celText,
     related_city: relatedData.cityText,
-    related_zip_code: relatedData.zipText
+    related_zip_code: relatedData.zipText,
+    related_cuit: relatedData.cuitText
   };
 
   return await axios
@@ -346,6 +347,9 @@ export let resetPassword = async email => {
     .post(API_URL + '/rest-auth/password/reset/', qs.stringify(data), config)
     .then(response => {
       Reactotron.log(response);
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
       if (response.status === 200) {
         return { error: false };
       }
@@ -389,6 +393,9 @@ export let changePassword = async (old, new1, new2) => {
     .post(API_URL + '/rest-auth/password/change/', qs.stringify(data), config)
     .then(response => {
       Reactotron.log(response);
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
       if (response.status === 200) {
         _removeToken();
         return { error: false };
@@ -423,6 +430,9 @@ export let getUser = async () => {
   return await axios
     .get(API_URL + '/rest-auth/user/', config)
     .then(response => {
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
       if (response.status === 200) {
         return { error: false, data: response.data };
       }
@@ -464,12 +474,16 @@ export let updateUser = async relatedData => {
     related_telephone: relatedData.telText,
     related_cel_phone: relatedData.celText,
     related_city: relatedData.cityText,
-    related_zip_code: relatedData.zipText
+    related_zip_code: relatedData.zipText,
+    related_cuit: relatedData.cuitText
   };
 
   return await axios
     .put(API_URL + '/rest-auth/user/', qs.stringify(data), config)
     .then(response => {
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
       if (response.status === 200) {
         return { error: false, data: response.data };
       }
