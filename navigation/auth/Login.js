@@ -8,10 +8,11 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text, TextInput, HelperText } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import Sentry from 'sentry-expo';
+import { loginValidator, validation } from '../../helpers/validation';
 import { theme } from '../../helpers/styles';
 import { login } from '../../helpers/api';
 import Logo from '../../components/Logo';
@@ -26,7 +27,9 @@ class LoginScreen extends React.Component {
       userText: '',
       passText: '',
       loginError: null,
-      loading: false
+      loading: false,
+      userError: '',
+      passError: ''
     };
   }
 
@@ -34,6 +37,24 @@ class LoginScreen extends React.Component {
     this.setState({
       passText: text
     });
+  };
+
+  _validateLogin = () => {
+    const emailError = validation('email', this.state.userText, loginValidator);
+    const passwordError = validation(
+      'password',
+      this.state.passText,
+      loginValidator
+    );
+
+    this.setState({
+      userError: emailError,
+      passError: passwordError
+    });
+
+    if (!emailError && !passwordError) {
+      this._login();
+    }
   };
 
   _login = async () => {
@@ -71,6 +92,9 @@ class LoginScreen extends React.Component {
   };
 
   render() {
+    const userError = this.state.userError ? true : false;
+    const passError = this.state.passError ? true : false;
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardAvoidContainer}
@@ -96,7 +120,20 @@ class LoginScreen extends React.Component {
               style={styles.input}
               value={this.state.userText}
               onChangeText={text => this.setState({ userText: text })}
+              onBlur={() => {
+                this.setState({
+                  userError: validation(
+                    'email',
+                    this.state.userText,
+                    loginValidator
+                  )
+                });
+              }}
+              error={userError}
             />
+            <HelperText type="error" visible={userError}>
+              {this.state.userError}
+            </HelperText>
             <InputPassword
               label="Contraseña"
               value={this.state.passText}
@@ -145,7 +182,8 @@ class LoginScreen extends React.Component {
               style={styles.loginButton}
               color={theme.ACCENT_COLOR}
               theme={{ roundness: 0 }}
-              onPress={() => this._login()}
+              // onPress={() => this._login()}
+              onPress={() => this._validateLogin()}
             >
               <Text
                 style={styles.loginButtonText}
