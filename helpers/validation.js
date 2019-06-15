@@ -15,13 +15,12 @@ export const loginValidator = {
     },
     length: {
       minimum: 8,
-      message: 'Su contraseña debe contener al menos 8 caracteres'
+      message: 'Debe contener al menos 8 caracteres'
     },
     format: {
       pattern: '[a-z0-9!@#$%^&]+',
       flags: 'i',
-      message:
-        'La contraseña puede contener solo letras, numeros y simbolos (!@#$%^&)'
+      message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   }
 };
@@ -41,13 +40,12 @@ export const registerValidator = {
     },
     length: {
       minimum: 8,
-      message: 'Su contraseña debe contener al menos 8 caracteres'
+      message: 'Debe contener al menos 8 caracteres'
     },
     format: {
       pattern: '[a-z0-9!@#$%^&]+',
       flags: 'i',
-      message:
-        'La contraseña puede contener solo letras, numeros y simbolos (!@#$%^&)'
+      message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   },
   password2: {
@@ -56,13 +54,12 @@ export const registerValidator = {
     },
     length: {
       minimum: 8,
-      message: 'Su contraseña debe contener al menos 8 caracteres'
+      message: 'Debe contener al menos 8 caracteres'
     },
     format: {
       pattern: '[a-z0-9!@#$%^&]+',
       flags: 'i',
-      message:
-        'La contraseña puede contener solo letras, numeros y simbolos (!@#$%^&)'
+      message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   },
   related_name: {
@@ -71,7 +68,7 @@ export const registerValidator = {
     },
     length: {
       maximum: 120,
-      message: 'No puede superar los 120 caracteres de longitud'
+      message: 'No puede superar los 120 caracteres'
     },
     format: {
       pattern: '[a-z]+',
@@ -85,7 +82,7 @@ export const registerValidator = {
     },
     length: {
       maximum: 120,
-      message: 'No puede superar los 120 caracteres de longitud'
+      message: 'No puede superar los 120 caracteres'
     },
     format: {
       pattern: '[a-z]+',
@@ -99,12 +96,12 @@ export const registerValidator = {
     },
     length: {
       maximum: 150,
-      message: 'No puede superar los 150 caracteres de longitud'
+      message: 'No puede superar los 150 caracteres'
     },
     format: {
       pattern: '[a-z0-9!@#$%^&]+',
       flags: 'i',
-      message: 'Puede contener solo letras, numeros y simbolos (!@#$%^&)'
+      message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   },
   related_customer_address: {
@@ -113,18 +110,18 @@ export const registerValidator = {
     },
     length: {
       maximum: 150,
-      message: 'No puede superar los 150 caracteres de longitud'
+      message: 'No puede superar los 150 caracteres'
     },
     format: {
       pattern: '[a-z0-9!@#$%^&]+',
       flags: 'i',
-      message: 'Puede contener solo letras, numeros y simbolos (!@#$%^&)'
+      message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   },
   related_telephone: {
     length: {
       maximum: 15,
-      message: 'No puede superar los 15 caracteres de longitud'
+      message: 'No puede superar los 15 caracteres'
     },
     format: {
       pattern: '[0-9]+',
@@ -138,7 +135,7 @@ export const registerValidator = {
     },
     length: {
       maximum: 15,
-      message: 'No puede superar los 15 caracteres de longitud'
+      message: 'No puede superar los 15 caracteres'
     },
     format: {
       pattern: '[0-9]+',
@@ -151,7 +148,7 @@ export const registerValidator = {
     },
     length: {
       maximum: 80,
-      message: 'No puede superar los 80 caracteres de longitud'
+      message: 'No puede superar los 80 caracteres'
     },
     format: {
       pattern: '[a-z0-9]+',
@@ -165,7 +162,7 @@ export const registerValidator = {
     },
     length: {
       maximum: 15,
-      message: 'No puede superar los 15 caracteres de longitud'
+      message: 'No puede superar los 15 caracteres'
     },
     format: {
       pattern: '[a-z0-9]+',
@@ -179,7 +176,7 @@ export const registerValidator = {
     },
     length: {
       maximum: 11,
-      message: 'No puede superar los 11 caracteres de longitud'
+      message: 'No puede superar los 11 caracteres'
     },
     format: {
       pattern: '[0-9]+',

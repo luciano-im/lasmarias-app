@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { Button, Text, TextInput, HelperText } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import Sentry from 'sentry-expo';
@@ -16,6 +16,7 @@ import { loginValidator, validation } from '../../helpers/validation';
 import { theme } from '../../helpers/styles';
 import { login } from '../../helpers/api';
 import Logo from '../../components/Logo';
+import InputText from '../../components/InputText';
 import InputPassword from '../../components/InputPassword';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
@@ -36,6 +37,24 @@ class LoginScreen extends React.Component {
   _onChangePassword = text => {
     this.setState({
       passText: text
+    });
+  };
+
+  _onBlurPassword = () => {
+    this.setState({
+      passError: validation('password', this.state.passText, loginValidator)
+    });
+  };
+
+  _onChangeUser = text => {
+    this.setState({
+      userText: text
+    });
+  };
+
+  _onBlurUser = () => {
+    this.setState({
+      userError: validation('email', this.state.userText, loginValidator)
     });
   };
 
@@ -92,8 +111,10 @@ class LoginScreen extends React.Component {
   };
 
   render() {
-    const userError = this.state.userError ? true : false;
-    const passError = this.state.passError ? true : false;
+    const { userText, passText } = this.state;
+    const { userError, passError } = this.state;
+    const userIsError = userError ? true : false;
+    const passIsError = passError ? true : false;
 
     return (
       <KeyboardAvoidingView
@@ -111,34 +132,29 @@ class LoginScreen extends React.Component {
             <Text style={styles.title}>INGRESÁ</Text>
           </View>
           <View style={styles.inputContainer}>
-            <TextInput
+            <InputText
               label="Usuario"
               placeholder="Correo"
+              style={styles.input}
+              value={userText}
+              onChangeText={this._onChangeUser}
+              onBlur={this._onBlurUser}
+              error={userIsError}
+              errorText={userError}
               autoCapitalize="none"
               autoComplete="email"
               keyboardType="email-address"
-              style={styles.input}
-              value={this.state.userText}
-              onChangeText={text => this.setState({ userText: text })}
-              onBlur={() => {
-                this.setState({
-                  userError: validation(
-                    'email',
-                    this.state.userText,
-                    loginValidator
-                  )
-                });
-              }}
-              error={userError}
             />
-            <HelperText type="error" visible={userError}>
-              {this.state.userError}
-            </HelperText>
             <InputPassword
               label="Contraseña"
-              value={this.state.passText}
-              onChangeText={this._onChangePassword}
+              placeholder="Contraseña"
               styles={styles.input}
+              value={passText}
+              onChangeText={this._onChangePassword}
+              onBlur={this._onBlurPassword}
+              error={passIsError}
+              errorText={passError}
+              autoCapitalize="none"
             />
             <View>
               <ActivityIndicator
