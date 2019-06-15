@@ -34,7 +34,7 @@ export const registerValidator = {
       message: 'Ingrese una dirección de email válida'
     }
   },
-  password1: {
+  password: {
     presence: {
       message: 'Ingrese una contraseña'
     },
@@ -48,21 +48,7 @@ export const registerValidator = {
       message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   },
-  password2: {
-    presence: {
-      message: 'Ingrese una contraseña'
-    },
-    length: {
-      minimum: 8,
-      message: 'Debe contener al menos 8 caracteres'
-    },
-    format: {
-      pattern: '[a-z0-9!@#$%^&]+',
-      flags: 'i',
-      message: 'Solo letras, numeros y simbolos (!@#$%^&)'
-    }
-  },
-  related_name: {
+  name: {
     presence: {
       message: 'Este campo es obligatorio'
     },
@@ -76,7 +62,7 @@ export const registerValidator = {
       message: 'Debe contener solo letras'
     }
   },
-  related_last_name: {
+  lastName: {
     presence: {
       message: 'Este campo es obligatorio'
     },
@@ -90,7 +76,7 @@ export const registerValidator = {
       message: 'Debe contener solo letras'
     }
   },
-  related_customer_name: {
+  customerName: {
     presence: {
       message: 'Este campo es obligatorio'
     },
@@ -104,7 +90,7 @@ export const registerValidator = {
       message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   },
-  related_customer_address: {
+  customerAddress: {
     presence: {
       message: 'Este campo es obligatorio'
     },
@@ -118,7 +104,7 @@ export const registerValidator = {
       message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
   },
-  related_telephone: {
+  telephone: {
     length: {
       maximum: 15,
       message: 'No puede superar los 15 caracteres'
@@ -129,7 +115,7 @@ export const registerValidator = {
       message: 'Puede contener solo numeros'
     }
   },
-  related_cel_phone: {
+  celPhone: {
     presence: {
       message: 'Este campo es obligatorio'
     },
@@ -142,7 +128,7 @@ export const registerValidator = {
       message: 'Puede contener solo numeros'
     }
   },
-  related_city: {
+  city: {
     presence: {
       message: 'Este campo es obligatorio'
     },
@@ -156,7 +142,7 @@ export const registerValidator = {
       message: 'Puede contener solo letras y numeros'
     }
   },
-  related_zip_code: {
+  zipCode: {
     presence: {
       message: 'Este campo es obligatorio'
     },
@@ -170,7 +156,7 @@ export const registerValidator = {
       message: 'Puede contener solo letras y numeros'
     }
   },
-  related_cuit: {
+  cuit: {
     presence: {
       message: 'Este campo es obligatorio'
     },
