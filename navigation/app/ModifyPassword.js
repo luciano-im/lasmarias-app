@@ -9,6 +9,7 @@ import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NavigationEvents } from 'react-navigation';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
+import { loginValidator, validation } from '../../helpers/validation';
 import { getUser, changePassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import InputPassword from '../../components/InputPassword';
@@ -22,7 +23,10 @@ export default class ModifyPasswordScreen extends React.Component {
       newPass2: '',
       errorText: null,
       updating: false,
-      user: null
+      user: null,
+      passError: '',
+      newPass1Error: '',
+      newPass2Error: ''
     };
   }
 
@@ -32,9 +36,21 @@ export default class ModifyPasswordScreen extends React.Component {
     });
   };
 
+  _onBlurCurrentPassword = () => {
+    this.setState({
+      passError: validation('password', this.state.passText, loginValidator)
+    });
+  };
+
   _onChangeNewPassword1 = text => {
     this.setState({
       newPass1: text
+    });
+  };
+
+  _onBlurNewPassword1 = () => {
+    this.setState({
+      newPass1Error: validation('password', this.state.newPass1, loginValidator)
     });
   };
 
@@ -42,6 +58,46 @@ export default class ModifyPasswordScreen extends React.Component {
     this.setState({
       newPass2: text
     });
+  };
+
+  _onBlurNewPassword2 = () => {
+    this.setState({
+      newPass2Error: validation('password', this.state.newPass2, loginValidator)
+    });
+  };
+
+  _validateChangePassword = () => {
+    const passError = validation(
+      'password',
+      this.state.passText,
+      loginValidator
+    );
+    const newPass1Error = validation(
+      'password',
+      this.state.newPass1,
+      loginValidator
+    );
+    const newPass2Error = validation(
+      'password',
+      this.state.newPass2,
+      loginValidator
+    );
+
+    this.setState({
+      passError: passError,
+      newPass1Error: newPass1Error,
+      newPass2Error: newPass2Error
+    });
+
+    if (!passError && !newPass1Error && !newPass2Error) {
+      if (this.state.newPass1 !== this.state.newPass2) {
+        this.setState({
+          newPass2Error: 'Las contraseñas no coinciden'
+        });
+      } else {
+        this._changePassword();
+      }
+    }
   };
 
   _changePassword = async () => {
@@ -74,13 +130,21 @@ export default class ModifyPasswordScreen extends React.Component {
     if (user.error === false) {
       const data = user.data;
       this.setState({
-        user: data.related_name + ' ' + data.related_last_name
+        user: data.related_name + ' ' + data.related_last_name,
+        passError: '',
+        newPass1Error: '',
+        newPass2Error: ''
       });
     }
   }
 
   render() {
     const { user } = this.state;
+    const { passText, newPass1, newPass2 } = this.state;
+    const { passError, newPass1Error, newPass2Error } = this.state;
+    const passIsError = passError ? true : false;
+    const newPass1IsError = newPass1Error ? true : false;
+    const newPass2IsError = newPass2Error ? true : false;
 
     return (
       <KeyboardAvoidingView
@@ -121,21 +185,36 @@ export default class ModifyPasswordScreen extends React.Component {
           <View style={styles.inputContainer}>
             <InputPassword
               label="Ingresá la Contraseña actual"
-              value={this.state.passText}
-              onChangeText={this._onChangeCurrentPassword}
+              placeholder="Contraseña"
               styles={styles.input}
+              value={passText}
+              onChangeText={this._onChangeCurrentPassword}
+              onBlur={this._onBlurCurrentPassword}
+              error={passIsError}
+              errorText={passError}
+              autoCapitalize="none"
             />
             <InputPassword
               label="Nueva Contraseña"
-              value={this.state.newPass1}
-              onChangeText={this._onChangeNewPassword1}
+              placeholder="Contraseña"
               styles={styles.input}
+              value={newPass1}
+              onChangeText={this._onChangeNewPassword1}
+              onBlur={this._onBlurNewPassword1}
+              error={newPass1IsError}
+              errorText={newPass1Error}
+              autoCapitalize="none"
             />
             <InputPassword
               label="Repetir Nueva Contraseña"
-              value={this.state.newPass2}
-              onChangeText={this._onChangeNewPassword2}
+              placeholder="Contraseña"
               styles={styles.input}
+              value={newPass2}
+              onChangeText={this._onChangeNewPassword2}
+              onBlur={this._onBlurNewPassword2}
+              error={newPass2IsError}
+              errorText={newPass2Error}
+              autoCapitalize="none"
             />
             {this.state.errorText ? (
               <Text style={styles.error}>{this.state.errorText}</Text>
@@ -161,7 +240,7 @@ export default class ModifyPasswordScreen extends React.Component {
               style={styles.saveButton}
               color={theme.ACCENT_COLOR}
               theme={{ roundness: 0 }}
-              onPress={() => this._changePassword()}
+              onPress={() => this._validateChangePassword()}
             >
               <Text
                 style={styles.saveButtonText}

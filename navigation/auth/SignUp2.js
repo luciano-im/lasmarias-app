@@ -190,8 +190,78 @@ export default class SignUp2Screen extends React.Component {
     }
   };
 
-  validateSignUp = () => {
-    //TODO Validate
+  _validateSignUp = () => {
+    const nameError = validation(
+      'name',
+      this.state.nameText,
+      registerValidator
+    );
+    const lastNameError = validation(
+      'lastName',
+      this.state.lastNameText,
+      registerValidator
+    );
+    const businessError = validation(
+      'customerName',
+      this.state.businessText,
+      registerValidator
+    );
+    const telError = validation(
+      'telephone',
+      this.state.telText,
+      registerValidator
+    );
+    const celError = validation(
+      'celPhone',
+      this.state.celText,
+      registerValidator
+    );
+    const addressError = validation(
+      'customerAddress',
+      this.state.addressText,
+      registerValidator
+    );
+    const cityError = validation(
+      'city',
+      this.state.cityText,
+      registerValidator
+    );
+    const zipError = validation(
+      'zipCode',
+      this.state.zipText,
+      registerValidator
+    );
+    const cuitError = validation(
+      'cuit',
+      this.state.cuitText,
+      registerValidator
+    );
+
+    this.setState({
+      nameError: nameError,
+      lastNameError: lastNameError,
+      businessError: businessError,
+      telError: telError,
+      celError: celError,
+      addressError: addressError,
+      cityError: cityError,
+      zipError: zipError,
+      cuitError: cuitError
+    });
+
+    if (
+      !nameError &&
+      !lastNameError &&
+      !businessError &&
+      !telError &&
+      !celError &&
+      !addressError &&
+      !cityError &&
+      !zipError &&
+      !cuitError
+    ) {
+      this._signUp();
+    }
   };
 
   _signUp = async () => {
@@ -413,7 +483,7 @@ export default class SignUp2Screen extends React.Component {
               style={styles.nextButton}
               color={theme.ACCENT_COLOR}
               theme={{ roundness: 0 }}
-              onPress={() => this._signUp()}
+              onPress={() => this._validateSignUp()}
             >
               <Text
                 style={styles.nextButtonText}
