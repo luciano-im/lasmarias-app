@@ -8,9 +8,11 @@ import {
 } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
+import { registerValidator, validation } from '../../helpers/validation';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
 import InputPassword from '../../components/InputPassword';
+import InputText from '../../components/InputText';
 
 export default class SignUpScreen extends React.Component {
   constructor(props) {
@@ -19,7 +21,10 @@ export default class SignUpScreen extends React.Component {
       userText: '',
       passText: '',
       passText2: '',
-      errorText: null
+      errorText: null,
+      userError: '',
+      passError: '',
+      passError2: ''
     };
   }
 
@@ -29,40 +34,88 @@ export default class SignUpScreen extends React.Component {
     });
   };
 
+  _onBlurPassword = () => {
+    this.setState({
+      passError: validation('password', this.state.passText, registerValidator)
+    });
+  };
+
   _onChangePassword2 = text => {
     this.setState({
       passText2: text
     });
   };
 
-  _navigateSignUp2 = () => {
-    if (
-      this.state.userText === '' ||
-      this.state.passText === '' ||
-      this.state.passText2 === ''
-    ) {
-      this.setState({
-        errorText: 'Debe completar Correo y Contraseña'
-      });
-    } else {
+  _onBlurPassword2 = () => {
+    this.setState({
+      passError2: validation('password', this.state.passText, registerValidator)
+    });
+  };
+
+  _onChangeUser = text => {
+    this.setState({
+      userText: text
+    });
+  };
+
+  _onBlurUser = () => {
+    this.setState({
+      userError: validation('email', this.state.userText, registerValidator)
+    });
+  };
+
+  _validateNavigateSignUp2 = () => {
+    const emailError = validation(
+      'email',
+      this.state.userText,
+      registerValidator
+    );
+    const passwordError = validation(
+      'password',
+      this.state.passText,
+      registerValidator
+    );
+    const password2Error = validation(
+      'password',
+      this.state.passText2,
+      registerValidator
+    );
+
+    this.setState({
+      userError: emailError,
+      passError: passwordError,
+      passError2: password2Error
+    });
+
+    if (!emailError && !passwordError && !password2Error) {
       if (this.state.passText !== this.state.passText2) {
         this.setState({
-          errorText: 'Las contraseñas no coinciden'
+          passError2: 'Las contraseñas no coinciden'
         });
       } else {
-        this.setState({
-          errorText: null
-        });
-        this.props.navigation.navigate('SignUp2', {
-          email: this.state.userText,
-          password: this.state.passText,
-          password2: this.state.passText2
-        });
+        this._navigateSignUp2();
       }
     }
   };
 
+  _navigateSignUp2 = () => {
+    this.setState({
+      errorText: null
+    });
+    this.props.navigation.navigate('SignUp2', {
+      email: this.state.userText,
+      password: this.state.passText,
+      password2: this.state.passText2
+    });
+  };
+
   render() {
+    const { userText, passText, passText2 } = this.state;
+    const { userError, passError, passError2 } = this.state;
+    const userIsError = userError ? true : false;
+    const passIsError = passError ? true : false;
+    const pass2IsError = passError2 ? true : false;
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardAvoidContainer}
@@ -79,27 +132,40 @@ export default class SignUpScreen extends React.Component {
             <Text style={styles.title}>REGISTRATE</Text>
           </View>
           <View style={styles.inputContainer}>
-            <TextInput
+            <InputText
               label="Ingresá tu Correo:"
               placeholder="Correo"
-              autoCapitalize={'none'}
+              style={styles.input}
+              value={userText}
+              onChangeText={this._onChangeUser}
+              onBlur={this._onBlurUser}
+              error={userIsError}
+              errorText={userError}
+              autoCapitalize="none"
               autoComplete="email"
               keyboardType="email-address"
-              style={styles.input}
-              value={this.state.userText}
-              onChangeText={text => this.setState({ userText: text })}
             />
             <InputPassword
               label="Ingresá tu Contraseña:"
-              value={this.state.passText}
-              onChangeText={this._onChangePassword}
+              placeholder="Contraseña"
               styles={styles.input}
+              value={passText}
+              onChangeText={this._onChangePassword}
+              onBlur={this._onBlurPassword}
+              error={passIsError}
+              errorText={passError}
+              autoCapitalize="none"
             />
             <InputPassword
               label="Repetir Contraseña:"
-              value={this.state.passText2}
-              onChangeText={this._onChangePassword2}
+              placeholder="Contraseña"
               styles={styles.input}
+              value={passText2}
+              onChangeText={this._onChangePassword2}
+              onBlur={this._onBlurPassword2}
+              error={pass2IsError}
+              errorText={passError2}
+              autoCapitalize="none"
             />
             {this.state.errorText ? (
               <Text style={styles.error}>{this.state.errorText}</Text>
@@ -116,7 +182,7 @@ export default class SignUpScreen extends React.Component {
             style={styles.nextButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this._navigateSignUp2()}
+            onPress={() => this._validateNavigateSignUp2()}
           >
             <Text
               style={styles.nextButtonText}

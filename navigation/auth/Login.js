@@ -8,13 +8,15 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
 import Sentry from 'sentry-expo';
+import { loginValidator, validation } from '../../helpers/validation';
 import { theme } from '../../helpers/styles';
 import { login } from '../../helpers/api';
 import Logo from '../../components/Logo';
+import InputText from '../../components/InputText';
 import InputPassword from '../../components/InputPassword';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
@@ -26,7 +28,9 @@ class LoginScreen extends React.Component {
       userText: '',
       passText: '',
       loginError: null,
-      loading: false
+      loading: false,
+      userError: '',
+      passError: ''
     };
   }
 
@@ -34,6 +38,42 @@ class LoginScreen extends React.Component {
     this.setState({
       passText: text
     });
+  };
+
+  _onBlurPassword = () => {
+    this.setState({
+      passError: validation('password', this.state.passText, loginValidator)
+    });
+  };
+
+  _onChangeUser = text => {
+    this.setState({
+      userText: text
+    });
+  };
+
+  _onBlurUser = () => {
+    this.setState({
+      userError: validation('email', this.state.userText, loginValidator)
+    });
+  };
+
+  _validateLogin = () => {
+    const emailError = validation('email', this.state.userText, loginValidator);
+    const passwordError = validation(
+      'password',
+      this.state.passText,
+      loginValidator
+    );
+
+    this.setState({
+      userError: emailError,
+      passError: passwordError
+    });
+
+    if (!emailError && !passwordError) {
+      this._login();
+    }
   };
 
   _login = async () => {
@@ -71,6 +111,11 @@ class LoginScreen extends React.Component {
   };
 
   render() {
+    const { userText, passText } = this.state;
+    const { userError, passError } = this.state;
+    const userIsError = userError ? true : false;
+    const passIsError = passError ? true : false;
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardAvoidContainer}
@@ -87,21 +132,29 @@ class LoginScreen extends React.Component {
             <Text style={styles.title}>INGRESÁ</Text>
           </View>
           <View style={styles.inputContainer}>
-            <TextInput
+            <InputText
               label="Usuario"
               placeholder="Correo"
+              style={styles.input}
+              value={userText}
+              onChangeText={this._onChangeUser}
+              onBlur={this._onBlurUser}
+              error={userIsError}
+              errorText={userError}
               autoCapitalize="none"
               autoComplete="email"
               keyboardType="email-address"
-              style={styles.input}
-              value={this.state.userText}
-              onChangeText={text => this.setState({ userText: text })}
             />
             <InputPassword
               label="Contraseña"
-              value={this.state.passText}
-              onChangeText={this._onChangePassword}
+              placeholder="Contraseña"
               styles={styles.input}
+              value={passText}
+              onChangeText={this._onChangePassword}
+              onBlur={this._onBlurPassword}
+              error={passIsError}
+              errorText={passError}
+              autoCapitalize="none"
             />
             <View>
               <ActivityIndicator
@@ -145,7 +198,8 @@ class LoginScreen extends React.Component {
               style={styles.loginButton}
               color={theme.ACCENT_COLOR}
               theme={{ roundness: 0 }}
-              onPress={() => this._login()}
+              // onPress={() => this._login()}
+              onPress={() => this._validateLogin()}
             >
               <Text
                 style={styles.loginButtonText}

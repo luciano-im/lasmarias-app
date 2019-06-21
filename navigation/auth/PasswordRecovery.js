@@ -7,11 +7,13 @@ import {
   View,
   ScrollView
 } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
+import { loginValidator, validation } from '../../helpers/validation';
 import { resetPassword } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Logo from '../../components/Logo';
+import InputText from '../../components/InputText';
 import Reactotron from 'reactotron-react-native';
 
 export default class PasswordRecoveryScreen extends React.Component {
@@ -20,14 +22,33 @@ export default class PasswordRecoveryScreen extends React.Component {
     this.state = {
       userText: '',
       errorText: null,
-      loading: false
+      loading: false,
+      userError: ''
     };
   }
 
-  _onChangePassword = text => {
+  _onChangeUser = text => {
     this.setState({
-      passText: text
+      userText: text
     });
+  };
+
+  _onBlurUser = () => {
+    this.setState({
+      userError: validation('email', this.state.userText, loginValidator)
+    });
+  };
+
+  _validateReset = () => {
+    const emailError = validation('email', this.state.userText, loginValidator);
+
+    this.setState({
+      userError: emailError
+    });
+
+    if (!emailError) {
+      this._resetPassword();
+    }
   };
 
   _resetPassword = async () => {
@@ -59,6 +80,10 @@ export default class PasswordRecoveryScreen extends React.Component {
   };
 
   render() {
+    const { userText } = this.state;
+    const { userError } = this.state;
+    const userIsError = userError ? true : false;
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardAvoidContainer}
@@ -75,15 +100,18 @@ export default class PasswordRecoveryScreen extends React.Component {
             <Text style={styles.title}>RECUPERAR CONTRASEÑA</Text>
           </View>
           <View style={styles.inputContainer}>
-            <TextInput
+            <InputText
               label="Ingresá el correo registrado:"
               placeholder="Correo"
-              autoCapitalize={'none'}
+              style={styles.input}
+              value={userText}
+              onChangeText={this._onChangeUser}
+              onBlur={this._onBlurUser}
+              error={userIsError}
+              errorText={userError}
+              autoCapitalize="none"
               autoComplete="email"
               keyboardType="email-address"
-              style={styles.input}
-              value={this.state.userText}
-              onChangeText={text => this.setState({ userText: text })}
             />
             <View>
               <ActivityIndicator
@@ -107,7 +135,7 @@ export default class PasswordRecoveryScreen extends React.Component {
             style={styles.dataButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this._resetPassword()}
+            onPress={() => this._validateReset()}
           >
             <Text
               style={styles.dataButtonText}
