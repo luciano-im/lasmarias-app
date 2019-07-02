@@ -13,7 +13,7 @@ import Reactotron from 'reactotron-react-native';
 YellowBox.ignoreWarnings(['Setting a timer']);
 
 // Remove this once Sentry is correctly setup.
-Sentry.enableInExpoDevelopment = true;
+// Sentry.enableInExpoDevelopment = true;
 Sentry.config(
   'https://c008fab7632245fb8cd70f356e12826a@sentry.io/1462611'
 ).install();
