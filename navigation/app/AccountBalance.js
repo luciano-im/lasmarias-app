@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { ActivityIndicator, Button, Text } from 'react-native-paper';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
@@ -8,6 +8,7 @@ import { fetchAccountBalance } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import AccountBalanceTable from './components/AccountBalanceTable';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class AccountBalanceScreen extends React.Component {
   constructor(props) {
@@ -121,8 +122,9 @@ class AccountBalanceScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <SelectCustomer navigation={this.props.navigation} />
-        {/* <View style={styles.customer}>
+        <ScrollView>
+          <SelectCustomer navigation={this.props.navigation} />
+          {/* <View style={styles.customer}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialIcons name="person" size={25} color="white" />
             <Text style={{ color: 'white', marginLeft: 15, fontSize: 16 }}>
@@ -133,10 +135,11 @@ class AccountBalanceScreen extends React.Component {
             <MaterialIcons name="monetization-on" size={25} color="white" />
           </View>
         </View> */}
-        <View style={styles.title}>
-          <Text style={styles.titleText}>ESTADO DE CUENTA</Text>
-        </View>
-        {content}
+          <View style={styles.title}>
+            <Text style={styles.titleText}>ESTADO DE CUENTA</Text>
+          </View>
+          {content}
+        </ScrollView>
         <View style={styles.backButtonContainer}>
           <Button
             mode="contained"
@@ -210,9 +213,10 @@ const styles = ScaledSheet.create({
     textAlign: 'center'
   },
   backButtonContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end'
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    marginTop: '30@ms0.3'
   },
   backButton: {
     alignSelf: 'stretch',
@@ -225,3 +229,8 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(AccountBalanceScreen, ['id', 'name']);
+
+AccountBalanceScreen.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string
+};

@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { Divider, List, Modal, Portal, Text } from 'react-native-paper';
 import { ScaledSheet } from 'react-native-size-matters';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 export default class SelectCity extends React.Component {
   _hideModal = () => {
@@ -83,3 +84,11 @@ const styles = ScaledSheet.create({
     textAlign: 'center'
   }
 });
+
+SelectCity.propTypes = {
+  title: PropTypes.string.isRequired,
+  cities: PropTypes.array.isRequired,
+  visible: PropTypes.bool.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired
+};

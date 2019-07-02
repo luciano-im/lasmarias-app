@@ -5,6 +5,7 @@ import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import CategoryButton from './CategoryButton';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 const categoryData = [
   {
@@ -116,3 +117,7 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-around'
   }
 });
+
+CategoryFilter.propTypes = {
+  onPress: PropTypes.func.isRequired
+};

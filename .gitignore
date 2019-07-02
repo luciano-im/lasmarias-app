@@ -8,3 +8,4 @@ npm-debug.*
 .DS_Store
 pubnubConfig.js
 .env
+.vscode

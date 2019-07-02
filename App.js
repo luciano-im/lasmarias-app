@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, YellowBox } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { createStore } from '@spyna/react-store';
+import Sentry from 'sentry-expo';
 import { Navigation } from './navigation/Navigation';
 import NavigationService from './navigation/NavigationService';
 import { theme } from './helpers/styles';
@@ -10,6 +11,12 @@ import './ReactotronConfig';
 import Reactotron from 'reactotron-react-native';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
+
+// Remove this once Sentry is correctly setup.
+// Sentry.enableInExpoDevelopment = true;
+Sentry.config(
+  'https://c008fab7632245fb8cd70f356e12826a@sentry.io/1462611'
+).install();
 
 const customTheme = {
   ...DefaultTheme,
@@ -27,6 +34,7 @@ const initialValue = {
   name: null,
   productsInCart: null,
   updated: null,
+  updateError: false,
   userData: {
     userType: null,
     userName: null,

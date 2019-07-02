@@ -5,12 +5,14 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { ActivityIndicator, Button, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { NavigationEvents } from 'react-navigation';
+import { registerValidator, validation } from '../../helpers/validation';
 import { getUser, updateUser } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
+import InputText from '../../components/InputText';
 import Reactotron from 'reactotron-react-native';
 
 export default class ModifyDataScreen extends React.Component {
@@ -25,11 +27,215 @@ export default class ModifyDataScreen extends React.Component {
       addressText: '',
       cityText: '',
       zipText: '',
+      cuitText: '',
       loading: true,
       updating: false,
-      errorText: null
+      errorText: null,
+      nameError: '',
+      lastNameError: '',
+      businessError: '',
+      telError: '',
+      celError: '',
+      addressError: '',
+      cityError: '',
+      zipError: '',
+      cuitError: ''
     };
   }
+
+  _onChangeName = text => {
+    this.setState({
+      nameText: text
+    });
+  };
+
+  _onBlurName = () => {
+    this.setState({
+      nameError: validation('name', this.state.nameText, registerValidator)
+    });
+  };
+
+  _onChangeLastName = text => {
+    this.setState({
+      lastNameText: text
+    });
+  };
+
+  _onBlurLastName = () => {
+    this.setState({
+      lastNameError: validation(
+        'lastName',
+        this.state.lastNameText,
+        registerValidator
+      )
+    });
+  };
+
+  _onChangeBusiness = text => {
+    this.setState({
+      businessText: text
+    });
+  };
+
+  _onBlurBusiness = () => {
+    this.setState({
+      businessError: validation(
+        'customerName',
+        this.state.businessText,
+        registerValidator
+      )
+    });
+  };
+
+  _onChangeTel = text => {
+    this.setState({
+      telText: text
+    });
+  };
+
+  _onBlurTel = () => {
+    this.setState({
+      telError: validation('telephone', this.state.telText, registerValidator)
+    });
+  };
+
+  _onChangeCel = text => {
+    this.setState({
+      celText: text
+    });
+  };
+
+  _onBlurCel = () => {
+    this.setState({
+      celError: validation('celPhone', this.state.celText, registerValidator)
+    });
+  };
+
+  _onChangeAddress = text => {
+    this.setState({
+      addressText: text
+    });
+  };
+
+  _onBlurAddress = () => {
+    this.setState({
+      addressError: validation(
+        'customerAddress',
+        this.state.addressText,
+        registerValidator
+      )
+    });
+  };
+
+  _onChangeCity = text => {
+    this.setState({
+      cityText: text
+    });
+  };
+
+  _onBlurCity = () => {
+    this.setState({
+      cityError: validation('city', this.state.cityText, registerValidator)
+    });
+  };
+
+  _onChangeZip = text => {
+    this.setState({
+      zipText: text
+    });
+  };
+
+  _onBlurZip = () => {
+    this.setState({
+      zipError: validation('zipCode', this.state.zipText, registerValidator)
+    });
+  };
+
+  _onChangeCuit = text => {
+    this.setState({
+      cuitText: text
+    });
+  };
+
+  _onBlurCuit = () => {
+    this.setState({
+      cuitError: validation('cuit', this.state.cuitText, registerValidator)
+    });
+  };
+
+  _validateUpdateUser = () => {
+    const nameError = validation(
+      'name',
+      this.state.nameText,
+      registerValidator
+    );
+    const lastNameError = validation(
+      'lastName',
+      this.state.lastNameText,
+      registerValidator
+    );
+    const businessError = validation(
+      'customerName',
+      this.state.businessText,
+      registerValidator
+    );
+    const telError = validation(
+      'telephone',
+      this.state.telText,
+      registerValidator
+    );
+    const celError = validation(
+      'celPhone',
+      this.state.celText,
+      registerValidator
+    );
+    const addressError = validation(
+      'customerAddress',
+      this.state.addressText,
+      registerValidator
+    );
+    const cityError = validation(
+      'city',
+      this.state.cityText,
+      registerValidator
+    );
+    const zipError = validation(
+      'zipCode',
+      this.state.zipText,
+      registerValidator
+    );
+    const cuitError = validation(
+      'cuit',
+      this.state.cuitText,
+      registerValidator
+    );
+
+    this.setState({
+      nameError: nameError,
+      lastNameError: lastNameError,
+      businessError: businessError,
+      telError: telError,
+      celError: celError,
+      addressError: addressError,
+      cityError: cityError,
+      zipError: zipError,
+      cuitError: cuitError
+    });
+
+    if (
+      !nameError &&
+      !lastNameError &&
+      !businessError &&
+      !telError &&
+      !celError &&
+      !addressError &&
+      !cityError &&
+      !zipError &&
+      !cuitError
+    ) {
+      this._updateUser();
+    }
+  };
 
   _updateUser = async () => {
     this.setState({
@@ -57,7 +263,6 @@ export default class ModifyDataScreen extends React.Component {
   async _onFocusScreen() {
     const user = await getUser();
 
-    Reactotron.log(user);
     if (user.error === false) {
       const data = user.data;
       this.setState({
@@ -69,14 +274,54 @@ export default class ModifyDataScreen extends React.Component {
         addressText: data.related_customer_address,
         cityText: data.related_city,
         zipText: data.related_zip_code,
-        loading: false
+        cuitText: data.related_cuit,
+        loading: false,
+        nameError: '',
+        lastNameError: '',
+        businessError: '',
+        telError: '',
+        celError: '',
+        addressError: '',
+        cityError: '',
+        zipError: '',
+        cuitError: ''
       });
     }
   }
 
   render() {
     const { loading } = this.state;
-    const { nameText, lastNameText } = this.state;
+    const {
+      nameText,
+      lastNameText,
+      businessText,
+      telText,
+      celText,
+      addressText,
+      cityText,
+      zipText,
+      cuitText
+    } = this.state;
+    const {
+      nameError,
+      lastNameError,
+      businessError,
+      telError,
+      celError,
+      addressError,
+      cityError,
+      zipError,
+      cuitError
+    } = this.state;
+    const nameIsError = nameError ? true : false;
+    const lastNameIsError = lastNameError ? true : false;
+    const businessIsError = businessError ? true : false;
+    const telIsError = telError ? true : false;
+    const celIsError = celError ? true : false;
+    const addressIsError = addressError ? true : false;
+    const cityIsError = cityError ? true : false;
+    const zipIsError = zipError ? true : false;
+    const cuitIsError = cuitError ? true : false;
 
     let content;
     if (loading) {
@@ -105,61 +350,102 @@ export default class ModifyDataScreen extends React.Component {
         <View style={{ paddingBottom: moderateScale(50, 0.3) }}>
           <Text style={styles.sub}>Modificá tus Datos Personales:</Text>
           <View style={styles.inputContainer}>
-            <TextInput
+            <InputText
               label="Nombre"
               placeholder="Nombre"
               style={styles.input}
-              value={this.state.nameText}
-              onChangeText={text => this.setState({ nameText: text })}
+              value={nameText}
+              onChangeText={this._onChangeName}
+              onBlur={this._onBlurName}
+              error={nameIsError}
+              errorText={nameError}
             />
-            <TextInput
+            <InputText
               label="Apellido"
               placeholder="Apellido"
               style={styles.input}
-              value={this.state.lastNameText}
-              onChangeText={text => this.setState({ lastNameText: text })}
+              value={lastNameText}
+              onChangeText={this._onChangeLastName}
+              onBlur={this._onBlurLastName}
+              error={lastNameIsError}
+              errorText={lastNameError}
             />
-            <TextInput
+            <Divider />
+            <InputText
               label="Nombre del Comercio"
               placeholder="Nombre del Comercio"
               style={styles.input}
-              value={this.state.businessText}
-              onChangeText={text => this.setState({ businessText: text })}
+              value={businessText}
+              onChangeText={this._onChangeBusiness}
+              onBlur={this._onBlurBusiness}
+              error={businessIsError}
+              errorText={businessError}
             />
-            <TextInput
+            <InputText
+              label="CUIT"
+              placeholder="CUIT"
+              style={styles.input}
+              value={cuitText}
+              onChangeText={this._onChangeCuit}
+              onBlur={this._onBlurCuit}
+              error={cuitIsError}
+              errorText={cuitError}
+            />
+            <InputText
               label="Teléfono"
               placeholder="Teléfono"
               style={styles.input}
-              value={this.state.telText}
-              onChangeText={text => this.setState({ telText: text })}
+              value={telText}
+              onChangeText={this._onChangeTel}
+              onBlur={this._onBlurTel}
+              error={telIsError}
+              errorText={telError}
+              autoComplete="tel"
+              keyboardType="number-pad"
             />
-            <TextInput
+            <InputText
               label="Celular"
               placeholder="Celular"
               style={styles.input}
-              value={this.state.celText}
-              onChangeText={text => this.setState({ celText: text })}
+              value={celText}
+              onChangeText={this._onChangeCel}
+              onBlur={this._onBlurCel}
+              error={celIsError}
+              errorText={celError}
+              autoComplete="tel"
+              keyboardType="number-pad"
             />
-            <TextInput
+            <InputText
               label="Dirección del Comercio"
               placeholder="Dirección del Comercio"
               style={styles.input}
-              value={this.state.addressText}
-              onChangeText={text => this.setState({ addressText: text })}
+              value={addressText}
+              onChangeText={this._onChangeAddress}
+              onBlur={this._onBlurAddress}
+              error={addressIsError}
+              errorText={addressError}
+              autoComplete="street-address"
             />
-            <TextInput
+            <InputText
               label="Ciudad"
               placeholder="Ciudad"
               style={styles.input}
-              value={this.state.cityText}
-              onChangeText={text => this.setState({ cityText: text })}
+              value={cityText}
+              onChangeText={this._onChangeCity}
+              onBlur={this._onBlurCity}
+              error={cityIsError}
+              errorText={cityError}
             />
-            <TextInput
+            <InputText
               label="Código Postal"
               placeholder="Código Postal"
               style={styles.input}
-              value={this.state.zipText}
-              onChangeText={text => this.setState({ zipText: text })}
+              value={zipText}
+              onChangeText={this._onChangeZip}
+              onBlur={this._onBlurZip}
+              error={zipIsError}
+              errorText={zipError}
+              autoComplete="postal-code"
             />
           </View>
           <View>
@@ -217,24 +503,46 @@ export default class ModifyDataScreen extends React.Component {
             <Text style={styles.titleText}>MODIFICAR MIS DATOS</Text>
           </View>
           {content}
+          {!loading && (
+            <View style={styles.saveButtonContainer}>
+              <Button
+                mode="contained"
+                style={styles.saveButton}
+                color={theme.ACCENT_COLOR}
+                theme={{ roundness: 0 }}
+                onPress={() => this._validateUpdateUser()}
+              >
+                <Text
+                  style={styles.saveButtonText}
+                  theme={{
+                    colors: {
+                      text: '#FFFFFF'
+                    }
+                  }}
+                >
+                  GUARDAR CAMBIOS
+                </Text>
+              </Button>
+            </View>
+          )}
         </ScrollView>
-        <View style={styles.nextButtonContainer}>
+        <View style={styles.backButtonContainer}>
           <Button
             mode="contained"
-            style={styles.nextButton}
+            style={styles.backButton}
             color={theme.ACCENT_COLOR}
             theme={{ roundness: 0 }}
-            onPress={() => this._updateUser()}
+            onPress={() => this.props.navigation.navigate('Home')}
           >
             <Text
-              style={styles.nextButtonText}
+              style={styles.backButtonText}
               theme={{
                 colors: {
                   text: '#FFFFFF'
                 }
               }}
             >
-              GUARDAR CAMBIOS
+              SALIR
             </Text>
           </Button>
         </View>
@@ -284,12 +592,20 @@ const styles = ScaledSheet.create({
     marginBottom: '10@ms0.3',
     width: '260@ms0.3'
   },
-  // nextButtonContainer: {
-  //   alignItems: 'center',
-  //   justifyContent: 'flex-end',
-  //   marginTop: '30@ms0.3'
-  // },
-  nextButtonContainer: {
+  saveButtonContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: '20@ms0.3',
+    marginBottom: '80@ms0.3'
+  },
+  saveButton: {
+    width: '280@ms0.3'
+  },
+  saveButtonText: {
+    fontSize: '14@ms0.3'
+  },
+  backButtonContainer: {
     position: 'absolute',
     bottom: 0,
     // flex: 1,
@@ -297,12 +613,12 @@ const styles = ScaledSheet.create({
     justifyContent: 'flex-end',
     width: '100%'
   },
-  nextButton: {
+  backButton: {
     alignSelf: 'stretch',
     justifyContent: 'center',
     height: '50@ms0.3'
   },
-  nextButtonText: {
+  backButtonText: {
     fontSize: '16@ms0.3'
   },
   loading: {

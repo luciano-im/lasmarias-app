@@ -4,6 +4,7 @@ import { IconButton, Text } from 'react-native-paper';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 export default class CheckoutProductsTable extends React.Component {
   constructor(props) {
@@ -171,3 +172,10 @@ const styles = ScaledSheet.create({
     color: theme.PRIMARY_COLOR
   }
 });
+
+CheckoutProductsTable.propTypes = {
+  products: PropTypes.array,
+  inputs: PropTypes.object.isRequired,
+  onUpdateInput: PropTypes.func.isRequired,
+  onRemoveProduct: PropTypes.func.isRequired
+};

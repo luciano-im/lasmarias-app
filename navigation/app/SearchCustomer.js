@@ -4,10 +4,12 @@ import { Divider, List, Searchbar, Text } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
+import Sentry from 'sentry-expo';
 import SelectCity from '../../components/SelectCity';
 import { getCustomers, getCities } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 class SearchCustomerScreen extends React.Component {
   constructor(props) {
@@ -68,6 +70,13 @@ class SearchCustomerScreen extends React.Component {
   _handleSelectCustomer = item => {
     this.props.store.set('id', item.customer_id);
     this.props.store.set('name', item.name);
+
+    // Set Sentry context
+    Sentry.setExtraContext({
+      customerId: item.customer_id,
+      customerName: item.name
+    });
+
     this.props.navigation.goBack();
   };
 
@@ -99,8 +108,6 @@ class SearchCustomerScreen extends React.Component {
   }
 
   render() {
-    Reactotron.debug('Render SearchCustomer');
-
     let cityComponent;
     if (this.state.selectedCity) {
       cityComponent = (
@@ -216,3 +223,8 @@ const styles = ScaledSheet.create({
 });
 
 export default withStore(SearchCustomerScreen, ['id', 'name']);
+
+SearchCustomerScreen.propTypes = {
+  id: PropTypes.number,
+  name: PropTypes.string
+};

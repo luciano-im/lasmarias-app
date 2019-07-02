@@ -4,6 +4,7 @@ import { Text } from 'react-native-paper';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
+import PropTypes from 'prop-types';
 
 export default class AccountBalanceTable extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
@@ -11,8 +12,6 @@ export default class AccountBalanceTable extends React.Component {
   }
 
   render() {
-    const { accum, data } = this.props;
-
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -90,3 +89,7 @@ const styles = ScaledSheet.create({
     color: theme.PRIMARY_COLOR
   }
 });
+
+AccountBalanceTable.propTypes = {
+  data: PropTypes.array.isRequired
+};

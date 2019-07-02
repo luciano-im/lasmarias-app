@@ -7,6 +7,7 @@ import { theme } from '../../../helpers/styles';
 import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 export default class ProductDetailModal extends React.Component {
   constructor(props) {
@@ -62,6 +63,7 @@ export default class ProductDetailModal extends React.Component {
             </Text>
             <Text style={styles.unit}>{data.package}</Text>
             <Text style={styles.category}>{data.product_line}</Text>
+            <Text style={styles.productId}>{data.product_id}</Text>
             <View style={styles.priceContainer}>
               <View style={styles.priceDetail}>
                 {offer && <Text style={styles.prevPrice}>${offerPrice}</Text>}
@@ -120,11 +122,15 @@ const styles = ScaledSheet.create({
     fontSize: '16@ms0.3'
   },
   category: {
-    color: '#CCC',
+    color: '#AAA',
     fontSize: '14@ms0.3'
   },
   unit: {
-    color: '#CCC',
+    color: '#AAA',
+    fontSize: '14@ms0.3'
+  },
+  productId: {
+    color: '#AAA',
     fontSize: '14@ms0.3'
   },
   priceContainer: {
@@ -154,3 +160,9 @@ const styles = ScaledSheet.create({
     fontWeight: theme.FONT_WEIGHT_MEDIUM
   }
 });
+
+ProductDetailModal.propTypes = {
+  data: PropTypes.object,
+  onDismiss: PropTypes.func.isRequired,
+  addToCart: PropTypes.func.isRequired
+};

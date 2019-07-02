@@ -11,79 +11,97 @@ import {
 } from '../../helpers/api';
 import { theme } from '../../helpers/styles';
 import Reactotron from 'reactotron-react-native';
+import PropTypes from 'prop-types';
 
 // TODO: Review action to take when update fails
 class UpdateInfoScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modal_one: true,
-      modal_two: false,
-      updating: '',
-      animating: true,
-      buttonDisabled: true,
-      customerError: false,
-      productsError: false
+      stepOne: true,
+      stepTwo: false,
+      updatingText: '',
+      animating: false,
+      buttonDisabled: false,
+      updateError: false
     };
   }
 
-  _changeDialog = async () => {
-    // animating is false when finish update with or without errors
-    if (!this.state.animating) {
-      this.props.navigation.goBack();
-    } else {
-      this.setState({
-        modal_one: false,
-        modal_two: true,
-        updating: 'Actualizando Clientes...'
-      });
+  _fetchData = async () => {
+    this.setState({
+      updatingText: 'Actualizando Clientes...',
+      buttonDisabled: true,
+      animating: true
+    });
+    const customers = await fetchCustomers();
+    this.setState({
+      updatingText: 'Actualizando Productos...'
+    });
+    const products = await fetchProducts();
 
-      const customers = await fetchCustomers();
-
-      this.setState({
-        updating: 'Actualizando Productos...'
-      });
-
-      const products = await fetchProducts();
-
-      //Check for errors
-      if (customers.error === false) {
-        if (products.error === false) {
-          this.setState({
-            updating: 'Actualización terminada.',
-            animating: false,
-            buttonDisabled: false
-          });
-          //Set updated true
-          this.props.store.set('updated', new Date().toString());
-          //Once updated save the new DbData to AsyncStorage
-          const newDbData = this.props.navigation.getParam('newDbData');
-          _saveDbData('currentDbData', newDbData);
-        } else {
-          this.setState({
-            updating:
-              'Hubo un problema actualizando la base de Productos. Los Clientes se actualizaron correctamente.',
-            animating: false,
-            buttonDisabled: false
-          });
-        }
+    //Check for errors
+    if (customers.error === false) {
+      if (products.error === false) {
+        this.setState({
+          updatingText: 'Actualización terminada.',
+          animating: false,
+          buttonDisabled: false,
+          updateError: false
+        });
+        //Set updated to fetch SQLite in Home
+        this.props.store.set('updated', new Date().toString());
+        //Once updated save the new DbData to AsyncStorage
+        const newDbData = this.props.navigation.getParam('newDbData');
+        _saveDbData('currentDbData', newDbData);
       } else {
-        if (products.error === false) {
-          this.setState({
-            updating:
-              'Hubo un problema actualizando la base de Clientes. Los Productos se actualizaron correctamente.',
-            animating: false,
-            buttonDisabled: false
-          });
-        } else {
-          this.setState({
-            updating: 'No se pudo actualizar la App.',
-            animating: false,
-            buttonDisabled: false
-          });
-        }
+        this.setState({
+          updatingText:
+            'Hubo un problema actualizando la base de Productos. Los Clientes se actualizaron correctamente.',
+          animating: false,
+          buttonDisabled: false,
+          updateError: true
+        });
+      }
+    } else {
+      if (products.error === false) {
+        this.setState({
+          updatingText:
+            'Hubo un problema actualizando la base de Clientes. Los Productos se actualizaron correctamente.',
+          animating: false,
+          buttonDisabled: false,
+          updateError: true
+        });
+      } else {
+        this.setState({
+          updatingText: 'No se pudo actualizar la App.',
+          animating: false,
+          buttonDisabled: false,
+          updateError: true
+        });
       }
     }
+  };
+
+  _stepTwo = async () => {
+    this.setState({
+      stepOne: false,
+      stepTwo: true
+    });
+
+    this._fetchData();
+  };
+
+  _retry = () => {
+    this._fetchData();
+  };
+
+  _close = () => {
+    this.props.navigation.goBack();
+  };
+
+  _closeWithErrors = () => {
+    this.props.store.set('updateError', true);
+    this._close();
   };
 
   componentDidMount() {
@@ -100,6 +118,7 @@ class UpdateInfoScreen extends React.Component {
   }
 
   render() {
+    const { updateError } = this.state;
     return (
       <View
         style={{
@@ -111,7 +130,7 @@ class UpdateInfoScreen extends React.Component {
       >
         <Dialog
           style={styles.dialog}
-          visible={this.state.modal_one}
+          visible={this.state.stepOne}
           dismissable={false}
         >
           <Dialog.Title style={styles.title}>ATENCION!</Dialog.Title>
@@ -121,7 +140,7 @@ class UpdateInfoScreen extends React.Component {
             </Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={this._changeDialog}>
+            <Button onPress={this._stepTwo}>
               <Text style={styles.button}>ACTUALIZAR</Text>
             </Button>
           </Dialog.Actions>
@@ -129,7 +148,7 @@ class UpdateInfoScreen extends React.Component {
 
         <Dialog
           style={styles.dialog}
-          visible={this.state.modal_two}
+          visible={this.state.stepTwo}
           dismissable={false}
         >
           <Dialog.Title style={styles.title}>ACTUALIZACIÓN</Dialog.Title>
@@ -144,24 +163,58 @@ class UpdateInfoScreen extends React.Component {
                 }}
                 animating={this.state.animating}
               />
-              <Text style={styles.paragraph}>{this.state.updating}</Text>
+              <Text style={styles.paragraph}>{this.state.updatingText}</Text>
             </View>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button
-              onPress={this._changeDialog}
-              disabled={this.state.buttonDisabled}
-            >
-              <Text
-                style={
-                  this.state.buttonDisabled
-                    ? styles.buttonDisabled
-                    : styles.button
-                }
+            {!updateError && (
+              <Button
+                onPress={this._close}
+                disabled={this.state.buttonDisabled}
               >
-                OK
-              </Text>
-            </Button>
+                <Text
+                  style={
+                    this.state.buttonDisabled
+                      ? styles.buttonDisabled
+                      : styles.button
+                  }
+                >
+                  OK
+                </Text>
+              </Button>
+            )}
+            {updateError && (
+              <View style={{ flexDirection: 'row' }}>
+                <Button
+                  onPress={this._closeWithErrors}
+                  disabled={this.state.buttonDisabled}
+                >
+                  <Text
+                    style={
+                      this.state.buttonDisabled
+                        ? styles.buttonDisabled
+                        : styles.button
+                    }
+                  >
+                    CANCELAR
+                  </Text>
+                </Button>
+                <Button
+                  onPress={this._retry}
+                  disabled={this.state.buttonDisabled}
+                >
+                  <Text
+                    style={
+                      this.state.buttonDisabled
+                        ? styles.buttonDisabled
+                        : styles.button
+                    }
+                  >
+                    REINTENTAR
+                  </Text>
+                </Button>
+              </View>
+            )}
           </Dialog.Actions>
         </Dialog>
       </View>
@@ -194,4 +247,9 @@ const styles = ScaledSheet.create({
   }
 });
 
-export default withStore(UpdateInfoScreen, ['updated']);
+export default withStore(UpdateInfoScreen, ['updated', 'updateError']);
+
+UpdateInfoScreen.propTypes = {
+  updated: PropTypes.string,
+  updateError: PropTypes.bool
+};
