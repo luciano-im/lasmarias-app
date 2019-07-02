@@ -293,7 +293,7 @@ export default class SignUp2Screen extends React.Component {
         }
       })
       .catch(error => {
-        Reactotron.error(error);
+        // Reactotron.error(error);
         this.setState({
           loading: false,
           errorText: response.msg

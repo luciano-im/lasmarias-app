@@ -328,7 +328,6 @@ class CheckoutScreen extends React.Component {
   }
 
   render() {
-    Reactotron.log('Render Checkout');
     const { firstStep, secondStep, errorStep } = this.state;
 
     const iva = (this.state.subtotal * 21) / 100;

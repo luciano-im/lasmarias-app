@@ -108,8 +108,6 @@ class SearchCustomerScreen extends React.Component {
   }
 
   render() {
-    Reactotron.debug('Render SearchCustomer');
-
     let cityComponent;
     if (this.state.selectedCity) {
       cityComponent = (

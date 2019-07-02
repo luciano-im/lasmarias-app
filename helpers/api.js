@@ -196,7 +196,8 @@ export let updateDbData = async newDbData => {
   try {
     const currentDbData = await _getDbData('currentDbData');
     if (currentDbData === null || currentDbData !== newData) {
-      _saveDbData('newDbData', newDbData);
+      await _saveDbData('newDbData', newDbData);
+      await _saveDbData('imagesFetchDate', Date.now());
       NavigationService.navigate('UpdateModalScreen', { newDbData: newDbData });
     }
   } catch (error) {
@@ -316,7 +317,7 @@ export let signUp = async (email, password, password2, relatedData) => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -346,7 +347,7 @@ export let resetPassword = async email => {
   return await axios
     .post(API_URL + '/rest-auth/password/reset/', qs.stringify(data), config)
     .then(response => {
-      Reactotron.log(response);
+      // Reactotron.log(response);
       if (response.status === 401) {
         this._notAuthenticated();
       }
@@ -355,7 +356,7 @@ export let resetPassword = async email => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -392,7 +393,7 @@ export let changePassword = async (old, new1, new2) => {
   return await axios
     .post(API_URL + '/rest-auth/password/change/', qs.stringify(data), config)
     .then(response => {
-      Reactotron.log(response);
+      // Reactotron.log(response);
       if (response.status === 401) {
         this._notAuthenticated();
       }
@@ -402,7 +403,7 @@ export let changePassword = async (old, new1, new2) => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -438,7 +439,7 @@ export let getUser = async () => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -489,7 +490,7 @@ export let updateUser = async relatedData => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -507,6 +508,69 @@ export let updateUser = async relatedData => {
 };
 
 ///////// Fetch App Data API
+
+export let fetchImages = async (method, updateTimestamp = null) => {
+  const token = await _getToken();
+
+  const config = {
+    url: API_URL + '/api/product/images/',
+    method: method,
+    headers: { Authorization: 'Token ' + token.key },
+    timeout: timeout,
+    responseType: 'json'
+  };
+
+  return await axios(config)
+    .then(response => {
+      console.log(response.data);
+      if (response.status === 401) {
+        this._notAuthenticated();
+      }
+      if (response.status === 200) {
+        if (method === 'head') {
+          return { error: false, updateDate: response.headers['update-date'] };
+        }
+        if (method === 'get') {
+          // Create database table if not exists
+          db.transaction(tx => {
+            tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS product_images (product_id text NOT NULL, image text NOT NULL, PRIMARY KEY (product_id, image))'
+            );
+          });
+
+          const data = response.data;
+          data.forEach(product => {
+            db.transaction(tx => {
+              tx.executeSql(
+                'REPLACE INTO product_images (product_id, image) VALUES (?, ?);',
+                [product.product_id, product.image_relative_url]
+              );
+            });
+          });
+
+          _saveDbData('imagesUpdateDate', updateTimestamp);
+          _saveDbData('imagesFetchDate', Date.now());
+          return { error: false };
+        }
+      }
+    })
+    .catch(error => {
+      // Reactotron.error(error);
+      if (error.code === 'ECONNABORTED') {
+        return {
+          error: true,
+          msg: 'El servidor no responde',
+          data: error
+        };
+      } else {
+        return {
+          error: true,
+          msg: 'No se pudo procesar la solicitud',
+          data: error
+        };
+      }
+    });
+};
 
 export let fetchCustomers = async () => {
   // Delete table customer
@@ -541,7 +605,7 @@ export let fetchCustomers = async () => {
   return await axios
     .get(API_URL + '/api/customer/', config)
     .then(response => {
-      Reactotron.log(response.data);
+      // Reactotron.log(response.data);
       if (response.status === 401) {
         this._notAuthenticated();
       }
@@ -564,7 +628,7 @@ export let fetchCustomers = async () => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -627,7 +691,7 @@ export let fetchProducts = async () => {
   return await axios
     .get(API_URL + '/api/product/', config)
     .then(response => {
-      Reactotron.log(response.data);
+      // Reactotron.log(response.data);
       if (response.status === 401) {
         this._notAuthenticated();
       }
@@ -661,7 +725,7 @@ export let fetchProducts = async () => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -701,7 +765,7 @@ export let fetchAccountBalance = async user => {
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -747,7 +811,6 @@ export let fetchInvoices = async (
       }
     }
   }
-  Reactotron.log(urlPath);
 
   const url = urlPath ? `/api/invoice/${urlPath}/` : `/api/invoice/`;
 
@@ -765,7 +828,7 @@ export let fetchInvoices = async (
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -828,7 +891,7 @@ export let fetchOrders = async (
       }
     })
     .catch(error => {
-      Reactotron.error(error);
+      // Reactotron.error(error);
       if (error.code === 'ECONNABORTED') {
         return {
           error: true,
@@ -857,7 +920,7 @@ export let createOrder = async (data, customer) => {
   return await axios
     .post(API_URL + `/api/order/${customer}/`, data, config)
     .then(response => {
-      Reactotron.log(response);
+      // Reactotron.log(response);
       if (response.status === 401) {
         this._notAuthenticated();
       }
@@ -872,7 +935,7 @@ export let createOrder = async (data, customer) => {
       }
     })
     .catch(error => {
-      Reactotron.log(error);
+      // Reactotron.log(error);
       if (error.response.status === 404) {
         return {
           error: true,
