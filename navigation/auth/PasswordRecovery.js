@@ -58,7 +58,7 @@ export default class PasswordRecoveryScreen extends React.Component {
     });
     await resetPassword(this.state.userText)
       .then(response => {
-        Reactotron.log(response);
+        // Reactotron.log(response);
         if (response.error === false) {
           this.setState({
             loading: false
@@ -72,7 +72,7 @@ export default class PasswordRecoveryScreen extends React.Component {
         }
       })
       .catch(error => {
-        Reactotron.error(error);
+        // Reactotron.error(error);
         this.setState({
           loading: false
         });

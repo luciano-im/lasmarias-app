@@ -164,9 +164,6 @@ class OrdersScreen extends React.Component {
     const invoices = await fetchInvoices(customer, dateFrom, dateTo);
     const orders = await fetchOrders(customer, dateFrom, dateTo);
 
-    Reactotron.log('Invoices', invoices);
-    Reactotron.log('Orders', orders);
-
     let dataInvoices;
     let dataOrders;
     if (invoices.error === false) {

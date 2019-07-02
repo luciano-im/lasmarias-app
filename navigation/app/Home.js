@@ -7,9 +7,12 @@ import {
   Snackbar,
   Text
 } from 'react-native-paper';
+import { NavigationEvents } from 'react-navigation';
 import PubNubReact from 'pubnub-react';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { withStore } from '@spyna/react-store';
+import { format, parse, subMinutes } from 'date-fns';
+import es from 'date-fns/locale/es';
 import { theme } from '../../helpers/styles';
 import {
   _getDbData,
@@ -21,7 +24,8 @@ import {
   updateDbData,
   getProducts,
   fetchCustomers,
-  fetchProducts
+  fetchProducts,
+  fetchImages
 } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import CategoryFilter from './components/CategoryFilter';
@@ -44,6 +48,7 @@ class HomeScreen extends React.Component {
       snackVisible: false,
       snackText: '',
       categoryTitle: 'OFERTAS / DESTACADOS',
+      category: null,
       manualUpdate: false,
       fetchingManualUpdate: false
     };
@@ -117,26 +122,8 @@ class HomeScreen extends React.Component {
         ? 'OFERTAS / DESTACADOS'
         : label.toUpperCase();
     this.setState({
-      categoryTitle: newLabel
-    });
-  };
-
-  _updateData = async dbData => {
-    // If there are new data
-    // Call updateDbData to compare with existing/current data
-    if (dbData !== null) {
-      await updateDbData(dbData);
-    }
-    // Fetch SQLite data
-    this._fetchData();
-  };
-
-  _fetchData = async category => {
-    const products = await getProducts(category);
-    this.setState({
-      products: products,
-      filteredProducts: products,
-      loading: false
+      categoryTitle: newLabel,
+      category: category
     });
   };
 
@@ -243,6 +230,70 @@ class HomeScreen extends React.Component {
     }
   };
 
+  _updateData = async dbData => {
+    // If there are new data
+    // Call updateDbData to compare with existing/current data
+    if (dbData !== null) {
+      await updateDbData(dbData);
+    }
+    // Check images update
+    await this._checkImages();
+    // Fetch SQLite data
+    this._fetchData();
+  };
+
+  _fetchData = async category => {
+    const products = await getProducts(category);
+    this.setState({
+      products: products,
+      filteredProducts: products,
+      loading: false
+    });
+  };
+
+  _checkImages = async () => {
+    const imagesFetchDate = await _getDbData('imagesFetchDate');
+    if (imagesFetchDate !== null) {
+      const diffMs = Date.now() - imagesFetchDate;
+      const diffMins = Math.round(diffMs / 1000 / 60);
+
+      if (diffMins > 10) {
+        this._fetchImagesDate();
+      }
+    } else {
+      this._fetchImagesDate();
+    }
+  };
+
+  _fetchImagesDate = async () => {
+    const imagesUpdateDate = await fetchImages('head');
+
+    if (imagesUpdateDate.error === false) {
+      const updateDate = parse(
+        imagesUpdateDate.updateDate,
+        'YYYY-MM-DD HH:mm:ss'
+      );
+      const utcOffset = updateDate.getTimezoneOffset();
+      const updateDateUTC = subMinutes(updateDate, utcOffset);
+      const updateDateTimestamp = updateDateUTC.getTime();
+
+      const imagesStoredDate = await _getDbData('imagesUpdateDate');
+      if (
+        imagesStoredDate === null ||
+        parseInt(imagesStoredDate) !== updateDateTimestamp
+      ) {
+        const response = await fetchImages('get', updateDateTimestamp);
+        if (response.error === false) {
+          const products = await getProducts(this.state.category);
+          this.setState({
+            products: products,
+            filteredProducts: products
+          });
+        }
+      }
+    }
+  };
+
   async componentDidMount() {
     if (this.userType === 'VEN') {
       // Subscribe to channel
@@ -267,6 +318,7 @@ class HomeScreen extends React.Component {
       // );
 
       //Get last message from history
+
       this._fetchPubNubHistory();
 
       const pendingOrders = await _getPendingOrders();
@@ -396,6 +448,7 @@ class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
+        <NavigationEvents onDidFocus={payload => this._checkImages()} />
         <Snackbar
           style={{ zIndex: 20000 }}
           visible={this.state.snackVisible}
