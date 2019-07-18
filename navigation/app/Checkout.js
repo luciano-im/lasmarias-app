@@ -101,9 +101,23 @@ class CheckoutScreen extends React.Component {
       const subtotal = this.state.products.reduce((total, item) => {
         // Use (+) unary operator to turn string into numbers
         if ('input' + item.id === input) {
+          // Reactotron.log(
+          //   'input' + item.id,
+          //   total,
+          //   item.item.price,
+          //   newState[input]
+          // );
           return +total + +item.item.price * +newState[input];
         } else {
-          return +total + +item.item.price * +item.qty;
+          // Reactotron.log(
+          //   'input' + item.id,
+          //   total,
+          //   item.item.price,
+          //   this.state.inputs['input' + item.id]
+          // );
+          return (
+            +total + +item.item.price * +this.state.inputs['input' + item.id]
+          );
         }
       }, []);
 
