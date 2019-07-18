@@ -55,6 +55,13 @@ class CheckoutScreen extends React.Component {
     };
   }
 
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
+
   _showSnack = text => {
     this.setState({
       snackVisible: true,
@@ -179,7 +186,7 @@ class CheckoutScreen extends React.Component {
     const customer = this.props.id;
     const customerName = this.props.name;
 
-    if (products === null) {
+    if (this._isEmpty(products) || products === null) {
       this.setState({
         confirmVisible: false
       });
