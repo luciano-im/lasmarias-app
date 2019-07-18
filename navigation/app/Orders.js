@@ -13,6 +13,7 @@ import {
   Searchbar,
   Text
 } from 'react-native-paper';
+import { NavigationEvents } from 'react-navigation';
 import { MaterialIcons } from '@expo/vector-icons';
 import { withStore } from '@spyna/react-store';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
@@ -233,15 +234,13 @@ class OrdersScreen extends React.Component {
     }
   }
 
-  async componentDidMount() {
-    if (this.props.id !== null) {
-      await this._fetchData(
-        this.props.id,
-        this.state.selectedDateFrom,
-        this.state.selectedDateTo
-      );
-    }
-  }
+  onBlur = async () => {
+    await this._fetchData(
+      this.props.id,
+      this.state.selectedDateFrom,
+      this.state.selectedDateTo
+    );
+  };
 
   render() {
     const errorText = this.state.errorText;
@@ -332,6 +331,7 @@ class OrdersScreen extends React.Component {
         behavior="padding"
         keyboardVerticalOffset={100}
       >
+        <NavigationEvents onDidFocus={payload => this.onBlur()} />
         <ScrollView style={styles.container}>
           <SelectCustomer navigation={this.props.navigation} />
           <View style={styles.filters}>
