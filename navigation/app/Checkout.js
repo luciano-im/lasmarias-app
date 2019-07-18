@@ -28,6 +28,7 @@ import SelectCustomer from '../../components/SelectCustomer';
 import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
 import DeliveryMethod from './components/DeliveryMethod';
+import TextNumber from '../../components/TextNumber';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
 
@@ -411,13 +412,14 @@ class CheckoutScreen extends React.Component {
             <View style={styles.totalsContainer}>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>Subtotal:</Text>
-                <Text style={styles.totalText}>
-                  $ {this.state.subtotal.toFixed(2)}
-                </Text>
+                <TextNumber
+                  styles={styles.totalText}
+                  num={this.state.subtotal}
+                />
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>IVA (21%):</Text>
-                <Text style={styles.totalText}>$ {iva.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={iva} />
               </View>
               <View style={styles.totalRow}>
                 <Text style={[styles.totalText, styles.totalRed]}>
@@ -427,7 +429,7 @@ class CheckoutScreen extends React.Component {
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>(*) TOTAL:</Text>
-                <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={total} />
               </View>
               <View style={styles.legend}>
                 <Text

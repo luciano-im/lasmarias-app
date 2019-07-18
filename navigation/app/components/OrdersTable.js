@@ -4,6 +4,7 @@ import { IconButton, Text } from 'react-native-paper';
 import { ScaledSheet, moderateScale } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
+import TextNumber from '../../../components/TextNumber';
 import PropTypes from 'prop-types';
 
 export default class OrdersTable extends React.Component {
@@ -76,14 +77,8 @@ export default class OrdersTable extends React.Component {
                 >
                   {item.invoice_id}
                 </Text>
-                <Text
-                  style={[
-                    styles.dataText,
-                    styles.rightAlign,
-                    styles.invoiceCol3
-                  ]}
-                >
-                  $ {item.get_total.toFixed(2)}
+                <Text style={[styles.rightAlign, styles.invoiceCol3]}>
+                  <TextNumber styles={styles.dataText} num={item.get_total} />
                 </Text>
                 <View style={styles.invoiceCol4}>
                   <IconButton

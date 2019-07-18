@@ -17,6 +17,7 @@ import {
   _removePendingOrders,
   createOrder
 } from '../../helpers/api';
+import TextNumber from '../../components/TextNumber';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
 
@@ -142,8 +143,8 @@ class PendingOrdersScreen extends React.Component {
           <Text style={[styles.col2, styles.centerAlign]}>
             {format(parse(order.order.date), 'DD/MM/YY')}
           </Text>
-          <Text style={[styles.col3, styles.rightAlign]}>
-            $ {total.toFixed(2)}
+          <Text style={styles.col3}>
+            <TextNumber styles={styles.rightAlign} num={total} />
           </Text>
           <View
             style={[
