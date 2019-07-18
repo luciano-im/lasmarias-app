@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
 import { theme } from '../../helpers/styles';
+import TextNumber from '../../components/TextNumber';
 import OrderDetailProductsTable from './components/OrderDetailProductsTable';
 
 export default class OrderDetailScreen extends React.Component {
@@ -41,15 +42,15 @@ export default class OrderDetailScreen extends React.Component {
             <View style={styles.totalsContainer}>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>Subtotal:</Text>
-                <Text style={styles.totalText}>$ {subtotal.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={subtotal} />
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>IVA (21%):</Text>
-                <Text style={styles.totalText}>$ {data.iva.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={data.iva} />
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>Percepciones:</Text>
-                <Text style={styles.totalText}>$ {data.taxes.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={data.taxes} />
               </View>
               <View style={styles.totalRow}>
                 <Text style={[styles.totalText, styles.totalRed]}>
@@ -59,7 +60,7 @@ export default class OrderDetailScreen extends React.Component {
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>(*) TOTAL:</Text>
-                <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={total} />
               </View>
             </View>
           </View>
@@ -107,11 +108,11 @@ export default class OrderDetailScreen extends React.Component {
             <View style={styles.totalsContainer}>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>Subtotal:</Text>
-                <Text style={styles.totalText}>$ {subtotal.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={subtotal} />
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>IVA (21%):</Text>
-                <Text style={styles.totalText}>$ {iva.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={iva} />
               </View>
               <View style={styles.totalRow}>
                 <Text style={[styles.totalText, styles.totalRed]}>
@@ -121,7 +122,7 @@ export default class OrderDetailScreen extends React.Component {
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>(*) TOTAL:</Text>
-                <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={total} />
               </View>
               <View style={styles.legend}>
                 <Text

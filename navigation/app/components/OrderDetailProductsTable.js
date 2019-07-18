@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { ScaledSheet, moderateScale } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
+import TextNumber from '../../../components/TextNumber';
 import PropTypes from 'prop-types';
 
 export default class OrderDetailProductsTable extends React.Component {
@@ -27,11 +28,11 @@ export default class OrderDetailProductsTable extends React.Component {
           >
             {item.quantity}
           </Text>
-          <Text style={[styles.col3, styles.dataText]}>
-            $ {item.price.toFixed(2)}
+          <Text style={styles.col3}>
+            <TextNumber styles={styles.dataText} num={item.price} />
           </Text>
-          <Text style={[styles.col4, styles.dataText, styles.rightAlign]}>
-            $ {item.amount.toFixed(2)}
+          <Text style={[styles.col4, styles.rightAlign]}>
+            <TextNumber styles={styles.dataText} num={item.amount} />
           </Text>
         </View>
       ));
@@ -54,11 +55,11 @@ export default class OrderDetailProductsTable extends React.Component {
             >
               {item.quantity}
             </Text>
-            <Text style={[styles.col3, styles.dataText]}>
-              $ {item.price.toFixed(2)}
+            <Text style={styles.col3}>
+              <TextNumber styles={styles.dataText} num={item.price} />
             </Text>
-            <Text style={[styles.col4, styles.dataText, styles.rightAlign]}>
-              $ {amount.toFixed(2)}
+            <Text style={[styles.col4, styles.rightAlign]}>
+              <TextNumber styles={styles.dataText} num={amount} />
             </Text>
           </View>
         );

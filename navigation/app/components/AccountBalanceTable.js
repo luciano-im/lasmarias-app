@@ -4,6 +4,7 @@ import { Text } from 'react-native-paper';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { format, parse } from 'date-fns';
 import { theme } from '../../../helpers/styles';
+import TextNumber from '../../../components/TextNumber';
 import PropTypes from 'prop-types';
 
 export default class AccountBalanceTable extends React.Component {
@@ -32,12 +33,9 @@ export default class AccountBalanceTable extends React.Component {
             <Text style={[styles.col2, styles.centerAlign]}>
               {format(parse(item.date), 'DD/MM/YY')}
             </Text>
-            <Text style={[styles.col3, styles.price]}>
-              $ {item.balance.toFixed(2)}
+            <Text style={styles.col3}>
+              <TextNumber styles={styles.price} num={item.balance} />
             </Text>
-            {/* <Text style={[styles.col4, styles.price]}>
-              $ {item.accum.toFixed(2)}
-            </Text> */}
           </View>
         ))}
       </View>

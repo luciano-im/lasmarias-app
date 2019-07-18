@@ -1,5 +1,5 @@
 ﻿import { AsyncStorage } from 'react-native';
-import { SQLite } from 'expo';
+import { SQLite } from 'expo-sqlite';
 import axios from 'axios';
 import qs from 'qs';
 import { format, parse } from 'date-fns';
