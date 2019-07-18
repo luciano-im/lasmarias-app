@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {
   ActivityIndicator,
+  Button,
   IconButton,
   List,
   Searchbar,
@@ -471,6 +472,26 @@ class OrdersScreen extends React.Component {
             onCancel={this._handleHideDateToPicker}
           />
         </ScrollView>
+        <View style={styles.backButtonContainer}>
+          <Button
+            mode="contained"
+            style={styles.backButton}
+            color={theme.ACCENT_COLOR}
+            theme={{ roundness: 0 }}
+            onPress={() => this.props.navigation.navigate('Home')}
+          >
+            <Text
+              style={styles.backButtonText}
+              theme={{
+                colors: {
+                  text: '#FFFFFF'
+                }
+              }}
+            >
+              SALIR
+            </Text>
+          </Button>
+        </View>
       </KeyboardAvoidingView>
     );
   }
@@ -481,7 +502,8 @@ const styles = ScaledSheet.create({
     flex: 1
   },
   container: {
-    flex: 1
+    flex: 1,
+    marginBottom: '30@ms0.3'
   },
   seller: {
     flexDirection: 'row',
@@ -523,6 +545,20 @@ const styles = ScaledSheet.create({
     fontSize: '14@ms0.3',
     marginTop: 20,
     textAlign: 'center'
+  },
+  backButtonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    marginTop: '30@ms0.3'
+  },
+  backButton: {
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    height: '50@ms0.3'
+  },
+  backButtonText: {
+    fontSize: '16@ms0.3'
   }
 });
 
