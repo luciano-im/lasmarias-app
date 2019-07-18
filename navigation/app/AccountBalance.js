@@ -7,6 +7,7 @@ import { theme } from '../../helpers/styles';
 import { fetchAccountBalance } from '../../helpers/api';
 import SelectCustomer from '../../components/SelectCustomer';
 import AccountBalanceTable from './components/AccountBalanceTable';
+import TextNumber from '../../components/TextNumber';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
 
@@ -20,10 +21,6 @@ class AccountBalanceScreen extends React.Component {
       // customerName: this.props.name
     };
   }
-
-  _formatBalance = balance => {
-    return balance.charAt(0) === '-' ? '-$' + balance.slice(1) : '$' + balance;
-  };
 
   _fetchAccount = async customer_id => {
     const accountData = await fetchAccountBalance(customer_id);
@@ -105,9 +102,10 @@ class AccountBalanceScreen extends React.Component {
           <View>
             <View style={styles.account}>
               <Text style={styles.accountText}>Saldo:</Text>
-              <Text style={styles.accountText}>
-                {this._formatBalance(this.state.accumulated.toFixed(2))}
-              </Text>
+              <TextNumber
+                styles={styles.accountText}
+                num={this.state.accumulated}
+              />
             </View>
             <View style={styles.accountTable}>
               <Text style={styles.accountTableTitle}>

@@ -3,6 +3,7 @@ import { StyleSheet, View, TextInput } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
+import TextNumber from '../../../components/TextNumber';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
 
@@ -71,8 +72,8 @@ export default class CheckoutProductsTable extends React.Component {
                 }
               />
             </View>
-            <Text style={[styles.col3, styles.dataText, styles.price]}>
-              $ {item.item.price.toFixed(2)}
+            <Text style={[styles.col3, styles.dataText]}>
+              <TextNumber styles={styles.price} num={item.item.price} />
             </Text>
             <IconButton
               style={[

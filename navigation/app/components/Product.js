@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { API_URL } from 'react-native-dotenv';
 import { theme } from '../../../helpers/styles';
+import TextNumber from '../../../components/TextNumber';
 import { _addProductToOrder, getProductImages } from '../../../helpers/api';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
@@ -50,11 +51,11 @@ export default class Product extends React.Component {
     const name = this.props.name;
     const brand = this.props.brand;
     const productLine = this.props.productLine;
-    const price = this.props.price.toFixed(2);
+    const price = this.props.price;
     const unit = this.props.unit;
     const packaging = this.props.packaging;
     const offer = this.props.item.offer === 0 ? true : false;
-    const offerPrice = this.props.item.offer_price.toFixed(2);
+    const offerPrice = this.props.item.offer_price;
 
     const images = Array.from(this.state.images);
     const imagesEmpty = this._isEmpty(images);
@@ -101,8 +102,13 @@ export default class Product extends React.Component {
                 <Text style={styles.buttonText}>Ver detalle</Text>
               </TouchableOpacity>
               <Text />
-              {offer && <Text style={styles.prevPrice}>${offerPrice}</Text>}
-              <Text style={styles.price}>${price}</Text>
+              {offer && (
+                <TextNumber
+                  styles={styles.prevPrice}
+                  num={parseFloat(offerPrice)}
+                />
+              )}
+              <TextNumber styles={styles.price} num={parseFloat(price)} />
             </View>
             <View style={styles.addProductContainer}>
               <TouchableOpacity

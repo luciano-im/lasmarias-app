@@ -28,6 +28,7 @@ import SelectCustomer from '../../components/SelectCustomer';
 import CheckoutProductsTable from './components/CheckoutProductsTable';
 import PayMethod from './components/PayMethod';
 import DeliveryMethod from './components/DeliveryMethod';
+import TextNumber from '../../components/TextNumber';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
 
@@ -54,6 +55,13 @@ class CheckoutScreen extends React.Component {
       cancelCheckout: false
     };
   }
+
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
 
   _showSnack = text => {
     this.setState({
@@ -93,9 +101,23 @@ class CheckoutScreen extends React.Component {
       const subtotal = this.state.products.reduce((total, item) => {
         // Use (+) unary operator to turn string into numbers
         if ('input' + item.id === input) {
+          // Reactotron.log(
+          //   'input' + item.id,
+          //   total,
+          //   item.item.price,
+          //   newState[input]
+          // );
           return +total + +item.item.price * +newState[input];
         } else {
-          return +total + +item.item.price * +item.qty;
+          // Reactotron.log(
+          //   'input' + item.id,
+          //   total,
+          //   item.item.price,
+          //   this.state.inputs['input' + item.id]
+          // );
+          return (
+            +total + +item.item.price * +this.state.inputs['input' + item.id]
+          );
         }
       }, []);
 
@@ -179,7 +201,7 @@ class CheckoutScreen extends React.Component {
     const customer = this.props.id;
     const customerName = this.props.name;
 
-    if (products === null) {
+    if (this._isEmpty(products) || products === null) {
       this.setState({
         confirmVisible: false
       });
@@ -404,13 +426,14 @@ class CheckoutScreen extends React.Component {
             <View style={styles.totalsContainer}>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>Subtotal:</Text>
-                <Text style={styles.totalText}>
-                  $ {this.state.subtotal.toFixed(2)}
-                </Text>
+                <TextNumber
+                  styles={styles.totalText}
+                  num={this.state.subtotal}
+                />
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>IVA (21%):</Text>
-                <Text style={styles.totalText}>$ {iva.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={iva} />
               </View>
               <View style={styles.totalRow}>
                 <Text style={[styles.totalText, styles.totalRed]}>
@@ -420,7 +443,7 @@ class CheckoutScreen extends React.Component {
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalText}>(*) TOTAL:</Text>
-                <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
+                <TextNumber styles={styles.totalText} num={total} />
               </View>
               <View style={styles.legend}>
                 <Text

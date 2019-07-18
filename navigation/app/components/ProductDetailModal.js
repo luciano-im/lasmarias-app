@@ -6,6 +6,7 @@ import { moderateScale, ScaledSheet } from 'react-native-size-matters';
 import { theme } from '../../../helpers/styles';
 import { getProductImages } from '../../../helpers/api';
 import Slider from '../../../components/ImageSlider';
+import TextNumber from '../../../components/TextNumber';
 import Reactotron from 'reactotron-react-native';
 import PropTypes from 'prop-types';
 
@@ -40,7 +41,7 @@ export default class ProductDetailModal extends React.Component {
   render() {
     const { data } = this.props;
     const offer = data.offer === 0 ? true : false;
-    const offerPrice = data.offer_price.toFixed(2);
+    const offerPrice = data.offer_price;
 
     const images = Array.from(this.state.images);
 
@@ -66,8 +67,16 @@ export default class ProductDetailModal extends React.Component {
             <Text style={styles.productId}>{data.product_id}</Text>
             <View style={styles.priceContainer}>
               <View style={styles.priceDetail}>
-                {offer && <Text style={styles.prevPrice}>${offerPrice}</Text>}
-                <Text style={styles.price}>${data.price.toFixed(2)}</Text>
+                {offer && (
+                  <TextNumber
+                    styles={styles.prevPrice}
+                    num={parseFloat(offerPrice)}
+                  />
+                )}
+                <TextNumber
+                  styles={styles.price}
+                  num={parseFloat(data.price)}
+                />
               </View>
               <View style={styles.addProductContainer}>
                 <TouchableOpacity
