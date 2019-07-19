@@ -935,34 +935,41 @@ export let createOrder = async (data, customer) => {
       }
     })
     .catch(error => {
-      // Reactotron.log(error);
-      if (error.response.status === 404) {
+      if (error.response) {
+        if (error.response.status === 404) {
+          return {
+            error: true,
+            msg: 'El servidor no esta disponible'
+          };
+        }
+        if (error.response.status === 409) {
+          const data = error.response.data;
+          return {
+            error: false,
+            order: data.order_id,
+            status_code: error.response.status,
+            msg: 'El pedido ya existe'
+          };
+        }
+        if (error.code === 'ECONNABORTED') {
+          return {
+            error: true,
+            msg: 'El servidor no responde',
+            data: error
+          };
+        }
         return {
           error: true,
-          msg: 'El servidor no esta disponible'
+          msg: 'No se pudo procesar la solicitud',
+          data: error
         };
-      }
-      if (error.response.status === 409) {
-        const data = error.response.data;
-        return {
-          error: false,
-          order: data.order_id,
-          status_code: error.response.status,
-          msg: 'El pedido ya existe'
-        };
-      }
-      if (error.code === 'ECONNABORTED') {
+      } else {
         return {
           error: true,
-          msg: 'El servidor no responde',
+          msg: 'No se pudo procesar la solicitud',
           data: error
         };
       }
-      return {
-        error: true,
-        msg: 'No se pudo procesar la solicitud',
-        data: error
-      };
     });
 };
 
