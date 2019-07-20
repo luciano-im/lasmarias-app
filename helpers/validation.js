@@ -57,7 +57,7 @@ export const registerValidator = {
       message: 'No puede superar los 120 caracteres'
     },
     format: {
-      pattern: '[a-z]+',
+      pattern: '[a-záéíóú ]+',
       flags: 'i',
       message: 'Debe contener solo letras'
     }
@@ -71,7 +71,7 @@ export const registerValidator = {
       message: 'No puede superar los 120 caracteres'
     },
     format: {
-      pattern: '[a-z]+',
+      pattern: '[a-záéíóú ]+',
       flags: 'i',
       message: 'Debe contener solo letras'
     }
@@ -85,7 +85,7 @@ export const registerValidator = {
       message: 'No puede superar los 150 caracteres'
     },
     format: {
-      pattern: '[a-z0-9!@#$%^&]+',
+      pattern: '[a-z0-9!@#$%^&áéíóú ]+',
       flags: 'i',
       message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
@@ -99,7 +99,7 @@ export const registerValidator = {
       message: 'No puede superar los 150 caracteres'
     },
     format: {
-      pattern: '[a-z0-9!@#$%^&]+',
+      pattern: '[a-z0-9!@#$%^&áéíóú ]+',
       flags: 'i',
       message: 'Solo letras, numeros y simbolos (!@#$%^&)'
     }
@@ -137,7 +137,7 @@ export const registerValidator = {
       message: 'No puede superar los 80 caracteres'
     },
     format: {
-      pattern: '[a-z0-9]+',
+      pattern: '[a-z0-9áéíóú ]+',
       flags: 'i',
       message: 'Puede contener solo letras y numeros'
     }
