@@ -207,6 +207,7 @@ const styles = ScaledSheet.create({
   },
   container: {
     flex: 1
+    // marginBottom: '40@ms0.3'
   },
   titleContainer: {
     flex: 3.5,
@@ -228,7 +229,7 @@ const styles = ScaledSheet.create({
     flex: 3,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginTop: '30@ms0.3'
+    marginTop: '10@ms0.3'
   },
   input: {
     backgroundColor: 'transparent',
@@ -244,13 +245,13 @@ const styles = ScaledSheet.create({
     color: 'grey',
     width: '260@ms0.3',
     fontSize: '13@ms0.3',
-    marginTop: '10@ms0.3'
+    marginTop: '5@ms0.3'
   },
   nextButtonContainer: {
     //flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '30@ms0.3',
+    // marginTop: '30@ms0.3',
     position: 'absolute',
     bottom: 0,
     width: '100%'
