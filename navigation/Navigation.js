@@ -82,6 +82,7 @@ const AuthStack = createStackNavigator(
   },
   {
     initialRouteName: 'Login',
+    headerMode: 'none',
     cardStyle: {
       backgroundColor: 'white'
     }
@@ -332,7 +333,10 @@ const AppDrawer = createDrawerNavigator(
           </TouchableOpacity>
         </SafeAreaView>
       </View>
-    )
+    ),
+    contentOptions: {
+      activeTintColor: theme.PRIMARY_COLOR
+    }
   }
 );
 
