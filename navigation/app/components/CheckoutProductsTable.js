@@ -25,67 +25,87 @@ export default class CheckoutProductsTable extends React.Component {
     if (products !== null && products !== undefined) {
       products.map((item, index) => {
         content.push(
-          <View
-            style={styles.row}
-            key={'input' + item.item.product_id.toString().trim()}
-          >
-            <Text style={[styles.col1, styles.dataText]}>{item.item.name}</Text>
-            <View style={[styles.col2, styles.dataText, styles.controls]}>
+          <View key={'input' + item.item.product_id.toString().trim()}>
+            <View style={styles.row}>
+              <Text style={[styles.col1, styles.dataText]}>
+                {item.item.name}
+              </Text>
+              <View style={[styles.col2, styles.dataText, styles.controls]}>
+                <IconButton
+                  style={styles.quantityButton}
+                  icon="remove-circle-outline"
+                  color={theme.PRIMARY_COLOR}
+                  size={moderateScale(20, 0.3)}
+                  onPress={() =>
+                    this.props.onUpdateInput(
+                      'input' + item.item.product_id.toString().trim(),
+                      'sub',
+                      1
+                    )
+                  }
+                />
+                <TextInput
+                  style={styles.quantityInput}
+                  keyboardType="numeric"
+                  value={this.props.inputs[
+                    'input' + item.item.product_id.toString().trim()
+                  ].toString()}
+                  onChangeText={text => {
+                    this.props.onUpdateInput(
+                      'input' + item.item.product_id.toString().trim(),
+                      null,
+                      text
+                    );
+                  }}
+                />
+                <IconButton
+                  style={styles.quantityButton}
+                  icon="add-circle-outline"
+                  color={theme.PRIMARY_COLOR}
+                  size={moderateScale(20, 0.3)}
+                  onPress={() =>
+                    this.props.onUpdateInput(
+                      'input' + item.item.product_id.toString().trim(),
+                      'add',
+                      1
+                    )
+                  }
+                />
+              </View>
+              <Text style={[styles.col3, styles.dataText]}>
+                <TextNumber styles={styles.price} num={item.item.price} />
+              </Text>
               <IconButton
-                style={styles.quantityButton}
-                icon="remove-circle-outline"
-                color={theme.PRIMARY_COLOR}
+                style={[
+                  styles.col4,
+                  styles.quantityButton,
+                  { justifyContent: 'flex-end' }
+                ]}
+                icon="delete-forever"
+                color={'red'}
                 size={moderateScale(20, 0.3)}
-                onPress={() =>
-                  this.props.onUpdateInput(
-                    'input' + item.item.product_id.toString().trim(),
-                    'sub',
-                    1
-                  )
-                }
+                onPress={() => this.props.onRemoveProduct(item)}
               />
-              <TextInput
-                style={styles.quantityInput}
-                keyboardType="numeric"
-                value={this.props.inputs[
-                  'input' + item.item.product_id.toString().trim()
-                ].toString()}
-                onChangeText={text => {
-                  this.props.onUpdateInput(
-                    'input' + item.item.product_id.toString().trim(),
-                    null,
-                    text
-                  );
+            </View>
+            <View style={styles.cleanRow}>
+              <Text
+                style={{
+                  textAlign: 'right',
+                  fontWeight: theme.FONT_WEIGHT_BOLD
                 }}
-              />
-              <IconButton
-                style={styles.quantityButton}
-                icon="add-circle-outline"
-                color={theme.PRIMARY_COLOR}
-                size={moderateScale(20, 0.3)}
-                onPress={() =>
-                  this.props.onUpdateInput(
-                    'input' + item.item.product_id.toString().trim(),
-                    'add',
-                    1
-                  )
+              >
+                Total:{' '}
+              </Text>
+              <TextNumber
+                styles={styles.total}
+                num={
+                  item.item.price *
+                  this.props.inputs[
+                    'input' + item.item.product_id.toString().trim()
+                  ]
                 }
               />
             </View>
-            <Text style={[styles.col3, styles.dataText]}>
-              <TextNumber styles={styles.price} num={item.item.price} />
-            </Text>
-            <IconButton
-              style={[
-                styles.col4,
-                styles.quantityButton,
-                { justifyContent: 'flex-end' }
-              ]}
-              icon="delete-forever"
-              color={'red'}
-              size={moderateScale(20, 0.3)}
-              onPress={() => this.props.onRemoveProduct(item)}
-            />
           </View>
         );
       });
@@ -117,8 +137,6 @@ const styles = ScaledSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomColor: '#CCC',
-    borderBottomWidth: 1,
     paddingVertical: '5@ms0.3'
   },
   title: {
@@ -171,6 +189,20 @@ const styles = ScaledSheet.create({
   },
   price: {
     color: theme.PRIMARY_COLOR
+  },
+  cleanRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomColor: '#CCC',
+    borderBottomWidth: 1
+  },
+  total: {
+    flex: 1,
+    fontSize: '15@ms0.3',
+    fontWeight: theme.FONT_WEIGHT_BOLD,
+    textAlign: 'right',
+    marginRight: 21
   }
 });
 
