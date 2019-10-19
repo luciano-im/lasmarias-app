@@ -42,7 +42,7 @@ class AuthLoadingScreen extends React.Component {
           backgroundColor: theme.PRIMARY_COLOR
         }}
       >
-        <ActivityIndicator color={theme.ACCENT_COLOR} size={25} />
+        <ActivityIndicator color="#FFFFFF" size={25} />
       </View>
     );
   }

@@ -13,7 +13,9 @@ export default class CheckoutOkScreen extends React.Component {
     return (
       <View style={styles.container}>
         <SelectCustomer navigation={this.props.navigation} />
-        <Logo />
+        <View style={{ marginTop: -30 }}>
+          <Logo />
+        </View>
         <View style={styles.titleContainer}>
           <Image
             style={{ width: 40, height: 40 }}
