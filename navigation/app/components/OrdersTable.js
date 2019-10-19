@@ -62,7 +62,14 @@ export default class OrdersTable extends React.Component {
           <View style={styles.row} key={item.invoice_id}>
             <View style={styles.container}>
               <View style={styles.cleanRow}>
-                <Text style={styles.dataText}>{item.customer_name}</Text>
+                <Text
+                  style={[
+                    styles.dataText,
+                    { fontWeight: theme.FONT_WEIGHT_MEDIUM }
+                  ]}
+                >
+                  {item.customer_name}
+                </Text>
               </View>
               <View style={styles.cleanRow}>
                 <Text style={[styles.invoiceCol1, styles.detailDataText]}>
@@ -116,7 +123,14 @@ export default class OrdersTable extends React.Component {
           <View style={styles.row} key={item.order_id}>
             <View style={styles.container}>
               <View style={styles.cleanRow}>
-                <Text style={styles.dataText}>{item.customer_name}</Text>
+                <Text
+                  style={[
+                    styles.dataText,
+                    { fontWeight: theme.FONT_WEIGHT_MEDIUM }
+                  ]}
+                >
+                  {item.customer_name}
+                </Text>
               </View>
               <View style={styles.cleanRow}>
                 <Text
