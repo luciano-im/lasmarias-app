@@ -322,13 +322,13 @@ export let signUp = async (email, password, password2, relatedData) => {
         return {
           error: true,
           msg: 'El servidor no responde',
-          data: error
+          data: error.response.data
         };
       } else {
         return {
           error: true,
           msg: 'No se pudo registrar el usuario',
-          data: error
+          data: error.response.data
         };
       }
     });

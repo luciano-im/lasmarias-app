@@ -32,6 +32,7 @@ export default class SignUp2Screen extends React.Component {
       zipText: '',
       cuitText: '',
       errorText: null,
+      errorList: [],
       loading: false,
       nameError: '',
       lastNameError: '',
@@ -44,6 +45,13 @@ export default class SignUp2Screen extends React.Component {
       cuitError: ''
     };
   }
+
+  _isEmpty = obj => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  };
 
   _onChangeName = text => {
     this.setState({
@@ -288,7 +296,8 @@ export default class SignUp2Screen extends React.Component {
         } else {
           this.setState({
             loading: false,
-            errorText: response.msg
+            errorText: response.msg,
+            errorList: response.data
           });
         }
       })
@@ -296,7 +305,8 @@ export default class SignUp2Screen extends React.Component {
         // Reactotron.error(error);
         this.setState({
           loading: false,
-          errorText: response.msg
+          errorText: response.msg,
+          errorList: response.data
         });
       });
   };
@@ -348,11 +358,21 @@ export default class SignUp2Screen extends React.Component {
     const zipIsError = zipError ? true : false;
     const cuitIsError = cuitError ? true : false;
 
+    let errorListComponents = [];
+    if (!this._isEmpty(this.state.errorList)) {
+      Object.values(this.state.errorList).map((item, index) => {
+        errorListComponents.push(
+          <Text style={styles.error} key={index}>
+            {item.toString()}
+          </Text>
+        );
+      });
+    }
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardAvoidContainer}
         behavior="padding"
-        keyboardVerticalOffset={100}
       >
         <ScrollView contentContainerStyle={styles.container}>
           <Logo />
@@ -476,6 +496,7 @@ export default class SignUp2Screen extends React.Component {
             {this.state.errorText ? (
               <Text style={styles.error}>{this.state.errorText}</Text>
             ) : null}
+            {this.state.errorList ? <View>{errorListComponents}</View> : null}
           </View>
           <View style={styles.nextButtonContainer}>
             <Button
@@ -546,6 +567,7 @@ const styles = ScaledSheet.create({
   error: {
     color: 'red',
     marginVertical: '10@ms0.3',
+    marginHorizontal: '10@ms0.3',
     textAlign: 'center',
     width: '250@ms0.3'
   },
