@@ -120,7 +120,6 @@ export default class SignUpScreen extends React.Component {
       <KeyboardAvoidingView
         style={styles.keyboardAvoidContainer}
         behavior="padding"
-        keyboardVerticalOffset={100}
       >
         <ScrollView style={styles.container}>
           <Logo />
