@@ -16,7 +16,7 @@
     "expo": "34.0.3",
     "expo-constants": "5.0.1",
     "expo-sqlite": "5.0.1",
-    "pubnub": "4.22.0",
+    "pubnub": "4.37.0",
     "pubnub-react": "1.2.0",
     "qs": "6.6.0",
     "react": "16.8.3",
