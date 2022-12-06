@@ -18,7 +18,7 @@
     "expo-sqlite": "5.0.1",
     "pubnub": "4.22.0",
     "pubnub-react": "1.2.0",
-    "qs": "6.6.0",
+    "qs": "6.6.1",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
     "react-native-gesture-handler": "^1.2.2",
